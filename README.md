@@ -1,4 +1,4 @@
-flautasolo
+FlautaSolo
 ==========
 
 Estudo do repertório de flauta solo.
