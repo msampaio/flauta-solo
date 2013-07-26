@@ -10,25 +10,25 @@ Estudo do repertório de flauta solo.
 
 # Instalação
 
-1. Para usar o FlautaSolo é preciso ter o
+Para usar o FlautaSolo é preciso ter o
 [Python](http://python.org/),
 [VirtualEnv](http://genosmus.com/handbook/python/) e
 [Git](http://git-scm.com/) instalados. O Python vem instalado por
 padrão em Macintosh e Linux.
 
-2. Abra um terminal e baixe o programa FlautaSolo:
+Abra um terminal e baixe o programa FlautaSolo:
 
     $ git clone https://github.com/GenosResearchGroup/FlautaSolo.git
 
-3. Crie um ambiente `flautaSolo`
+Crie um ambiente `flautaSolo`:
 
     $ mkvirtualenv flautaSolo
 
-4. Ative o ambiente:
+Ative o ambiente:
 
     $ workon flautaSolo
 
-5. Entre no diretório `FlautaSolo` que você baixou e rode os comandos:
+Entre no diretório `FlautaSolo` que você baixou e rode os comandos:
 
     $ pip install ipython
     $ pip install numpy
