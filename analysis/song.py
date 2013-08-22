@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import datetime
+import _utils
 
 
 class Country(object):
@@ -80,32 +80,19 @@ def makeCity(name, countryObj, province=None):
     return city
 
 
-def makeComposer(completeName, gender='M', bornCity=None, bornDate=None, deathCity=None, deathDate=None):
+def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None):
     """Return a Composer object with given attributes. The dates must
     be in a string with the format YYYYMMDD."""
 
-    def dateParser(dateString):
-        """Return a datetime object from a dateString argument in
-        format YYYYMMDD."""
-
-        y, m, d = [int(s) for s in dateString[:4], dateString[5:6], dateString[6:]]
-        return datetime.date(y, m, d)
-
-    def nameParser(completeName):
-        """Return prename and name in two separate strings."""
-        
-        names = completeName.split()
-        return ' '.join(names[:-1]), names[-1:][0]
-
     composer = Composer()
-    composer.prename, composer.name = nameParser(completeName)
+    composer.prename, composer.name = _utils.nameParser(completeName)
     composer.gender = gender
-    composer.bornCity = bornCity
-    composer.deathCity = deathCity
+    composer.bornCity = bornCityObj
+    composer.deathCity = deathCityObj
 
     if bornDate:
-        composer.bornDate = dateParser(bornDate)
+        composer.bornDate = _utils.dateParser(bornDate)
     if deathDate:
-        composer.deathDate = dateParser(deathDate)
+        composer.deathDate = _utils.dateParser(deathDate)
 
     return composer
