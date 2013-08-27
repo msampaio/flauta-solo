@@ -71,8 +71,9 @@ def idCodeParser(idCode):
 
     try:
         idCodeChecker(idCodeDic)
-    else:
         return idCodeDic
+    except IdCodeError():
+        print 'IdCode Error'
 
 
 def idCodeMaker(sourceOrigin, sourceType, sourceId, sourceSongNumber=None, sourceMovement=None, sourceExpansion=False, sourceSuffix=None):
