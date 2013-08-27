@@ -180,3 +180,46 @@ def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deat
         composer.deathDate = _utils.dateParser(deathDate)
 
     return composer
+
+
+def makeEditor(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None, commonStyle=None):
+    """Return an Editor object with given attributes. The dates must
+    be in a string with the format YYYYMMDD."""
+
+    editor = Editor()
+    editor.prename, editor.name = _utils.nameParser(completeName)
+    editor.gender = gender
+    editor.bornCity = bornCityObj
+    editor.deathCity = deathCityObj
+
+    if bornDate:
+        editor.bornDate = _utils.dateParser(bornDate)
+    if deathDate:
+        editor.deathDate = _utils.dateParser(deathDate)
+
+    return editor
+
+
+def makePiece(title, composer, tonality=None, date=None, subtitle=None, city=None, premierCity=None, premierDate=None, opus=None, classificationCode=None, movements=None, structure=None):
+    """Return an Piece object with given attributes. The dates must
+    be in a string with the format YYYYMMDD."""
+
+    piece = Piece()
+
+    piece.title = title
+    piece.subtitle = subtitle
+    piece.composer = composer
+    piece.city = city
+    piece.premierCity = premierCity
+    piece.opus = opus
+    piece.classificationCode = classificationCode
+    piece.movements = movements
+    piece.structure = structure
+    piece.tonality = tonality
+
+    if date:
+        piece.date = _utils.dateParser(date)
+    if premierDate:
+        piece.premierDate = _utils.premierDateParser(premierDate)
+
+    return piece
