@@ -41,7 +41,9 @@ class Composer(object):
         self.bornDate = None
         self.deathCity = None
         self.deathDate = None
-        
+        self.mainInstrument = None
+        self.commonStyle = None
+
     def __repr__(self):
         if self.bornDate:
             bornDate = self.bornDate.year
@@ -57,6 +59,86 @@ class Composer(object):
 
     def completeName(self):
         return ' '.join([self.prename, self.name])
+
+
+class Editor(object):
+    """Class for Editor objects."""
+
+    def __init__(self):
+
+        self.name = None
+        self.prename = None
+        self.gender = None
+        self.bornCity = None
+        self.bornDate = None
+        self.deathCity = None
+        self.deathDate = None
+
+    def __repr__(self):
+        if self.bornDate:
+            bornDate = self.bornDate.year
+        else:
+            borndDate = None
+
+        if self.deathDate:
+            deathDate = self.deathDate.year
+        else:
+            deathDate = None
+
+        return "<Editor: {0}, {1}, {2}--{3}>".format(self.name, self.bornCity.country.name, bornDate, deathDate)
+
+    def completeName(self):
+        return ' '.join([self.prename, self.name])
+
+
+class Piece(object):
+    """Class for Piece objects."""
+
+    def __init__(self):
+
+        self.title = None
+        self.subtitle = None
+        self.composer = None
+        self.city = None
+        self.date = None
+        self.premierCity = None
+        self.premierDate = None
+        self.opus = None
+        self.classificationCode = None
+        self.movements = None
+        self.structure = None
+        self.tonality = None
+
+    def __repr__(self):
+        return "<Piece: {0}, {1}>".format(self.title, self.composer)
+
+
+class Movement(object):
+    """Class for Movement objects."""
+
+    def __init__(self):
+
+        self.title = None
+        self.subtitle = None
+        self.tempo = None
+        self.tonality = None
+
+    def __repr__(self):
+        return "<Movement: {0}>".format(self.title)
+
+
+class Source(object):
+    """Class for Source objects."""
+
+    def __init__(self):
+
+        self.piece = None
+        self.info = None
+        self.editor = None
+        self.idCode = None
+
+    def __repr__(self):
+        return "<Source: {0}, {1}>".format(self.piece, self.info)
 
 
 def makeCountry(name, continent):
@@ -80,7 +162,7 @@ def makeCity(name, countryObj, province=None):
     return city
 
 
-def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None):
+def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None, commonStyle=None):
     """Return a Composer object with given attributes. The dates must
     be in a string with the format YYYYMMDD."""
 
@@ -89,6 +171,8 @@ def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deat
     composer.gender = gender
     composer.bornCity = bornCityObj
     composer.deathCity = deathCityObj
+    composer.mainInstrument = mainInstrument
+    composer.commonStyle = commonStyle
 
     if bornDate:
         composer.bornDate = _utils.dateParser(bornDate)
