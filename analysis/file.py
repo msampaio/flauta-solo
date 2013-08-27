@@ -16,21 +16,23 @@ def idCodeParser(idCode):
     splitted = idCode.split('-')
     prefix = splitted[0]
 
-    if len(splitted) > 1:
-        suffix = splitted[1:]
-
     idCodeDic = {}
+
+    if len(splitted) > 1:
+        idCodeDic['sourceSuffix'] = ' '.join(splitted[1:])
+
     idCodeDic['sourceOrigin'] = prefix[0]
     idCodeDic['sourceType'] = prefix[1]
     idCodeDic['sourceId'] = prefix[2:7]
 
     middle = prefix[7:]
+    idCodeDic['sourceExpansion'] = False
 
     if middle:
         if middle[-1] == 'E':
             idCodeDic['sourceExpansion'] = True
         if middle[0] == '_':
-            idCodeDic['sourceSongNumber'] =  middle[1:2]
+            idCodeDic['sourceSongNumber'] =  middle[1:3]
             if idCodeDic['sourceExpansion']:
                 idCodeDic['sourceMovement'] = middle[3:-1]
             else:
