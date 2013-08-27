@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import analysis.file as file
+import analysis.idcode as idcode
 
 
 class TestUtils(unittest.TestCase):
@@ -20,12 +20,12 @@ class TestUtils(unittest.TestCase):
             {'sourceOrigin': 'E', 'sourceType': 'T', 'sourceId': '00001', 'sourceSongNumber': '01', 'sourceMovement': 'b', 'sourceExpansion': True},
             {'sourceOrigin': 'E', 'sourceType': 'T', 'sourceId': '00001', 'sourceSongNumber': '12', 'sourceMovement': 'a', 'sourceExpansion': True}
             ]
-        self.assertEqual(file.idCodeParser(codes[0]), answers[0])
-        self.assertEqual(file.idCodeParser(codes[1]), answers[1])
-        self.assertEqual(file.idCodeParser(codes[2]), answers[2])
-        self.assertEqual(file.idCodeParser(codes[3]), answers[3])
-        self.assertEqual(file.idCodeParser(codes[4]), answers[4])
-        self.assertEqual(file.idCodeParser(codes[5]), answers[5])
+        self.assertEqual(idcode.idCodeParser(codes[0]), answers[0])
+        self.assertEqual(idcode.idCodeParser(codes[1]), answers[1])
+        self.assertEqual(idcode.idCodeParser(codes[2]), answers[2])
+        self.assertEqual(idcode.idCodeParser(codes[3]), answers[3])
+        self.assertEqual(idcode.idCodeParser(codes[4]), answers[4])
+        self.assertEqual(idcode.idCodeParser(codes[5]), answers[5])
 
     def test_idCodeMaker(self):
-        self.assertEqual(file.idCodeMaker('E', 'T', '00001', '23', 'a', True, 'Foobar'), 'ET00001_23aE-Foobar')
+        self.assertEqual(idcode.idCodeMaker('E', 'T', '00001', '23', 'a', True, 'Foobar'), 'ET00001_23aE-Foobar')
