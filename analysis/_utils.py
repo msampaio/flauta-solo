@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import os
 
 
 def dateParser(dateString):
@@ -18,10 +17,3 @@ def nameParser(completeNameStr):
 
     names = completeNameStr.split()
     return ' '.join(names[:-1]), names[-1:][0]
-
-
-def mkdir(path):
-    """Make a path of a given path, if it doesn't exist."""
-
-    if not os.path.exists(path):
-        os.mkdir(path)
