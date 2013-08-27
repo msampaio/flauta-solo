@@ -2,6 +2,36 @@
 # -*- coding: utf-8 -*-
 
 
+class IdCodeError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+
+def idCodeChecker(idCodeDic):
+
+    n = [str(x) for x in range(100)]
+    n.append(None)
+    w = list('abcdefghijklmnopqrstuvwxyz')
+    w.append(None)
+
+    conditionsOne = [
+        idCodeDic['sourceOrigin'] in list('EI'),
+        idCodeDic['sourceType'] in list('FT'),
+        len(idCodeDic['sourceId']) == 5
+        ]
+
+    conditionsTwo = [
+        not 'sourceSongNumber' in idCodeDic or idCodeDic['sourceSongNumber'] in n,
+        not 'sourceMovement' in idCodeDic or idCodeDic['sourceMovement'] in w,
+        idCodeDic['sourceExpansion'] in (True, False)
+        ]
+
+    if not all(conditionsOne) and all(conditionsTwo):
+        raise IdCodeError('The given idCode is wrong.')
+
+
 def idCodeParser(idCode):
     """Return a dictionary with idCode parsed.
 
@@ -38,8 +68,11 @@ def idCodeParser(idCode):
                 idCodeDic['sourceMovement'] = middle[3:-1]
             else:
                 idCodeDic['sourceMovement'] = middle[3:]
-        
-    return idCodeDic
+
+    try:
+        idCodeChecker(idCodeDic)
+    else:
+        return idCodeDic
 
 
 def idCodeMaker(sourceOrigin, sourceType, sourceId, sourceSongNumber=None, sourceMovement=None, sourceExpansion=False, sourceSuffix=None):
