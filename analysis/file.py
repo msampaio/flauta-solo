@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 def idCodeParser(idCode):
     """Return a dictionary with idCode parsed.
 
@@ -39,3 +40,28 @@ def idCodeParser(idCode):
                 idCodeDic['sourceMovement'] = middle[3:]
         
     return idCodeDic
+
+
+def idCodeMaker(sourceOrigin, sourceType, sourceId, sourceSongNumber=None, sourceMovement=None, sourceExpansion=False, sourceSuffix=None):
+    """Return an idCode in a string.
+
+    >>> idCodeMaker('E', 'T', '00001', '23', 'a', True, 'Foobar')
+    'ET00001_23aE-Foobar'
+    """
+
+    prefix = ''.join([sourceOrigin, sourceType, sourceId])
+
+    optionals = []
+
+    if sourceSongNumber:
+        optionals.append('_' + sourceSongNumber)
+    if sourceMovement:
+        optionals.append(sourceMovement)
+    if sourceExpansion:
+        optionals.append('E')
+    if sourceSuffix:
+        optionals.append('-' + sourceSuffix)
+
+    suffix = ''.join(optionals)
+
+    return prefix + suffix

@@ -26,3 +26,6 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(file.idCodeParser(codes[3]), answers[3])
         self.assertEqual(file.idCodeParser(codes[4]), answers[4])
         self.assertEqual(file.idCodeParser(codes[5]), answers[5])
+
+    def test_idCodeMaker(self):
+        self.assertEqual(file.idCodeMaker('E', 'T', '00001', '23', 'a', True, 'Foobar'), 'ET00001_23aE-Foobar')
