@@ -12,6 +12,12 @@ class Country(object):
         self.name = None
         self.continent = None
 
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
+
     def __repr__(self):
         return "<Country: {0}, {1}>".format(self.name, self.continent)
 
@@ -24,6 +30,12 @@ class City(Country):
         self.name = None
         self.province = None
         self.country = None
+
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
         return "<City: {0}, {1}>".format(self.name, self.country.name)
@@ -43,6 +55,12 @@ class Composer(object):
         self.deathDate = None
         self.mainInstrument = None
         self.commonStyle = None
+
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
         if self.bornDate:
@@ -73,6 +91,12 @@ class Editor(object):
         self.bornDate = None
         self.deathCity = None
         self.deathDate = None
+
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
         if self.bornDate:
@@ -109,6 +133,12 @@ class Piece(object):
         self.structure = None
         self.tonality = None
 
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
+
     def __repr__(self):
         return "<Piece: {0}, {1}>".format(self.title, self.composer)
 
@@ -123,6 +153,12 @@ class Movement(object):
         self.tempo = None
         self.tonality = None
 
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
+
     def __repr__(self):
         return "<Movement: {0}>".format(self.title)
 
@@ -136,6 +172,12 @@ class Source(object):
         self.info = None
         self.editor = None
         self.idCode = None
+
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
         return "<Source: {0}, {1}>".format(self.piece, self.info)

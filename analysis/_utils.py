@@ -17,3 +17,24 @@ def nameParser(completeNameStr):
 
     names = completeNameStr.split()
     return ' '.join(names[:-1]), names[-1:][0]
+
+
+def equalityComparisons(objectOne, objectTwo, inequality=False):
+    # print "1 - {0}, 2 - {1}".format(objectOne, objectTwo)
+    attribList = objectOne.__dict__.keys()
+    comparisons = []
+    if objectOne and objectTwo:
+        for method in ['__class__', '__dict__']:
+            methodOne = getattr(objectOne, method)
+            methodTwo = getattr(objectTwo, method)
+            comparisons.append(methodOne == methodTwo)
+        for atrb in attribList:
+            atrbOne = objectOne.__getattribute__(atrb)
+            atrbTwo = objectTwo.__getattribute__(atrb)
+            comparisons.append(atrbOne == atrbTwo)
+    else:
+        comparisons.append(False)
+    if inequality:
+        return not all(comparisons)
+    else:
+        return all(comparisons)
