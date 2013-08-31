@@ -20,7 +20,6 @@ def nameParser(completeNameStr):
 
 
 def equalityComparisons(objectOne, objectTwo, inequality=False):
-    # print "1 - {0}, 2 - {1}".format(objectOne, objectTwo)
     attribList = objectOne.__dict__.keys()
     comparisons = []
     if objectOne and objectTwo:
