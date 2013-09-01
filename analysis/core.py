@@ -140,7 +140,7 @@ class Piece(object):
         return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
-        return "<Piece: {0}, {1}>".format(self.title, self.composer)
+        return "<Piece: {0}, {1}>".format(self.title, self.composer.completeName())
 
 
 class Movement(object):
@@ -262,6 +262,6 @@ def makePiece(title, composer, tonality=None, date=None, subtitle=None, city=Non
     if date:
         piece.date = _utils.dateParser(date)
     if premierDate:
-        piece.premierDate = _utils.premierDateParser(premierDate)
+        piece.premierDate = _utils.dateParser(premierDate)
 
     return piece
