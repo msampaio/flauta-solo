@@ -189,7 +189,7 @@ class Source(object):
 
 
 def makeCountry(name, continent):
-    """Return a Country object with given attributes."""
+    """Return a Country object with the given attributes."""
 
     country = Country()
     country.name = name
@@ -199,7 +199,7 @@ def makeCountry(name, continent):
 
 
 def makeCity(name, countryObj, province=None):
-    """Return a City object with given attributes."""
+    """Return a City object with the given attributes."""
 
     city = City()
     city.name = name
@@ -210,8 +210,8 @@ def makeCity(name, countryObj, province=None):
 
 
 def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None, commonStyle=None):
-    """Return a Composer object with given attributes. The dates must
-    be in a string with the format YYYYMMDD."""
+    """Return a Composer object with the given attributes. The dates
+    must be in a string with the format YYYYMMDD."""
 
     composer = Composer()
     composer.prename, composer.name = _utils.nameParser(completeName)
@@ -229,9 +229,9 @@ def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deat
     return composer
 
 
-    """Return an Editor object with given attributes. The dates must
-    be in a string with the format YYYYMMDD."""
 def makeEditor(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None):
+    """Return an Editor object with the given attributes. The dates
+    must be in a string with the format YYYYMMDD."""
 
     editor = Editor()
     editor.prename, editor.name = _utils.nameParser(completeName)
@@ -248,7 +248,7 @@ def makeEditor(completeName, gender='M', bornCityObj=None, bornDate=None, deathC
 
 
 def makePiece(title, composer, tonality=None, date=None, subtitle=None, city=None, premierCity=None, premierDate=None, opus=None, classificationCode=None, movements=None, structure=None):
-    """Return an Piece object with given attributes. The dates must
+    """Return a Piece object with the given attributes. The dates must
     be in a string with the format YYYYMMDD."""
 
     piece = Piece()
