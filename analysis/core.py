@@ -265,3 +265,29 @@ def makePiece(title, composer, tonality=None, date=None, subtitle=None, city=Non
         piece.premierDate = _utils.dateParser(premierDate)
 
     return piece
+
+
+def makeMovement(title, tempo, tonality, subtitle=None):
+    """Return a Movement object with the given attributes."""
+
+    movement = Movement()
+
+    movement.title = title
+    movement.subtitle = subtitle
+    movement.tempo = tempo
+    movement.tonality = tonality
+
+    return movement
+
+
+def makeSource(idCode, pieceObj, editorObj, info):
+    """Return a Source object with the given attributes."""
+
+    source = Source()
+
+    source.idCode = idCode
+    source.piece = pieceObj
+    source.info = info
+    source.editor = editorObj
+
+    return source
