@@ -66,14 +66,19 @@ class Composer(object):
         if self.bornDate:
             bornDate = self.bornDate.year
         else:
-            borndDate = None
+            bornDate = None
 
         if self.deathDate:
             deathDate = self.deathDate.year
         else:
             deathDate = None
 
-        return "<Composer: {0}, {1}, {2}--{3}>".format(self.name, self.bornCity.country.name, bornDate, deathDate)
+        if self.bornCity:
+            bornCity = self.bornCity.country.name
+        else:
+            bornCity = None
+
+        return "<Composer: {0}, {1}, {2}--{3}>".format(self.name, bornCity, bornDate, deathDate)
 
     def completeName(self):
         return ' '.join([self.prename, self.name])
@@ -224,9 +229,9 @@ def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deat
     return composer
 
 
-def makeEditor(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None, commonStyle=None):
     """Return an Editor object with given attributes. The dates must
     be in a string with the format YYYYMMDD."""
+def makeEditor(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None):
 
     editor = Editor()
     editor.prename, editor.name = _utils.nameParser(completeName)
