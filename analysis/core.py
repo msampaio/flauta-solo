@@ -137,6 +137,7 @@ class Piece(object):
         self.movements = None
         self.structure = None
         self.tonality = None
+        self.instrument = None
 
     def __eq__(self, other):
         return _utils.equalityComparisons(self, other)
@@ -247,7 +248,7 @@ def makeEditor(completeName, gender='M', bornCityObj=None, bornDate=None, deathC
     return editor
 
 
-def makePiece(title, composer, tonality=None, date=None, subtitle=None, city=None, premierCity=None, premierDate=None, opus=None, classificationCode=None, movements=None, structure=None):
+def makePiece(title, composer, tonality=None, date=None, subtitle=None, city=None, premierCity=None, premierDate=None, opus=None, classificationCode=None, movements=None, structure=None, instrument=None):
     """Return a Piece object with the given attributes. The dates must
     be in a string with the format YYYYMMDD."""
 
@@ -263,6 +264,7 @@ def makePiece(title, composer, tonality=None, date=None, subtitle=None, city=Non
     piece.movements = movements
     piece.structure = structure
     piece.tonality = tonality
+    piece.instrument = instrument
 
     if date:
         piece.date = _utils.dateParser(date)
