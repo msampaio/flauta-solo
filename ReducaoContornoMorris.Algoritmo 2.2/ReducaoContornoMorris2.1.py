@@ -24,13 +24,13 @@ def Etapa2 (C,N):
     listaMinima.append(C[len(C)-1])
     return listaMinima
 
-def Etapa3 (C, lMax, lMin,N):
+def Etapa3 (C, lMax, lMin, N):
     a = set(lMax).union(set(lMin))
     b = set(C)
     c = b.difference(a)
     Sinalizado = list(a)
-    nSinalizado = list(c)
-    print "etapa 3 -> lista de sinalizados:" ,Sinalizado, "lista de nao sinalizados:",nSinalizado
+    nSinalizado = PegaNoSinalizado(list(c), C)
+    print ("etapa 3 -> lista de sinalizados:" ,Sinalizado, "lista de nao sinalizados:",nSinalizado)
     if (c == set([])):
         N+=1
         return Etapa9(C,N)
@@ -46,8 +46,8 @@ def Etapa4 (naoSinalizados, C, N,lmx, lmn):
 
 def Etapa5 (C, N,lmx,lmn):
     N+=1
-    print"etapas 4 e 5 -> Novo Contorno",C
-    print "nivel de profundidade: N = %d" %N
+    print("etapas 4 e 5 -> Novo Contorno",C)
+    print ("nivel de profundidade: N = %d" %N)
     return Etapa8(C,lmx,lmn,N)
 
 def Etapa6 (lMax,C):
@@ -60,6 +60,9 @@ def Etapa6 (lMax,C):
             if(lMax[i+1] != newList[k]):
                 k+=1
                 newList.append(lMax[i+1])
+            elif ((lMax[i+1] == lMax[0]) or ((lMax[i+1] == lMax[len(lMax)-1]))):
+                n = C.index(lMax[i+1])
+                C.pop(n)
             else:
                 n = C.index(lMax[i+1])
                 C.pop(n)
@@ -68,45 +71,63 @@ def Etapa6 (lMax,C):
     return newList
 
 def Etapa7 (lMin,C):
-    i = 0
-    k = 0
-    newList = []
-    newList.append(lMin[0])
-    while (i < (len(lMin)-2)):
-        if ((lMin[i+1] <= lMin[i]) and (lMin[i+1] <= lMin[i+2])):
-            if(lMin[i+1] != newList[k]):
-                k+=1
-                newList.append(lMin[i+1])
-            else:
-                n = C.index(lMin[i+1])
-                C.pop(n)
-        i+=1
-    newList.append(lMin[len(lMin)-1])
-    return newList
+	i = 0
+	k = 0
+	newList = []
+	newList.append(lMin[0])
+	while (i < (len(lMin)-2)):
+		if ((lMin[i+1] <= lMin[i]) and (lMin[i+1] <= lMin[i+2])):
+			if(lMin[i+1] != newList[k]):
+				k+=1
+				newList.append(lMin[i+1])
+			elif ((lMin[i+1] == lMin[0]) or ((lMin[i+1] == lMin[len(lMin)-1]))):
+				n = C.index(lMin[i+1])
+				C.pop(n)
+			else:
+				n = C.index(lMin[i+1])
+				C.pop(n)
+		i+=1
+	newList.append(lMin[len(lMin)-1])
+	return newList
 
 def Etapa8 (C, lMax, lMin, N):
     nlMax = []
     nlMin = []
     nlMax = Etapa6(lMax,C)
     nlMin = Etapa7(lMin,C)
-    print"etapas 6, 7 e 8 -> listademaximo: ",nlMax," listademinimo: ",nlMin
+    print("etapas 6, 7 e 8 -> listademaximo: ",nlMax," listademinimo: ",nlMin)
     return Etapa3(C,nlMax,nlMin,N)
 
 def Etapa9 (C,N):
-    print "etapa 9 melodia reduzida: Contorno Final", C
-    print "nivel de profundidade: N = %d" %N
+    print ("etapa 9 melodia reduzida: Contorno Final", C)
+    print ("nivel de profundidade: N = %d" %N)
 
 def TransfInput(entrada):
-    C = []
-    for i in range(len(entrada)):
-        if ((str1[i] != ' ')):
-            C.append(int(entrada[i]))
-    return C
+	C = []
+	for i in range(len(entrada)-1):
+		if ((entrada[i] != " ")):
+			if (entrada[i+1] != " "):
+				a = entrada[i]
+				a+=entrada[i+1]
+				C.append(int(a))
+			else:
+				C.append(int(entrada[i]	))
+	return C
+
+def PegaNoSinalizado(input1, input2):
+	saida = []
+	for i in range(len(input1)):
+		for j in range(len(input2)):
+			if input2[j] == input1[i]:
+				saida.append(input1[i])
+	return saida			
+				
 
 ### programa principal onde chamamos as funcoes acima ###
-str1 = raw_input("entre com os contorno formato de entrada ex: 1234 ou 1 2 3 4: ")
+str1 = input("entre com os contorno formato de entrada ex: 1 2 3 4 (separados por um espaço): ")
+C=[]
 C = TransfInput(str1)
-print"Contorno Original: ",C
+print("Contorno Original: ",C)
 i = 0
 # Etapa0(n)
 n = 0
@@ -115,7 +136,7 @@ lmin = []
 Contorno = []
 lmax = Etapa1(C,n)
 lmin = Etapa2(C,n)
-print "etapas 0, 1 e 2 -> N = %i" %n,"listademaximo:",lmax,"listademinimo:",lmin
+print ("etapas 0, 1 e 2 -> N = %i" %n,"listademaximo:",lmax,"listademinimo:",lmin)
 Etapa3 (C, lmax, lmin, n)
 
 
