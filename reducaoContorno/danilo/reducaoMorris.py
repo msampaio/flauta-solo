@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 def Etapa1  (C,N):
     i = 0
     listaMaxima = []
