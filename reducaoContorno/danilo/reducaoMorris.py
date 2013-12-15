@@ -105,20 +105,18 @@ def TransfInput(entrada):
             C.append(int(entrada[i]))
     return C
 
-### programa principal onde chamamos as funcoes acima ###
-str1 = raw_input("entre com os contorno formato de entrada ex: 1234 ou 1 2 3 4: ")
-C = TransfInput(str1)
-print"Contorno Original: ",C
-i = 0
-# Etapa0(n)
-n = 0
-lmax = []
-lmin = []
-Contorno = []
-lmax = Etapa1(C,n)
-lmin = Etapa2(C,n)
-print "etapas 0, 1 e 2 -> N = %i" %n,"listademaximo:",lmax,"listademinimo:",lmin
-Etapa3 (C, lmax, lmin, n)
-
-
-
+# FIXME: remover
+# ### programa principal onde chamamos as funcoes acima ###
+# str1 = raw_input("entre com os contorno formato de entrada ex: 1234 ou 1 2 3 4: ")
+# C = TransfInput(str1)
+# print"Contorno Original: ",C
+# i = 0
+# # Etapa0(n)
+# n = 0
+# lmax = []
+# lmin = []
+# Contorno = []
+# lmax = Etapa1(C,n)
+# lmin = Etapa2(C,n)
+# print "etapas 0, 1 e 2 -> N = %i" %n,"listademaximo:",lmax,"listademinimo:",lmin
+# Etapa3 (C, lmax, lmin, n)
