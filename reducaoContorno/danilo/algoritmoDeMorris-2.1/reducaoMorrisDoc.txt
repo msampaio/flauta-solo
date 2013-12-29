@@ -1,0 +1,58 @@
+etapa 0 (Contorno, N):
+    N.profundidade = 0
+    retorno N
+
+etapa 1(Contorno C):
+    "dado um contorno C"
+"   C.lista_de_maxima = valor maximo de CP de, sendo C = {a1, a2, ... an} de cada tupla de C, ex: {a1, 'a2' a3} compara com {a2, 'a3', a4}, ... {an-2, 'an-1', an}, entao compara-se a2 com a3 com ... com an-1, sendo a1 e an maximos por definicao."
+    C.lista_de_maxima = MAX {a1, a2, ... an}
+    retorna C.lista_de_maxima
+
+etapa 2(Contorno C):
+    "dado um contorno C, idem ao 1, mas para menores"
+"   C.lista_de_minima = MIN {a1, a2, ... an}"
+    retorna C.lista_de_maxima
+etapa 3 (C, listaDemaxima, listaMinima):
+
+"verificar se qual CP não foi sinalizado nas maximas e minimas"
+"se a diferença entre C - {listaMaximaUlistaminima} = 0, entao pula para etapa 9"
+
+se auxiliar := C - {listaMaxima U listaMinima} = 0 entao
+    retorne etapa 9(C)
+senao
+    auxiliar =  C - {listaMaxima U listaMinima}  = [CP diferenca]
+    retorne etapa 4 (auxiliar, C)
+etapa 4 (auxiliar):
+    verificar quais de auxiliar estao em C
+    remove.de.C se C.[ai] = auxiliar[ak]
+    retorne etapa 5 (C, N)
+
+etapa 5 (C, N):
+
+"N = 0 --> N = N+1 --> N = 1"
+N = N+1
+retorn C, N
+
+etapa 6, 7 8 - etapas recursivas
+
+etapa 6(listaMaxima):
+
+novalistaMaxima = MAX {listaMaxima}
+loop
+se listaMaxima[ai] = listaMaxima[ak]
+remove novalistaMaxima[ai] = listaMaxima[al]
+retorne novalistaMaxima
+
+
+etapa 7(listaMinima):
+
+novalistaMinima = MAX {listaMinima}
+loop
+se listaMinima[ai] = listaMinima[ak]
+remove novalistaMinima[ai] = listaMinima[al]
+retorne novalistaMinima
+
+etapa 8 :
+retorne etapa3
+etapa 9:
+mostra novo contorno

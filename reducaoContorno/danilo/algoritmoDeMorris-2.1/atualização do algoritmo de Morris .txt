@@ -1,0 +1,4 @@
+Atualização do algoritmos de Morris. 
+Algoritmo 2.1: Morris Contour Reduction Algorithm
+
+Como encontrei algumas entradas que apresentaram erros resolvi fazer uma atualização na etapa4 do algoritmo e adicionei novas funções para tratamento de máximas e minimas. 
