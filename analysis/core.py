@@ -173,8 +173,7 @@ class Source(object):
 
     def __init__(self):
 
-        self.piece = None
-        self.info = None
+        self.title = None
         self.editor = None
         self.idCode = None
 
@@ -185,7 +184,11 @@ class Source(object):
         return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
-        return "<Source: {0}, {1}>".format(self.piece, self.info)
+        if self.idCode:
+            idCode = self.idCode
+        else:
+            idCode = None
+        return "<Source: {0}, {1}>".format(self.title, idCode)
 
 
 def makeCountry(name, continent):
@@ -285,14 +288,13 @@ def makeMovement(title, tempo, tonality, subtitle=None):
     return movement
 
 
-def makeSource(idCode, pieceObj, editorObj, info):
+def makeSource(idCode, title, editorObj):
     """Return a Source object with the given attributes."""
 
     source = Source()
 
     source.idCode = idCode
-    source.piece = pieceObj
-    source.info = info
+    source.title = title
     source.editor = editorObj
 
     return source

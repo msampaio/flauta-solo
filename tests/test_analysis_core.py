@@ -141,18 +141,16 @@ class TestUtils(unittest.TestCase):
     def test_makeSource(self):
         composer = core.makeComposer('Johann Sebastian Bach')
         editor = core.makeEditor('Michele Giulianini')
-        piece = core.makePiece('Partita in A minor', composer)
+        title = "Partitas"
         idCode = 'IF05673a'
-        info = 'Michele Giulianini'
 
         source = core.Source()
         source.idCode = idCode
-        source.piece = piece
-        source.info = info
+        source.title = title
         source.editor = editor
 
-        self.assertEqual(core.makeSource(idCode, piece, editor, info), source)
-        self.assertNotEqual(core.makeSource('IF05673b', piece, editor, info), source)
+        self.assertEqual(core.makeSource(idCode, title, editor), source)
+        self.assertNotEqual(core.makeSource('IF05673b', title, editor), source)
 
 if __name__ == '__main__':
     unittest.main()
