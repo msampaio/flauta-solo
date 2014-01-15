@@ -6,7 +6,7 @@ import _utils
 
 class Country(object):
     """Class for Country objects."""
-    
+
     def __init__(self):
 
         self.name = None
@@ -24,7 +24,7 @@ class Country(object):
 
 class City(Country):
     """Class for City objects."""
-    
+
     def __init__(self):
 
         self.name = None
@@ -43,7 +43,7 @@ class City(Country):
 
 class Composer(object):
     """Class for Composer objects."""
-    
+
     def __init__(self):
 
         self.name = None
@@ -54,7 +54,6 @@ class Composer(object):
         self.deathCity = None
         self.deathDate = None
         self.mainInstrument = None
-        self.commonStyle = None
 
     def __eq__(self, other):
         return _utils.equalityComparisons(self, other)
@@ -210,7 +209,7 @@ def makeCity(name, countryObj, province=None):
     return city
 
 
-def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None, commonStyle=None):
+def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None):
     """Return a Composer object with the given attributes. The dates
     must be in a string with the format YYYYMMDD."""
 
@@ -220,7 +219,6 @@ def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deat
     composer.bornCity = bornCityObj
     composer.deathCity = deathCityObj
     composer.mainInstrument = mainInstrument
-    composer.commonStyle = commonStyle
 
     if bornDate:
         composer.bornDate = _utils.dateParser(bornDate)

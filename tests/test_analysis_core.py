@@ -43,7 +43,6 @@ class TestUtils(unittest.TestCase):
         deathCityObj = core.makeCity('Leipzig', country)
         deathDate = '17500728'
         mainInstrument = 'Organ'
-        commonStyle = 'All'
 
         composer = core.Composer()
         composer.prename, composer.name = _utils.nameParser(completeName)
@@ -53,9 +52,9 @@ class TestUtils(unittest.TestCase):
         composer.deathCity = deathCityObj
         composer.deathDate = _utils.dateParser(deathDate)
         composer.mainInstrument = mainInstrument
-        composer.commonStyle = commonStyle
-        args1 = [completeName, gender, bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument, commonStyle]
-        args2 = [completeName, 'F', bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument, commonStyle]
+
+        args1 = [completeName, gender, bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument]
+        args2 = [completeName, 'F', bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument]
 
         self.assertEqual(core.makeComposer(*args1), composer)
         self.assertNotEqual(core.makeComposer(*args2), composer)
