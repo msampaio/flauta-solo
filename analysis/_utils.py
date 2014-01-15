@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import os
+import ConfigParser
 
 
 def dateParser(dateString):
@@ -40,3 +42,14 @@ def equalityComparisons(objectOne, objectTwo, inequality=False):
             return not all(comparisons)
         else:
             return all(comparisons)
+
+
+def getCfgInfo(section, item, cfgFile='.musiAnalysis.cfg'):
+    """Return a given item from a section in config file."""
+
+    basename = os.path.expanduser('~')
+    path = os.path.join(basename, cfgFile)
+    config = ConfigParser.ConfigParser()
+    config.read(path)
+
+    return config.get(section, item)
