@@ -1,12 +1,29 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+#DEPARTAMENTO DE CIENCIA DA COMPUTACAO e ESCOLA DE MUSICA - GENOS - UFBA
+#PROJETO FINAL DE CURSO I - Orientadores: Marco Sampaio e Flavio Assis
+# Danilo Azevedo Santos
+
+
 def maxima(seq, i):
+    """returns the max c-pitch contour of a suit"""
+
+
     return (seq[i+1] >= seq[i]) and (seq[i+1] >= seq[i+2])
 
+
 def minima(seq, i):
+    """"returns the max c-pitch contour of a suit"""
+
+
     return (seq[i+1] <= seq[i]) and (seq[i+1] <= seq[i+2])
 
+
 def Etapa1 (contour,N):
-    i = 0
-    listaMaxima = []
+    """Set the list of maximum of the contour
+    """
+
+    i,listaMaxima = 0, []
     if (N == 0):
         listaMaxima.append(contour[0])
         while (i < (len(contour)-2)):
@@ -16,9 +33,13 @@ def Etapa1 (contour,N):
     listaMaxima.append(contour[len(contour)-1])
     return listaMaxima
 
+
 def Etapa2 (contour,N):
-    i = 0
-    listaMinima = []
+    """Set the list of minimum of the contour
+    """
+
+
+    i, listaMinima = 0,[]
     if (N == 0):
         listaMinima.append(contour[0])
         while (i < (len(contour)-2)):
@@ -28,21 +49,32 @@ def Etapa2 (contour,N):
     listaMinima.append(contour[len(contour)-1])
     return listaMinima
 
+
 def Etapa3 (contour, lMax, lMin, N):
-    a = set(lMax).union(set(lMin))
-    b = set(contour)
+    """check which CP was not flagged in the maximum and minimum 
+       The difference between C - listaMaximaUlistaminima {} = 0, 
+       then jumps to step 9, if override: = C - {listaMaxima listaMinima U} = 0 then 
+       Step 9 returns (C) but aid = C - {listaMaxima listaMinima U} = [difference CP] 
+       return step 4 (auxiliary, C)
+    """
+
+
+    a,b = set(lMax).union(set(lMin)), set(contour)
     c = b.difference(a)
-    flag = list(a)
-    noflag = PegaNoSinalizado(list(c), contour)
-    print "etapa 3 -> lista de sinalizados:" ,flag, "lista de nao sinalizados:",noflag
+    flag, noflag = list(a), PegaNoSinalizado(list(c), contour)
     if (c == set([])):
         N+=1
         return Etapa9(contour,N)
     else:
         return Etapa4 (noflag,contour,N,lMax,lMin)
 
+
 def Etapa4 (noflag, contour, N,lmx, lmn):
-    #for i in range(len(noflag)):
+    """check which auxiliary station in C 
+     C. remove.de.C if [ai] = helper [ak] 
+     return step 5 (C, N)"""
+
+
     j = 0
     for i in range(len(contour)-1):
         if j < len(noflag):
@@ -51,16 +83,22 @@ def Etapa4 (noflag, contour, N,lmx, lmn):
                 j+=1
     return Etapa5(contour, N,lmx,lmn)
 
+
 def Etapa5 (contour, N,lmx,lmn):
+    """Here the increase of the reduction profudidade 1 occurs, ie, N = N +1
+    """
     N+=1
-    print "etapas 4 e 5 -> Novo Contorno",contour
-    print "nivel de profundidade: N = %d" %N
     return Etapa8(contour,lmx,lmn,N)
 
+
 def Etapa6 (lMax,contour):
-    i = 0
-    k = 0
-    newList = []
+    """novalistaMaxima = MAX {} listaMaxima 
+    loop if listaMaxima [al] = listaMaxima [ak] 
+    removes novalistaMaxima [al] = listaMaxima [al] 
+    return novalistaMaxima"""
+
+
+    i, k, newList = 0, 0, []
     newList.append(lMax[0])
     while (i < (len(lMax)-2)):
         if (maxima(lMax,i)):
@@ -77,10 +115,15 @@ def Etapa6 (lMax,contour):
     newList.append(lMax[len(lMax)-1])
     return newList
 
+
 def Etapa7 (lMin,contour):
-    i = 0
-    k = 0
-    newList = []
+    """novalistaMinima = MAX {} listaMinima 
+       loop if listaMinima [al] = listaMinima [ak] 
+       removes novalistaMinima [al] = listaMinima [al] 
+       return novalistaMinima"""
+
+
+    i,k, newList = 0, 0, []
     newList.append(lMin[0])
     while (i < (len(lMin)-2)):
         if (minima(lMin,i)):
@@ -97,25 +140,42 @@ def Etapa7 (lMin,contour):
     newList.append(lMin[len(lMin)-1])
     return newList
 
+
 def Etapa8 (contour, lMax, lMin, N):
-    nlMax = []
-    nlMin = []
-    nlMax = Etapa6(lMax,contour)
-    nlMin = Etapa7(lMin,contour)
-    print "etapas 6, 7 e 8 -> listademaximo: ",nlMax," listademinimo: ",nlMin
+    """Here we have an interaction that back to step 3, 
+    so that further checks occur on the new contour
+    and also check if the outline is in prime form
+    """
+
+
+    nlMax, nlMin = [], []
+    nlMax, nlMin = Etapa6(lMax,contour), Etapa7(lMin,contour)
     return Etapa3(contour,nlMax,nlMin,N)
 
-def Etapa9 (contour,N):
-    print "etapa 9 melodia reduzida: Contorno Final", contour
-    print "nivel de profundidade: N = %d" %N
 
-def TransfInput(entrada):
+def Etapa9 (contour,N):
+    """the final stage has become the new boundary"""
+
+
+    print "Contorno Final", contour
+    print "Profundidade: N = %d" %N
+
+
+def convertInput(entrada):
+    """function to modify the input to run the algorithm 
+    with code list as input is given in string"""
+
+
     seq = []
     for i in range(len(entrada)):
         seq.append(int(entrada[i]))
     return seq
 
+
 def PegaNoSinalizado(input1, input2):
+    """the quantity no flags contour"""
+
+
     saida = []
     for i in range(len(input1)):
         for j in range(len(input2)):
@@ -124,21 +184,17 @@ def PegaNoSinalizado(input1, input2):
     return saida
 
 
-### programa principal onde chamamos as funcoes acima ###
-entrada = raw_input("entre com os contorno formato de entrada ex: 1 2 3 4 (separados por um espaco): ")
+# # # Main program, a place that we call the functions above # # #
+
+entrada = raw_input("(entrada - ex: 1 2 3 4): ")
 str1 = entrada.split(" ")
 contour=[]
-contour = TransfInput(str1)
+contour = convertInput(str1)
 print "Contorno Original: ",contour
 i = 0
-# Etapa0(n)
+
+# Step 0 of the algorithm sets the depth value
 n = 0
-lmax = []
-lmin = []
-lmax = Etapa1(contour,n)
-lmin = Etapa2(contour,n)
-print "etapas 0, 1 e 2 -> N = %i" %n,"listademaximo:",lmax,"listademinimo:",lmin
+lmax, lmin = [],[]
+lmax, lmin = Etapa1(contour,n), Etapa2(contour,n)
 Etapa3 (contour, lmax, lmin, n)
-
-
-
