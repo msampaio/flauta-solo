@@ -191,6 +191,36 @@ class Source(object):
         return "<Source: {0}, {1}>".format(self.title, idCode)
 
 
+class Score(object):
+    """Class for Score objects. Scores are sources segments."""
+
+    def __init__(self):
+
+        self.source = None
+        self.piece = None
+        self.idCode = None
+        self.mscore = None
+        self.formAnalysis = None
+
+        self.timeSignature = None
+        self.meter = None
+        self.key = None
+        self.mode = None
+
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
+
+    def __repr__(self):
+        if self.idCode:
+            idCode = self.idCode
+        else:
+            idCode = None
+        return "<Score: {0}, {1}>".format(self.piece.title, idCode)
+
+
 def makeCountry(name, continent):
     """Return a Country object with the given attributes."""
 
@@ -298,3 +328,23 @@ def makeSource(idCode, title, editorObj):
     source.editor = editorObj
 
     return source
+
+
+def makeScore(sourceObj, pieceObj, idCode, mscore=None, formAnalysis=None):
+    """Return a Score object with the given attributes."""
+
+    score = Score()
+
+    score.source = sourceObj
+    score.piece = pieceObj
+    score.idCode = idCode
+    score.mscore = mscore
+    score.formAnalysis = formAnalysis
+
+    # FIXME: use music21 to get these
+    # score.timeSignature = timeSignature
+    # score.meter = meter
+    # score.key = key
+    # score.mode = mode
+
+    return score
