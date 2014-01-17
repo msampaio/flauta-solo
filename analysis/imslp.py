@@ -78,6 +78,7 @@ def download(url):
 
 def getInfo(idNumber, iType='3', retformat='json'):
     """Return a dictionary with data retrieved from IMSLP."""
+
     dic = makeDic(idNumber, iType, retformat)
     url = makeURL(dic)
     string = download(url)
@@ -88,35 +89,45 @@ def getInfo(idNumber, iType='3', retformat='json'):
 def makeImslpSource(idNumber):
     """Return an object of ImslpSource class."""
 
-
     imslpSource = ImslpSource()
     dic = getInfo(idNumber, '3')['0']
 
+    extvals = dic['extvals']
+    intvals = dic['intvals']
+
+    extSeq = (
+        ('editor', 'Editor'),
+        ('publisherInformation', 'Publisher Information'),
+        ('miscNotes', 'Misc. Notes')
+        )
+
+    scoreInfoSeq = (
+        ('description', 'description'),
+        ('uploader', 'uploader'),
+        ('id', 'index'),
+        ('timestamp', 'timestamp'),
+        ('pagecount', 'pagecount'),
+        ('rawpagecount', 'rawpagecount'),
+        ('rating', 'rating')
+        )
+
     parent = dic['parent']
-    parentComposer = parent[parent.find("(")+1:parent.find(")")]
     # extract composer from parent
+    parentComposer = parent[parent.find("(")+1:parent.find(")")]
+
     setattr(imslpSource, 'parent', parent)
     setattr(imslpSource, 'parentComposer', parentComposer)
 
-    extvals = dic['extvals']
-    setattr(imslpSource, 'editor', extvals['Editor'])
-    setattr(imslpSource, 'publisherInformation', extvals['Publisher Information'])
-    setattr(imslpSource, 'miscNotes', extvals['Misc. Notes'])
-
-    intvals = dic['intvals']
+    for extPair in extSeq:
+        _utils.dicAddAttrib(imslpSource, extvals, extPair)
 
     for k in intvals.keys():
         if k.isdigit:
             if 'index' in intvals[k]:
                 if intvals[k]['index'] == idNumber:
                     scoreInfo = intvals[k]
-                    setattr(imslpSource, 'description', scoreInfo['description'])
-                    setattr(imslpSource, 'uploader', scoreInfo['uploader'])
-                    setattr(imslpSource, 'id', scoreInfo['index'])
-                    setattr(imslpSource, 'timestamp', scoreInfo['timestamp'])
-                    setattr(imslpSource, 'pagecount', scoreInfo['pagecount'])
-                    setattr(imslpSource, 'rawpagecount', scoreInfo['rawpagecount'])
-                    setattr(imslpSource, 'rating', scoreInfo['rating'])
+                    for scoreInfoPair in scoreInfoSeq:
+                        _utils.dicAddAttrib(imslpSource, scoreInfo, scoreInfoPair)
 
     return imslpSource
 
