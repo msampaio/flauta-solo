@@ -143,7 +143,7 @@ def etapa9(contour, N):
     print "Contorno Final (", contour," %d )" % N
 
 
-def Main():
+def main():
     entrada = raw_input("(entrada - ex: 1 2 3 4): ")
     str1 = entrada.split(" ")
     contour = []
@@ -157,4 +157,4 @@ def Main():
     lmin = etapa2(contour, n)
     etapa3(contour, lmax, lmin, n)  
 # # # Main program, a place that we call the functions above # # #
-Main()  #Final process    
+main()  #Final process    
