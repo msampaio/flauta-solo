@@ -53,3 +53,11 @@ def getCfgInfo(section, item, cfgFile='.musiAnalysis.cfg'):
     config.read(path)
 
     return config.get(section, item)
+
+
+def dicAddAttrib(outputDic, inputDic, pair):
+    """Set an attribute from a input dictionary in a output one. The
+    pair is the key in both dictionaries."""
+
+    if pair[1] in inputDic:
+        setattr(outputDic, pair[0], inputDic[pair[1]])
