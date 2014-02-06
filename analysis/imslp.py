@@ -79,7 +79,7 @@ def download(url):
 def getInfo(idNumber, iType='3', retformat='json'):
     """Return a dictionary with data retrieved from IMSLP."""
 
-    dic = makeDic(idNumber, iType, retformat)
+    dic = makeDic(idNumber.lstrip('0'), iType, retformat)
     url = makeURL(dic)
     string = download(url)
 
