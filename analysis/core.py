@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import music21
+import music
 import _utils
 import imslp
 
@@ -355,13 +355,6 @@ def makeScore(sourceObj, pieceObj, idCode, mscore=None, formAnalysis=None):
 
 def makeCompleteScore(idNumber, movement=None):
 
-    basename = _utils.getCfgInfo('Scores', 'path')
-    filename = 'IF' + idNumber
-
-    if movement:
-        filename = filename + '_' + movement
-    filename = os.path.join(basename, filename + '.xml')
-
     imslpSource = imslp.makeImslpSource(idNumber)
     title = imslpSource.parent.split(' (')[0]
     composer = imslpSource.getComposer()
@@ -369,7 +362,7 @@ def makeCompleteScore(idNumber, movement=None):
 
     piece = makePiece(title, composer)
     source = makeSource(idNumber, title, editor)
-    mscore = music21.converter.parse(filename)
+    mscore = music.getScore(idNumber, movement)
 
     score = makeScore(source, piece, idNumber, mscore)
 
