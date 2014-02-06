@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+import music21
 import _utils
+import imslp
 
 
 class Country(object):
@@ -346,5 +349,28 @@ def makeScore(sourceObj, pieceObj, idCode, mscore=None, formAnalysis=None):
     # score.meter = meter
     # score.key = key
     # score.mode = mode
+
+    return score
+
+
+def makeCompleteScore(idNumber, movement=None):
+
+    basename = _utils.getCfgInfo('Scores', 'path')
+    filename = 'IF' + idNumber
+
+    if movement:
+        filename = filename + '_' + movement
+    filename = os.path.join(basename, filename + '.xml')
+
+    imslpSource = imslp.makeImslpSource(idNumber)
+    title = imslpSource.parent.split(' (')[0]
+    composer = imslpSource.getComposer()
+    editor = imslpSource.editor
+
+    piece = makePiece(title, composer)
+    source = makeSource(idNumber, title, editor)
+    mscore = music21.converter.parse(filename)
+
+    score = makeScore(source, piece, idNumber, mscore)
 
     return score
