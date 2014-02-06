@@ -344,16 +344,22 @@ def makeScore(sourceObj, pieceObj, idCode, mscore=None, formAnalysis=None):
     score.mscore = mscore
     score.formAnalysis = formAnalysis
 
-    # FIXME: use music21 to get these
-    # score.timeSignature = timeSignature
-    # score.meter = meter
-    # score.key = key
-    # score.mode = mode
+    if mscore:
+        timeSignature, meter, mode, key = music.getInfoAboutMScore(mscore)
+        score.timeSignature = timeSignature
+        score.meter = meter
+        score.key = key
+        score.mode = mode
 
     return score
 
 
 def makeCompleteScore(idNumber, movement=None):
+    """Return a complete Score object, with data retrieved from IMSLP
+    and xml score.
+
+    >>> makeCompleteScore('34491', '01')
+    """
 
     imslpSource = imslp.makeImslpSource(idNumber)
     title = imslpSource.parent.split(' (')[0]
