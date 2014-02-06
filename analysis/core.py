@@ -79,7 +79,7 @@ class Composer(object):
 
         return "<Composer: {0}, {1}, {2}--{3}>".format(self.name, bornCity, bornDate, deathDate)
 
-    def completeName(self):
+    def normalName(self):
         return ' '.join([self.prename, self.name])
 
 
@@ -115,7 +115,7 @@ class Editor(object):
 
         return "<Editor: {0}, {1}, {2}--{3}>".format(self.name, self.bornCity.country.name, bornDate, deathDate)
 
-    def completeName(self):
+    def normalName(self):
         return ' '.join([self.prename, self.name])
 
 
@@ -145,7 +145,7 @@ class Piece(object):
         return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
-        return "<Piece: {0}, {1}>".format(self.title, self.composer.completeName())
+        return "<Piece: {0}, {1}>".format(self.title, self.composer.normalName)
 
 
 class Movement(object):
