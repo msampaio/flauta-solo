@@ -4,7 +4,7 @@
 import datetime
 import os
 import ConfigParser
-
+import idcode
 
 def dateParser(dateString):
     """Return a datetime object from a dateString argument in
@@ -61,3 +61,27 @@ def dicAddAttrib(outputDic, inputDic, pair):
 
     if pair[1] in inputDic:
         setattr(outputDic, pair[0], inputDic[pair[1]])
+
+
+def splitFileName(Absfilename):
+    """Return id and song number from a given absolute path
+    filename.
+
+    >>> splitFileName('Flauta Solo/Partituras')
+    """
+
+    # FIXME: how to handle with song number and movement number?
+    basename = os.path.basename(Absfilename)
+    idCode = idcode.idCodeParser(basename)
+    idNumber = idCode['sourceId']
+    if 'sourceSongNumber' in idCode:
+        songNumber = idCode['sourceSongNumber']
+    else:
+        songNumber = None
+    return idNumber, songNumber
+
+
+def getXmlFiles(path):
+    """Return a list of xml files from a given path."""
+
+    return [f for f in os.listdir(path) if f.endswith('.xml') and f.startswith('IF')]

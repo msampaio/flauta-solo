@@ -354,6 +354,7 @@ def makeScore(sourceObj, pieceObj, idCode, mscore=None, formAnalysis=None):
     return score
 
 
+# FIXME: how to handle with song number and movement number?
 def makeCompleteScore(idNumber, movement=None):
     """Return a complete Score object, with data retrieved from IMSLP
     and xml score.
@@ -361,6 +362,7 @@ def makeCompleteScore(idNumber, movement=None):
     >>> makeCompleteScore('34491', '01')
     """
 
+    print 'Processing score id {0}, movement {1}'.format(idNumber, movement)
     imslpSource = imslp.makeImslpSource(idNumber)
     title = imslpSource.parent.split(' (')[0]
     composer = imslpSource.getComposer()
@@ -373,3 +375,12 @@ def makeCompleteScore(idNumber, movement=None):
     score = makeScore(source, piece, idNumber, mscore)
 
     return score
+
+
+def makeScoresFromPath(path):
+    """Return a list of Score objects from a given path with xml
+    files."""
+
+    files = _utils.getXmlFiles(path)
+
+    return [makeCompleteScore(*_utils.splitFileName(f)) for f in files]
