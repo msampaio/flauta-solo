@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
 
 class IdCodeError(Exception):
     def __init__(self, value):
@@ -56,18 +57,22 @@ def idCodeParser(idCode):
     idCodeDic['sourceType'] = prefix[1]
     idCodeDic['sourceId'] = prefix[2:7]
 
-    middle = prefix[7:]
-    idCodeDic['sourceExpansion'] = False
+    if prefix[-1] == 'E':
+        idCodeDic['sourceExpansion'] = True
+        prefix = prefix.rstrip('E')
+    else:
+        idCodeDic['sourceExpansion'] = False
 
-    if middle:
-        if middle[-1] == 'E':
-            idCodeDic['sourceExpansion'] = True
-        if middle[0] == '_':
-            idCodeDic['sourceSongNumber'] =  middle[1:3]
-            if idCodeDic['sourceExpansion']:
-                idCodeDic['sourceMovement'] = middle[3:-1]
-            else:
-                idCodeDic['sourceMovement'] = middle[3:]
+    if '_' in prefix:
+        middle = prefix.split('_')[1]
+
+        sourceSongNumber, sourceMovement = re.match(r"([0-9]*)([a-z]*)", middle).groups()
+
+        if sourceSongNumber != None:
+            idCodeDic['sourceSongNumber'] = sourceSongNumber
+
+        if sourceMovement != None:
+            idCodeDic['sourceMovement'] = sourceMovement
 
     try:
         idCodeChecker(idCodeDic)
