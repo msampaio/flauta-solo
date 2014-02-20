@@ -13,7 +13,7 @@ def getScore(idCode, song=None, movement=None):
     filename = 'IF' + idCode
 
     # Song test
-    if song is str:
+    if song != None:
         filename = filename + '_' + song
 
         # Movement test
