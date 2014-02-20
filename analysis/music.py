@@ -6,15 +6,20 @@ import music21
 import _utils
 
 
-def getScore(idCode, movement=None):
+def getScore(idCode, song=None, movement=None):
     """Return a Music21 score from a given idCode."""
 
     base = _utils.getCfgInfo('Scores', 'path')
     filename = 'IF' + idCode
 
-    # Movement test
-    if movement:
-        filename = filename + '_' + movement
+    # Song test
+    if song is str:
+        filename = filename + '_' + song
+
+        # Movement test
+        if movement:
+            filename = filename + movement
+
     path = os.path.join(base, filename + '.xml')
 
     # Xml file existence test

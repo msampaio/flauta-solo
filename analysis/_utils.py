@@ -63,22 +63,29 @@ def dicAddAttrib(outputDic, inputDic, pair):
         setattr(outputDic, pair[0], inputDic[pair[1]])
 
 
-def splitFileName(Absfilename):
+def splitFileName(absFilename):
     """Return id and song number from a given absolute path
     filename.
 
     >>> splitFileName('Flauta Solo/Partituras')
     """
 
-    # FIXME: how to handle with song number and movement number?
-    basename = os.path.basename(Absfilename)
-    idCode = idcode.idCodeParser(basename)
+    basename = os.path.basename(absFilename)
+
+    idCode = idcode.idCodeParser(basename.strip('.xml'))
     idNumber = idCode['sourceId']
+
     if 'sourceSongNumber' in idCode:
         songNumber = idCode['sourceSongNumber']
     else:
         songNumber = None
-    return idNumber, songNumber
+
+    if 'sourceMovement' in idCode:
+        movement = idCode['sourceMovement']
+    else:
+        movement = None
+
+    return idNumber, songNumber, movement
 
 
 def getXmlFiles(path):
