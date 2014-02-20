@@ -67,10 +67,10 @@ def idCodeParser(idCode):
 
         sourceSongNumber, sourceMovement = re.match(r"([0-9]*)([a-z]*)", middle).groups()
 
-        if sourceSongNumber != None:
+        if sourceSongNumber is not None:
             idCodeDic['sourceSongNumber'] = sourceSongNumber
 
-        if sourceMovement != None:
+        if sourceMovement is not None:
             idCodeDic['sourceMovement'] = sourceMovement
 
     if 'pre_prefix' in locals():

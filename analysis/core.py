@@ -363,6 +363,7 @@ def makeCompleteScore(idNumber, song=None, movement=None):
     """
 
     print 'Processing score id {0}, song {1}, movement {2}'.format(idNumber, song, movement)
+
     imslpSource = imslp.makeImslpSource(idNumber)
     title = imslpSource.parent.split(' (')[0]
     composer = imslpSource.getComposer()

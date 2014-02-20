@@ -6,6 +6,7 @@ import os
 import ConfigParser
 import idcode
 
+
 def dateParser(dateString):
     """Return a datetime object from a dateString argument in
     format YYYYMMDD."""
