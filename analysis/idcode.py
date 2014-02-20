@@ -55,7 +55,6 @@ def idCodeParser(idCode):
 
     idCodeDic['sourceOrigin'] = prefix[0]
     idCodeDic['sourceType'] = prefix[1]
-    idCodeDic['sourceId'] = prefix[2:7]
 
     if prefix[-1] == 'E':
         idCodeDic['sourceExpansion'] = True
@@ -64,7 +63,7 @@ def idCodeParser(idCode):
         idCodeDic['sourceExpansion'] = False
 
     if '_' in prefix:
-        middle = prefix.split('_')[1]
+        pre_prefix, middle = prefix.split('_')
 
         sourceSongNumber, sourceMovement = re.match(r"([0-9]*)([a-z]*)", middle).groups()
 
@@ -73,6 +72,11 @@ def idCodeParser(idCode):
 
         if sourceMovement != None:
             idCodeDic['sourceMovement'] = sourceMovement
+
+    if 'pre_prefix' in locals():
+        idCodeDic['sourceId'] = pre_prefix[2:]
+    else:
+        idCodeDic['sourceId'] = re.match(r"([0-9]*)([a-z]*)", prefix[2:]).groups()[0]
 
     try:
         idCodeChecker(idCodeDic)
