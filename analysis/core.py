@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+import music
 import _utils
+import imslp
 
 
 class Country(object):
     """Class for Country objects."""
-    
+
     def __init__(self):
 
         self.name = None
@@ -24,7 +27,7 @@ class Country(object):
 
 class City(Country):
     """Class for City objects."""
-    
+
     def __init__(self):
 
         self.name = None
@@ -43,7 +46,7 @@ class City(Country):
 
 class Composer(object):
     """Class for Composer objects."""
-    
+
     def __init__(self):
 
         self.name = None
@@ -54,7 +57,6 @@ class Composer(object):
         self.deathCity = None
         self.deathDate = None
         self.mainInstrument = None
-        self.commonStyle = None
 
     def __eq__(self, other):
         return _utils.equalityComparisons(self, other)
@@ -80,7 +82,7 @@ class Composer(object):
 
         return "<Composer: {0}, {1}, {2}--{3}>".format(self.name, bornCity, bornDate, deathDate)
 
-    def completeName(self):
+    def normalName(self):
         return ' '.join([self.prename, self.name])
 
 
@@ -116,7 +118,7 @@ class Editor(object):
 
         return "<Editor: {0}, {1}, {2}--{3}>".format(self.name, self.bornCity.country.name, bornDate, deathDate)
 
-    def completeName(self):
+    def normalName(self):
         return ' '.join([self.prename, self.name])
 
 
@@ -146,7 +148,7 @@ class Piece(object):
         return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
-        return "<Piece: {0}, {1}>".format(self.title, self.composer.completeName())
+        return "<Piece: {0}, {1}>".format(self.title, self.composer.normalName)
 
 
 class Movement(object):
@@ -174,8 +176,7 @@ class Source(object):
 
     def __init__(self):
 
-        self.piece = None
-        self.info = None
+        self.title = None
         self.editor = None
         self.idCode = None
 
@@ -186,7 +187,41 @@ class Source(object):
         return _utils.equalityComparisons(self, other, True)
 
     def __repr__(self):
-        return "<Source: {0}, {1}>".format(self.piece, self.info)
+        if self.idCode:
+            idCode = self.idCode
+        else:
+            idCode = None
+        return "<Source: {0}, {1}>".format(self.title, idCode)
+
+
+class Score(object):
+    """Class for Score objects. Scores are sources segments."""
+
+    def __init__(self):
+
+        self.source = None
+        self.piece = None
+        self.idCode = None
+        self.mscore = None
+        self.formAnalysis = None
+
+        self.timeSignature = None
+        self.meter = None
+        self.key = None
+        self.mode = None
+
+    def __eq__(self, other):
+        return _utils.equalityComparisons(self, other)
+
+    def __ne__(self, other):
+        return _utils.equalityComparisons(self, other, True)
+
+    def __repr__(self):
+        if self.idCode:
+            idCode = self.idCode
+        else:
+            idCode = None
+        return "<Score: {0}, {1}>".format(self.piece.title, idCode)
 
 
 def makeCountry(name, continent):
@@ -210,7 +245,7 @@ def makeCity(name, countryObj, province=None):
     return city
 
 
-def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None, commonStyle=None):
+def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deathCityObj=None, deathDate=None, mainInstrument=None):
     """Return a Composer object with the given attributes. The dates
     must be in a string with the format YYYYMMDD."""
 
@@ -220,7 +255,6 @@ def makeComposer(completeName, gender='M', bornCityObj=None, bornDate=None, deat
     composer.bornCity = bornCityObj
     composer.deathCity = deathCityObj
     composer.mainInstrument = mainInstrument
-    composer.commonStyle = commonStyle
 
     if bornDate:
         composer.bornDate = _utils.dateParser(bornDate)
@@ -287,14 +321,67 @@ def makeMovement(title, tempo, tonality, subtitle=None):
     return movement
 
 
-def makeSource(idCode, pieceObj, editorObj, info):
+def makeSource(idCode, title, editorObj):
     """Return a Source object with the given attributes."""
 
     source = Source()
 
     source.idCode = idCode
-    source.piece = pieceObj
-    source.info = info
+    source.title = title
     source.editor = editorObj
 
     return source
+
+
+def makeScore(sourceObj, pieceObj, idCode, mscore=None, formAnalysis=None):
+    """Return a Score object with the given attributes."""
+
+    score = Score()
+
+    score.source = sourceObj
+    score.piece = pieceObj
+    score.idCode = idCode
+    score.mscore = mscore
+    score.formAnalysis = formAnalysis
+
+    if mscore:
+        timeSignature, meter, mode, key = music.getInfoAboutMScore(mscore)
+        score.timeSignature = timeSignature
+        score.meter = meter
+        score.key = key
+        score.mode = mode
+
+    return score
+
+
+# FIXME: how to handle with song number and movement number?
+def makeCompleteScore(idNumber, song=None, movement=None):
+    """Return a complete Score object, with data retrieved from IMSLP
+    and xml score.
+
+    >>> makeCompleteScore('34491', '01')
+    """
+
+    print 'Processing score id {0}, song {1}, movement {2}'.format(idNumber, song, movement)
+
+    imslpSource = imslp.makeImslpSource(idNumber)
+    title = imslpSource.parent.split(' (')[0]
+    composer = imslpSource.getComposer()
+    editor = imslpSource.editor
+
+    piece = makePiece(title, composer)
+    source = makeSource(idNumber, title, editor)
+    mscore = music.getScore(idNumber, song, movement)
+
+    score = makeScore(source, piece, idNumber, mscore)
+
+    return score
+
+
+def makeScoresFromPath(path):
+    """Return a list of Score objects from a given path with xml
+    files."""
+
+    files = _utils.getXmlFiles(path)
+
+    return [makeCompleteScore(*_utils.splitFileName(f)) for f in files]

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
 
 class IdCodeError(Exception):
     def __init__(self, value):
@@ -54,20 +55,28 @@ def idCodeParser(idCode):
 
     idCodeDic['sourceOrigin'] = prefix[0]
     idCodeDic['sourceType'] = prefix[1]
-    idCodeDic['sourceId'] = prefix[2:7]
 
-    middle = prefix[7:]
-    idCodeDic['sourceExpansion'] = False
+    if prefix[-1] == 'E':
+        idCodeDic['sourceExpansion'] = True
+        prefix = prefix.rstrip('E')
+    else:
+        idCodeDic['sourceExpansion'] = False
 
-    if middle:
-        if middle[-1] == 'E':
-            idCodeDic['sourceExpansion'] = True
-        if middle[0] == '_':
-            idCodeDic['sourceSongNumber'] =  middle[1:3]
-            if idCodeDic['sourceExpansion']:
-                idCodeDic['sourceMovement'] = middle[3:-1]
-            else:
-                idCodeDic['sourceMovement'] = middle[3:]
+    if '_' in prefix:
+        pre_prefix, middle = prefix.split('_')
+
+        sourceSongNumber, sourceMovement = re.match(r"([0-9]*)([a-z]*)", middle).groups()
+
+        if sourceSongNumber is not None:
+            idCodeDic['sourceSongNumber'] = sourceSongNumber
+
+        if sourceMovement is not None:
+            idCodeDic['sourceMovement'] = sourceMovement
+
+    if 'pre_prefix' in locals():
+        idCodeDic['sourceId'] = pre_prefix[2:]
+    else:
+        idCodeDic['sourceId'] = re.match(r"([0-9]*)([a-z]*)", prefix[2:]).groups()[0]
 
     try:
         idCodeChecker(idCodeDic)

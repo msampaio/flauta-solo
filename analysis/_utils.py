@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import os
+import ConfigParser
+import idcode
 
 
 def dateParser(dateString):
@@ -40,3 +43,53 @@ def equalityComparisons(objectOne, objectTwo, inequality=False):
             return not all(comparisons)
         else:
             return all(comparisons)
+
+
+def getCfgInfo(section, item, cfgFile='.musiAnalysis.cfg'):
+    """Return a given item from a section in config file."""
+
+    basename = os.path.expanduser('~')
+    path = os.path.join(basename, cfgFile)
+    config = ConfigParser.ConfigParser()
+    config.read(path)
+
+    return config.get(section, item)
+
+
+def dicAddAttrib(outputDic, inputDic, pair):
+    """Set an attribute from a input dictionary in a output one. The
+    pair is the key in both dictionaries."""
+
+    if pair[1] in inputDic:
+        setattr(outputDic, pair[0], inputDic[pair[1]])
+
+
+def splitFileName(absFilename):
+    """Return id and song number from a given absolute path
+    filename.
+
+    >>> splitFileName('Flauta Solo/Partituras')
+    """
+
+    basename = os.path.basename(absFilename)
+
+    idCode = idcode.idCodeParser(basename.strip('.xml'))
+    idNumber = idCode['sourceId']
+
+    if 'sourceSongNumber' in idCode:
+        songNumber = idCode['sourceSongNumber']
+    else:
+        songNumber = None
+
+    if 'sourceMovement' in idCode:
+        movement = idCode['sourceMovement']
+    else:
+        movement = None
+
+    return idNumber, songNumber, movement
+
+
+def getXmlFiles(path):
+    """Return a list of xml files from a given path."""
+
+    return [f for f in os.listdir(path) if f.endswith('.xml') and f.startswith('IF')]

@@ -43,7 +43,6 @@ class TestUtils(unittest.TestCase):
         deathCityObj = core.makeCity('Leipzig', country)
         deathDate = '17500728'
         mainInstrument = 'Organ'
-        commonStyle = 'All'
 
         composer = core.Composer()
         composer.prename, composer.name = _utils.nameParser(completeName)
@@ -53,9 +52,9 @@ class TestUtils(unittest.TestCase):
         composer.deathCity = deathCityObj
         composer.deathDate = _utils.dateParser(deathDate)
         composer.mainInstrument = mainInstrument
-        composer.commonStyle = commonStyle
-        args1 = [completeName, gender, bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument, commonStyle]
-        args2 = [completeName, 'F', bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument, commonStyle]
+
+        args1 = [completeName, gender, bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument]
+        args2 = [completeName, 'F', bornCityObj, bornDate, deathCityObj, deathDate, mainInstrument]
 
         self.assertEqual(core.makeComposer(*args1), composer)
         self.assertNotEqual(core.makeComposer(*args2), composer)
@@ -142,18 +141,16 @@ class TestUtils(unittest.TestCase):
     def test_makeSource(self):
         composer = core.makeComposer('Johann Sebastian Bach')
         editor = core.makeEditor('Michele Giulianini')
-        piece = core.makePiece('Partita in A minor', composer)
+        title = "Partitas"
         idCode = 'IF05673a'
-        info = 'Michele Giulianini'
 
         source = core.Source()
         source.idCode = idCode
-        source.piece = piece
-        source.info = info
+        source.title = title
         source.editor = editor
 
-        self.assertEqual(core.makeSource(idCode, piece, editor, info), source)
-        self.assertNotEqual(core.makeSource('IF05673b', piece, editor, info), source)
+        self.assertEqual(core.makeSource(idCode, title, editor), source)
+        self.assertNotEqual(core.makeSource('IF05673b', title, editor), source)
 
 if __name__ == '__main__':
     unittest.main()
