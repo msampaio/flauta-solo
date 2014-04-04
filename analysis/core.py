@@ -79,11 +79,18 @@ def makeScore(sourceObj, pieceObj, idCode, composer, mscore=None):
     score.mscore = mscore
 
     if mscore:
-        timeSignature, meter, mode, key = music.getInfoAboutMScore(mscore)
-        score.timeSignature = timeSignature
-        score.meter = meter
-        score.key = key
-        score.mode = mode
+        dic = music.getInfoAboutMScore(mscore)
+
+        score.timeSignature = dic['timeSignature']
+        score.meter = dic['meter']
+        score.key = dic['key']
+        score.mode = dic['mode']
+        score.notes = dic['notes']
+        score.pitches = dic['pitches']
+        score.durations = dic['durations']
+        score.pitchContour = dic['pitchContour']
+        score.durationContour = dic['durationContour']
+        score.ambitus = dic['ambitus']
 
     return score
 
