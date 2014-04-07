@@ -37,13 +37,10 @@ def getScore(idCode, song=None, movement=None):
 
     path = os.path.join(base, filename + '.xml')
 
-    # Xml file existence test
-    if os.path.exists(path):
-        mScore = music21.converter.parse(path)
-    else:
-        mScore = None
+    # expand the path in case it's in the format ~/myfile
+    expanded_path = os.path.expanduser(path)
 
-    return mScore
+    return music21.converter.parse(expanded_path) if os.path.exists(expanded_path) else None
 
 
 def getInfoAboutMScore(mscore):
