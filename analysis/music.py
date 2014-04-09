@@ -6,26 +6,26 @@ import music21
 import _utils
 
 
-def getContour(numberSequence):
+def get_contour(number_sequence):
     """Return a flatten contour."""
 
     transition = {}
-    for new, old in enumerate(sorted(list(set(numberSequence)))):
+    for new, old in enumerate(sorted(list(set(number_sequence)))):
         transition[old] = new
 
-    return [transition[new] for new in numberSequence]
+    return [transition[new] for new in number_sequence]
 
 
-def getChromaticAmbitus(pitches):
+def get_chromatic_ambitus(pitches):
     """Return an integer with ambitus chromatic semitones."""
 
     return max(pitches) - min(pitches)
 
-def getScore(idCode, song=None, movement=None):
-    """Return a Music21 score from a given idCode."""
+def get_score(id_code, song=None, movement=None):
+    """Return a Music21 score from a given id_code."""
 
-    base = _utils.getCfgInfo('Scores', 'path')
-    filename = 'IF' + idCode
+    base = _utils.get_cfg_info('Scores', 'path')
+    filename = 'IF' + id_code
 
     # Song test
     if song is not None:
@@ -43,7 +43,7 @@ def getScore(idCode, song=None, movement=None):
     return music21.converter.parse(expanded_path) if os.path.exists(expanded_path) else None
 
 
-def getInfoAboutMScore(mscore):
+def get_info_about_mscore(mscore):
     """Insert Music information such as Time Signature in Source
     object."""
 
@@ -53,9 +53,9 @@ def getInfoAboutMScore(mscore):
     part = mscore.getElementsByClass('Part')[0]
     measures = part.getElementsByClass('Measure')
     m1 = measures[0]
-    timeSignatureObj = m1.getElementsByClass('TimeSignature')[0]
-    timeSignature = '/'.join([str(i) for i in timeSignatureObj.numerator, timeSignatureObj.denominator])
-    meter = timeSignatureObj.beatCountName
+    time_signature_obj = m1.getElementsByClass('TimeSignature')[0]
+    time_signature = '/'.join([str(i) for i in time_signature_obj.numerator, time_signature_obj.denominator])
+    meter = time_signature_obj.beatCountName
     keyObj, mode = m1.getElementsByClass('KeySignature')[0].pitchAndMode
     key = keyObj.fullName
 
@@ -72,15 +72,15 @@ def getInfoAboutMScore(mscore):
         durations.append(note.duration.quarterLength)
 
     dic = {}
-    dic['timeSignature'] = timeSignature
+    dic['time_signature'] = time_signature
     dic['meter'] = meter
     dic['mode'] = mode
     dic['key'] = key
     dic['notes'] = notes
     dic['pitches'] = pitches
     dic['durations'] = durations
-    dic['pitchContour'] = getContour(pitches)
-    dic['durationContour'] = getContour(durations)
-    dic['ambitus'] = getChromaticAmbitus(pitches)
+    dic['pitch_contour'] = get_contour(pitches)
+    dic['duration_contour'] = get_contour(durations)
+    dic['ambitus'] = get_chromatic_ambitus(pitches)
 
     return dic

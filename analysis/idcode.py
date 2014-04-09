@@ -10,100 +10,100 @@ class IdCodeError(Exception):
         return repr(self.value)
 
 
-def idCodeChecker(idCodeDic):
+def id_code_checker(id_code_dic):
 
     n = [str(x) for x in range(100)]
     n.append(None)
     w = list('abcdefghijklmnopqrstuvwxyz')
     w.append(None)
 
-    conditionsOne = [
-        idCodeDic['sourceOrigin'] in list('EI'),
-        idCodeDic['sourceType'] in list('FT'),
-        len(idCodeDic['sourceId']) == 5
+    conditions_one = [
+        id_code_dic['source_origin'] in list('EI'),
+        id_code_dic['source_type'] in list('FT'),
+        len(id_code_dic['source_id']) == 5
         ]
 
-    conditionsTwo = [
-        not 'sourceSongNumber' in idCodeDic or idCodeDic['sourceSongNumber'] in n,
-        not 'sourceMovement' in idCodeDic or idCodeDic['sourceMovement'] in w,
-        idCodeDic['sourceExpansion'] in (True, False)
+    conditions_two = [
+        not 'source_song_number' in id_code_dic or id_code_dic['source_song_number'] in n,
+        not 'source_movement' in id_code_dic or id_code_dic['source_movement'] in w,
+        id_code_dic['source_expansion'] in (True, False)
         ]
 
-    if not all(conditionsOne) and all(conditionsTwo):
-        raise IdCodeError('The given idCode is wrong.')
+    if not all(conditions_one) and all(conditions_two):
+        raise IdCodeError('The given id_code is wrong.')
 
 
-def idCodeParser(idCode):
-    """Return a dictionary with idCode parsed.
+def id_code_parser(id_code):
+    """Return a dictionary with id_code parsed.
 
-    >>> idCodeParser('ET00001_12aE')
-    {'sourceExpansion': True,
-    'sourceId': '00001',
-    'sourceMovement': 'a',
-    'sourceOrigin': 'E',
-    'sourceSongNumber': '1',
-    'sourceType': 'T'}
+    >>> id_code_parser('ET00001_12aE')
+    {'source_expansion': True,
+    'source_id': '00001',
+    'source_movement': 'a',
+    'source_origin': 'E',
+    'source_song_number': '1',
+    'source_type': 'T'}
     """
 
-    splitted = idCode.split('-')
+    splitted = id_code.split('-')
     prefix = splitted[0]
 
-    idCodeDic = {}
+    id_code_dic = {}
 
     if len(splitted) > 1:
-        idCodeDic['sourceSuffix'] = ' '.join(splitted[1:])
+        id_code_dic['source_suffix'] = ' '.join(splitted[1:])
 
-    idCodeDic['sourceOrigin'] = prefix[0]
-    idCodeDic['sourceType'] = prefix[1]
+    id_code_dic['source_origin'] = prefix[0]
+    id_code_dic['source_type'] = prefix[1]
 
     if prefix[-1] == 'E':
-        idCodeDic['sourceExpansion'] = True
+        id_code_dic['source_expansion'] = True
         prefix = prefix.rstrip('E')
     else:
-        idCodeDic['sourceExpansion'] = False
+        id_code_dic['source_expansion'] = False
 
     if '_' in prefix:
         pre_prefix, middle = prefix.split('_')
 
-        sourceSongNumber, sourceMovement = re.match(r"([0-9]*)([a-z]*)", middle).groups()
+        source_song_number, source_movement = re.match(r"([0-9]*)([a-z]*)", middle).groups()
 
-        if sourceSongNumber is not None:
-            idCodeDic['sourceSongNumber'] = sourceSongNumber
+        if source_song_number is not None:
+            id_code_dic['source_song_number'] = source_song_number
 
-        if sourceMovement is not None:
-            idCodeDic['sourceMovement'] = sourceMovement
+        if source_movement is not None:
+            id_code_dic['source_movement'] = source_movement
 
     if 'pre_prefix' in locals():
-        idCodeDic['sourceId'] = pre_prefix[2:]
+        id_code_dic['source_id'] = pre_prefix[2:]
     else:
-        idCodeDic['sourceId'] = re.match(r"([0-9]*)([a-z]*)", prefix[2:]).groups()[0]
+        id_code_dic['source_id'] = re.match(r"([0-9]*)([a-z]*)", prefix[2:]).groups()[0]
 
     try:
-        idCodeChecker(idCodeDic)
-        return idCodeDic
+        id_code_checker(id_code_dic)
+        return id_code_dic
     except IdCodeError():
         print 'IdCode Error'
 
 
-def idCodeMaker(sourceOrigin, sourceType, sourceId, sourceSongNumber=None, sourceMovement=None, sourceExpansion=False, sourceSuffix=None):
-    """Return an idCode in a string.
+def id_code_maker(source_origin, source_type, source_id, source_song_number=None, source_movement=None, source_expansion=False, source_suffix=None):
+    """Return an id_code in a string.
 
-    >>> idCodeMaker('E', 'T', '00001', '23', 'a', True, 'Foobar')
+    >>> id_code_maker('E', 'T', '00001', '23', 'a', True, 'Foobar')
     'ET00001_23aE-Foobar'
     """
 
-    prefix = ''.join([sourceOrigin, sourceType, sourceId])
+    prefix = ''.join([source_origin, source_type, source_id])
 
     optionals = []
 
-    if sourceSongNumber:
-        optionals.append('_' + sourceSongNumber)
-    if sourceMovement:
-        optionals.append(sourceMovement)
-    if sourceExpansion:
+    if source_song_number:
+        optionals.append('_' + source_song_number)
+    if source_movement:
+        optionals.append(source_movement)
+    if source_expansion:
         optionals.append('E')
-    if sourceSuffix:
-        optionals.append('-' + sourceSuffix)
+    if source_suffix:
+        optionals.append('-' + source_suffix)
 
     suffix = ''.join(optionals)
 

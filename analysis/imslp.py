@@ -15,19 +15,19 @@ class ImslpSource(object):
         self.id = None
 
     def __eq__(self, other):
-        return _utils.equalityComparisons(self, other)
+        return _utils.equality_comparisons(self, other)
 
     def __ne__(self, other):
-        return _utils.equalityComparisons(self, other, True)
+        return _utils.equality_comparisons(self, other, True)
 
     def __repr__(self):
         return "<ImslpSource: {0}>".format(self.id)
 
-    def getComposer(self):
+    def get_composer(self):
         """Return the source composer. Retrieves from IMSLP
         database."""
 
-        return makeImslpComposer(self.parentComposer)
+        return make_imslp_composer(self.parent_composer)
 
 
 class ImslpComposer(object):
@@ -35,19 +35,19 @@ class ImslpComposer(object):
 
     def __init__(self):
 
-        self.normalName = None
+        self.normal_name = None
 
     def __eq__(self, other):
-        return _utils.equalityComparisons(self, other)
+        return _utils.equality_comparisons(self, other)
 
     def __ne__(self, other):
-        return _utils.equalityComparisons(self, other, True)
+        return _utils.equality_comparisons(self, other, True)
 
     def __repr__(self):
-        return "<ImslpComposer: {0}>".format(unicode(self.normalName).encode('utf-8'))
+        return "<ImslpComposer: {0}>".format(unicode(self.normal_name).encode('utf-8'))
 
 
-def makeURL(dic):
+def make_url(dic):
     initURL = 'http://imslp.org/imslpscripts/API.ISCR.php?'
     data = []
     for k, v in dic.items():
@@ -56,14 +56,14 @@ def makeURL(dic):
     return initURL + '/'.join(data)
 
 
-def makeDic(idNumber, iType='3', retformat='json'):
+def make_dic(id_number, i_type='3', retformat='json'):
     dic = {}
-    dic['account'] = _utils.getCfgInfo('Imslp', 'user')
-    dic['type'] = iType
-    if iType == '1':
-        idNumber = 'Category:' + idNumber
+    dic['account'] = _utils.get_cfg_info('Imslp', 'user')
+    dic['type'] = i_type
+    if i_type == '1':
+        id_number = 'Category:' + id_number
 
-    dic['id'] = base64.b64encode(idNumber)
+    dic['id'] = base64.b64encode(id_number)
     dic['disclaimer'] = 'accepted'
     dic['retformat'] = retformat
 
@@ -76,32 +76,32 @@ def download(url):
     return html
 
 
-def getInfo(idNumber, iType='3', retformat='json'):
+def get_info(id_number, i_type='3', retformat='json'):
     """Return a dictionary with data retrieved from IMSLP."""
 
-    dic = makeDic(idNumber.lstrip('0'), iType, retformat)
-    url = makeURL(dic)
+    dic = make_dic(id_number.lstrip('0'), i_type, retformat)
+    url = make_url(dic)
     string = download(url)
 
     return json.loads(string)
 
 
-def makeImslpSource(idNumber):
+def make_imslp_source(id_number):
     """Return an object of ImslpSource class."""
 
-    imslpSource = ImslpSource()
-    dic = getInfo(idNumber, '3')['0']
+    imslp_source = ImslpSource()
+    dic = get_info(id_number, '3')['0']
 
     extvals = dic['extvals']
     intvals = dic['intvals']
 
-    extSeq = (
+    ext_seq = (
         ('editor', 'Editor'),
         ('publisherInformation', 'Publisher Information'),
         ('miscNotes', 'Misc. Notes')
         )
 
-    scoreInfoSeq = (
+    score_info_seq = (
         ('description', 'description'),
         ('uploader', 'uploader'),
         ('id', 'index'),
@@ -113,36 +113,36 @@ def makeImslpSource(idNumber):
 
     parent = dic['parent']
     # extract composer from parent
-    parentComposer = parent[parent.find("(")+1:parent.find(")")]
+    parent_composer = parent[parent.find("(")+1:parent.find(")")]
 
-    setattr(imslpSource, 'parent', parent)
-    setattr(imslpSource, 'parentComposer', parentComposer)
+    setattr(imslp_source, 'parent', parent)
+    setattr(imslp_source, 'parent_composer', parent_composer)
 
-    for extPair in extSeq:
-        _utils.dicAddAttrib(imslpSource, extvals, extPair)
+    for ext_pair in ext_seq:
+        _utils.dic_add_attrib(imslp_source, extvals, ext_pair)
 
     for k in intvals.keys():
         if k.isdigit:
             if 'index' in intvals[k]:
-                if intvals[k]['index'] == idNumber:
-                    scoreInfo = intvals[k]
-                    for scoreInfoPair in scoreInfoSeq:
-                        _utils.dicAddAttrib(imslpSource, scoreInfo, scoreInfoPair)
+                if intvals[k]['index'] == id_number:
+                    score_info = intvals[k]
+                    for score_info_pair in score_info_seq:
+                        _utils.dic_add_attrib(imslp_source, score_info, score_info_pair)
 
-    return imslpSource
+    return imslp_source
 
 
-def makeImslpComposer(idNumber):
+def make_imslp_composer(id_number):
     """Return an object of ImslpComposer class."""
 
-    imslpComposer = ImslpComposer()
-    dic = getInfo(unicode(idNumber).encode('utf-8'), '1')['0']
+    imslp_composer = ImslpComposer()
+    dic = get_info(unicode(id_number).encode('utf-8'), '1')['0']
 
     parent = dic['parent']
     extvals = dic['extvals']
     intvals = dic['intvals']
 
-    extSeq = (('birthDate', 'Birth Date'),
+    ext_seq = (('birthDate', 'Birth Date'),
               ('bornDay', 'Born Day'),
               ('bornMonth', 'Born Month'),
               ('bornYear', 'Born Year'),
@@ -156,17 +156,17 @@ def makeImslpComposer(idNumber):
 
     intSeq = (('firstName', 'firstname'),
               ('lastName', 'lastname'),
-              ('normalName', 'normalname'),
+              ('normal_name', 'normalname'),
               ('pictureLinkRaw', 'picturelinkraw'),
               ('rawCats', 'rawcats'),
               ('totalDate', 'totaldate'))
 
-    setattr(imslpComposer, 'parent', parent)
+    setattr(imslp_composer, 'parent', parent)
 
-    for extPair in extSeq:
-        _utils.dicAddAttrib(imslpComposer, extvals, extPair)
+    for ext_pair in ext_seq:
+        _utils.dic_add_attrib(imslp_composer, extvals, ext_pair)
 
-    for intPair in intSeq:
-        _utils.dicAddAttrib(imslpComposer, intvals, intPair)
+    for int_pair in intSeq:
+        _utils.dic_add_attrib(imslp_composer, intvals, int_pair)
 
-    return imslpComposer
+    return imslp_composer

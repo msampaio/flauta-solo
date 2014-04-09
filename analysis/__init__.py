@@ -1,2 +1,2 @@
 # functions
-from core import makeCompleteScore
+from core import make_complete_score

@@ -16,13 +16,13 @@ class Piece(object):
         self.composer = None
 
     def __eq__(self, other):
-        return _utils.equalityComparisons(self, other)
+        return _utils.equality_comparisons(self, other)
 
     def __ne__(self, other):
-        return _utils.equalityComparisons(self, other, True)
+        return _utils.equality_comparisons(self, other, True)
 
     def __repr__(self):
-        return "<Piece: {0}, {1}>".format(self.title, self.composer.normalName)
+        return "<Piece: {0}, {1}>".format(self.title, self.composer.normal_name)
 
 
 class Score(object):
@@ -32,30 +32,30 @@ class Score(object):
 
         self.source = None
         self.piece = None
-        self.idCode = None
+        self.id_code = None
         self.composer = None
         self.mscore = None
 
-        self.timeSignature = None
+        self.time_signature = None
         self.meter = None
         self.key = None
         self.mode = None
 
     def __eq__(self, other):
-        return _utils.equalityComparisons(self, other)
+        return _utils.equality_comparisons(self, other)
 
     def __ne__(self, other):
-        return _utils.equalityComparisons(self, other, True)
+        return _utils.equality_comparisons(self, other, True)
 
     def __repr__(self):
-        if self.idCode:
-            idCode = self.idCode
+        if self.id_code:
+            id_code = self.id_code
         else:
-            idCode = None
-        return "<Score: {0}, {1}>".format(self.piece.title, idCode)
+            id_code = None
+        return "<Score: {0}, {1}>".format(self.piece.title, id_code)
 
 
-def makePiece(title, composer):
+def make_piece(title, composer):
     """Return a Piece object with the given attributes. The dates must
     be in a string with the format YYYYMMDD."""
 
@@ -67,62 +67,62 @@ def makePiece(title, composer):
     return piece
 
 
-def makeScore(sourceObj, pieceObj, idCode, composer, mscore=None):
+def makeScore(source_obj, piece_obj, id_code, composer, mscore=None):
     """Return a Score object with the given attributes."""
 
     score = Score()
 
-    score.source = sourceObj
-    score.piece = pieceObj
-    score.idCode = idCode
+    score.source = source_obj
+    score.piece = piece_obj
+    score.id_code = id_code
     score.composer = composer
     score.mscore = mscore
 
     if mscore:
-        dic = music.getInfoAboutMScore(mscore)
+        dic = music.get_info_about_mscore(mscore)
 
-        score.timeSignature = dic['timeSignature']
+        score.time_signature = dic['time_signature']
         score.meter = dic['meter']
         score.key = dic['key']
         score.mode = dic['mode']
         score.notes = dic['notes']
         score.pitches = dic['pitches']
         score.durations = dic['durations']
-        score.pitchContour = dic['pitchContour']
-        score.durationContour = dic['durationContour']
+        score.pitch_contour = dic['pitch_contour']
+        score.duration_contour = dic['duration_contour']
         score.ambitus = dic['ambitus']
 
     return score
 
 
 # FIXME: how to handle with song number and movement number?
-def makeCompleteScore(idNumber, song=None, movement=None):
+def make_complete_score(id_number, song=None, movement=None):
     """Return a complete Score object, with data retrieved from IMSLP
     and xml score.
 
-    >>> makeCompleteScore('34491', '01')
+    >>> make_complete_score('34491', '01')
     """
 
-    print 'Processing score id {0}, song {1}, movement {2}'.format(idNumber, song, movement)
+    print 'Processing score id {0}, song {1}, movement {2}'.format(id_number, song, movement)
 
-    imslpSource = imslp.makeImslpSource(idNumber)
-    title = imslpSource.parent.split(' (')[0]
-    composer = imslpSource.getComposer()
-    editor = imslpSource.editor
+    imslp_source = imslp.make_imslp_source(id_number)
+    title = imslp_source.parent.split(' (')[0]
+    composer = imslp_source.get_composer()
+    editor = imslp_source.editor
 
-    piece = makePiece(title, composer)
-    mscore = music.getScore(idNumber, song, movement)
-    score = makeScore(imslpSource, piece, idNumber, composer, mscore)
+    piece = make_piece(title, composer)
+    mscore = music.get_score(id_number, song, movement)
+    score = makeScore(imslp_source, piece, id_number, composer, mscore)
 
     return score
 
 
-def makeScoresFromPath(path=None):
+def make_scores_from_path(path=None):
     """Return a list of Score objects from a given path with xml
     files."""
 
     if not path:
-        path = _utils.getCfgInfo('Scores', 'path')
-    files = _utils.getXmlFiles(path)
+        path = _utils.get_cfg_info('Scores', 'path')
+    files = _utils.get_xml_files(path)
 
-    return [makeCompleteScore(*_utils.splitFileName(f)) for f in files]
+    return [make_complete_score(*_utils.split_filename(f)) for f in files]
