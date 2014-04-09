@@ -73,7 +73,6 @@ parentComposer.parent_composer
 iType.i_type
 imslpComposer.imslp_composer
 numberSequence.number_sequence
-filePath.file_path
 classOne.class_one
 classTwo.class_two
 classThree.class_three
