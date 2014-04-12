@@ -14,6 +14,9 @@ push:
 deploy: push
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make restart-server"
 
+remote-update-static-files:
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage.py collectstatic -v0 --noinput"
+	
 remote-restart-server:
 	ssh $(SERVER) "~/webapps/$(APPNAME)/apache2/bin/restart"
 
