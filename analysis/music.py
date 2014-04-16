@@ -2,18 +2,20 @@
 # -*- coding: utf-8 -*-
 
 import os
+import numpy
 import music21
-import _utils
+import files
 
 
+# general
 def get_contour(number_sequence):
     """Return a flatten contour."""
 
-    transition = {}
+    aux = {}
     for new, old in enumerate(sorted(list(set(number_sequence)))):
-        transition[old] = new
+        aux[old] = new
 
-    return [transition[new] for new in number_sequence]
+    return [aux[new] for new in number_sequence]
 
 
 def get_chromatic_ambitus(pitches):
@@ -21,61 +23,74 @@ def get_chromatic_ambitus(pitches):
 
     return max(pitches) - min(pitches)
 
-def get_score(id_code, song=None, movement=None):
-    """Return a Music21 score from a given id_code."""
 
-    base = _utils.get_cfg_info('Scores', 'path')
-    filename = 'IF' + id_code
-
-    # Song test
-    if song is not None:
-        filename = filename + '_' + song
-
-        # Movement test
-        if movement:
-            filename = filename + movement
-
-    path = os.path.join(base, filename + '.xml')
-
-    # expand the path in case it's in the format ~/myfile
-    expanded_path = os.path.expanduser(path)
-
-    return music21.converter.parse(expanded_path) if os.path.exists(expanded_path) else None
+# music21
+def get_stream_from_path(path):
+     return music21.converter.parse(path)
 
 
-def get_info_about_mscore(mscore):
+def get_stream(id_code, song=None, movement=None):
+    """Return a Music21 stream from a given id_code."""
+
+    return get_stream_from_path(files.get_xml_path(id_code, song, movement))
+
+
+def get_stream_first_measure(music21_stream):
+    part = music21_stream.getElementsByClass('Part')[0]
+    measures = part.getElementsByClass('Measure')
+    return measures[0]
+
+
+def get_stream_flatten_notes(music21_stream):
+    flatten = music21_stream.flat
+    return flatten.getElementsByClass('Note')
+
+
+def get_note_and_position(notes_stream_seq):
+    size = notes_stream_seq[-1].offset
+    r = []
+    for note in notes_stream_seq:
+        pitch = note.pitch.midi
+        position = note.offset * 100 / size
+        r.append((position, pitch))
+    return r
+
+
+def get_stream_general_data(music21_stream):
+    first_measure = get_stream_first_measure(music21_stream)
+
+    dic = {}
+    time_signature_stream = first_measure.getElementsByClass('TimeSignature')[0]
+    time_signature_aux = [str(value) for value in time_signature_stream.numerator, time_signature_stream.denominator]
+    key_stream, mode = first_measure.getElementsByClass('KeySignature')[0].pitchAndMode
+
+    dic['time_signature'] = '/'.join(time_signature_aux)
+    dic['meter'] = time_signature_stream.beatCountName
+    dic['key'] = key_stream.fullName
+    dic['mode'] = mode
+
+    return dic
+
+
+def get_data_music21_stream(music21_stream):
     """Insert Music information such as Time Signature in Source
     object."""
 
-    filename = os.path.basename(mscore.filePath)
+    filename = os.path.basename(music21_stream.filePath)
     print '. Getting info from source {0}'.format(filename)
 
-    part = mscore.getElementsByClass('Part')[0]
-    measures = part.getElementsByClass('Measure')
-    m1 = measures[0]
-    time_signature_obj = m1.getElementsByClass('TimeSignature')[0]
-    time_signature = '/'.join([str(i) for i in time_signature_obj.numerator, time_signature_obj.denominator])
-    meter = time_signature_obj.beatCountName
-    keyObj, mode = m1.getElementsByClass('KeySignature')[0].pitchAndMode
-    key = keyObj.fullName
-
-    flatten = mscore.flat
-    notesObj = flatten.getElementsByClass('Note')
+    dic = get_stream_general_data(music21_stream) # get dictionary with general data
+    notes_stream = get_stream_flatten_notes(music21_stream)
 
     notes = []
     pitches = []
     durations = []
 
-    for note in notesObj:
+    for note in notes_stream:
         notes.append(note.nameWithOctave)
         pitches.append(note.midi)
         durations.append(note.duration.quarterLength)
 
-    dic = {}
-    dic['time_signature'] = time_signature
-    dic['meter'] = meter
-    dic['mode'] = mode
-    dic['key'] = key
     dic['notes'] = notes
     dic['pitches'] = pitches
     dic['durations'] = durations
@@ -84,3 +99,25 @@ def get_info_about_mscore(mscore):
     dic['ambitus'] = get_chromatic_ambitus(pitches)
 
     return dic
+
+## TODO: Generalize i/o and functions
+def get_music21_data_from_single_file(path, fn=get_note_and_position):
+    music21_stream = get_stream_from_path(path)
+    flatten_notes = get_stream_flatten_notes(music21_stream)
+
+    return fn(flatten_notes)
+
+## TODO: Generalize i/o and functions
+def get_music_data(fn=get_note_and_position, pattern='^((I.*)|(E.*E)).xml$'):
+
+    music_data = []
+    for f in files.get_files(pattern):
+        print 'Processing {0}'.format(os.path.basename(f))
+        try:
+            music_data.extend(get_music21_data_from_single_file(f, fn))
+
+
+        except (AttributeError, music21.converter.ConverterException):
+            pass
+
+    return numpy.array(music_data)

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import music
 import _utils
 import imslp
@@ -79,7 +78,7 @@ def makeScore(source_obj, piece_obj, id_code, composer, mscore=None):
     score.mscore = mscore
 
     if mscore:
-        dic = music.get_info_about_mscore(mscore)
+        dic = music.get_data_music21_stream(mscore)
 
         score.time_signature = dic['time_signature']
         score.meter = dic['meter']
@@ -111,7 +110,7 @@ def make_complete_score(id_number, song=None, movement=None):
     editor = imslp_source.editor
 
     piece = make_piece(title, composer)
-    mscore = music.get_score(id_number, song, movement)
+    mscore = music.get_stream(id_number, song, movement)
     score = makeScore(imslp_source, piece, id_number, composer, mscore)
 
     return score
