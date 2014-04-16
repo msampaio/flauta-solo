@@ -1,2 +1,2 @@
-from adjacentIntervalsMarkov import run
-from cluster_analysis import get_stream
+import cluster_analysis
+import get_data
