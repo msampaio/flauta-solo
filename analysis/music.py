@@ -46,11 +46,36 @@ def get_stream_flatten_notes(music21_stream):
     return flatten.getElementsByClass('Note')
 
 
-def get_note_and_position(notes_stream_seq):
+def get_note_pitch_and_position(notes_stream_seq):
+    """Return a list of tuples with position (offset) and pitch (midi
+    number) of a given sequence of notes in a Music 21 stream.
+
+    >>> get_note_pitch_and_position(<music21.notes.stream>)
+    [(50, 0), (54, 0.5)...]
+    """
+
     size = notes_stream_seq[-1].offset
     r = []
     for note in notes_stream_seq:
         pitch = note.pitch.midi
+        position = note.offset * 100 / size
+        r.append((position, pitch))
+    return r
+
+
+def get_note_duration_and_position(notes_stream_seq):
+    """Return a list of tuples with proportional position (offset
+    normalized to 0-100) and duration (quarterLength float) of a given
+    sequence of notes in a Music 21 stream.
+
+    >>> get_note_pitch_and_position(<music21.notes.stream>)
+    [(0.5, 0), (1, 0.5)...]
+    """
+
+    size = notes_stream_seq[-1].offset
+    r = []
+    for note in notes_stream_seq:
+        pitch = note.duration.quarterLength
         position = note.offset * 100 / size
         r.append((position, pitch))
     return r
@@ -100,16 +125,17 @@ def get_data_music21_stream(music21_stream):
 
     return dic
 
+
 ## TODO: Generalize i/o and functions
-def get_music21_data_from_single_file(path, fn=get_note_and_position):
+def get_music21_data_from_single_file(path, fn=get_note_pitch_and_position):
     music21_stream = get_stream_from_path(path)
     flatten_notes = get_stream_flatten_notes(music21_stream)
 
     return fn(flatten_notes)
 
-## TODO: Generalize i/o and functions
-def get_music_data(fn=get_note_and_position, pattern='^((I.*)|(E.*E)).xml$'):
 
+## TODO: Generalize i/o and functions
+def get_music_data(fn=get_note_pitch_and_position, pattern='^((I.*)|(E.*E)).xml$'):
     music_data = []
     for f in files.get_files(pattern):
         print 'Processing {0}'.format(os.path.basename(f))
