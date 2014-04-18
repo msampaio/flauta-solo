@@ -26,7 +26,7 @@ def get_chromatic_ambitus(pitches):
 
 # music21
 def get_stream_from_path(path):
-     return music21.converter.parse(path)
+    return music21.converter.parse(path)
 
 
 def get_stream(id_code, song=None, movement=None):
@@ -60,12 +60,12 @@ def get_stream_general_data(music21_stream):
     first_measure = get_stream_first_measure(music21_stream)
 
     dic = {}
-    time_signature_stream = first_measure.getElementsByClass('TimeSignature')[0]
-    time_signature_aux = [str(value) for value in time_signature_stream.numerator, time_signature_stream.denominator]
+    t_sig_stream = first_measure.getElementsByClass('TimeSignature')[0]
+    t_sig_aux = [str(value) for value in t_sig_stream.numerator, t_sig_stream.denominator]
     key_stream, mode = first_measure.getElementsByClass('KeySignature')[0].pitchAndMode
 
-    dic['time_signature'] = '/'.join(time_signature_aux)
-    dic['meter'] = time_signature_stream.beatCountName
+    dic['time_signature'] = '/'.join(t_sig_aux)
+    dic['meter'] = t_sig_stream.beatCountName
     dic['key'] = key_stream.fullName
     dic['mode'] = mode
 
@@ -79,7 +79,7 @@ def get_data_music21_stream(music21_stream):
     filename = os.path.basename(music21_stream.filePath)
     print '. Getting info from source {0}'.format(filename)
 
-    dic = get_stream_general_data(music21_stream) # get dictionary with general data
+    dic = get_stream_general_data(music21_stream)  # get dictionary with general data
     notes_stream = get_stream_flatten_notes(music21_stream)
 
     notes = []
