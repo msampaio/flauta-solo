@@ -85,12 +85,20 @@ def get_stream_general_data(music21_stream):
     first_measure = get_stream_first_measure(music21_stream)
 
     dic = {}
-    t_sig_stream = first_measure.getElementsByClass('TimeSignature')[0]
-    t_sig_aux = [str(value) for value in t_sig_stream.numerator, t_sig_stream.denominator]
+    aux = first_measure.getElementsByClass('TimeSignature')
+
+    # prevents if the stream doesn't have time signature info.
+    if aux:
+        t_sig_stream = aux[0]
+        t_sig_aux = [str(value) for value in t_sig_stream.numerator, t_sig_stream.denominator]
+        dic['time_signature'] = '/'.join(t_sig_aux)
+        dic['meter'] = t_sig_stream.beatCountName
+    else:
+        dic['time_signature'] = None
+        dic['meter'] = None
+
     key_stream, mode = first_measure.getElementsByClass('KeySignature')[0].pitchAndMode
 
-    dic['time_signature'] = '/'.join(t_sig_aux)
-    dic['meter'] = t_sig_stream.beatCountName
     dic['key'] = key_stream.fullName
     dic['mode'] = mode
 
