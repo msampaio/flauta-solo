@@ -158,6 +158,18 @@ def get_music_note_data(fn=get_note_pitch_and_position, pattern='^((I.*)|(E.*E))
 
     return numpy.array(music_data)
 
+
+def get_music_piece_data(arg_string=('mode', 'key'), pattern='^((I.*)|(E.*E)).xml$'):
+    """Return a numpy array with pair of piece characteristics, such
+    as mode and key."""
+
+    music_data = []
+    for f in files.get_files(pattern):
+        try:
+            music21_stream = get_stream_from_path(f)
+            dic = get_data_music21_stream(music21_stream)
+            music_data.append((dic[arg_string[0]], dic[arg_string[1]]))
+
         except (AttributeError, music21.converter.ConverterException):
             pass
 
