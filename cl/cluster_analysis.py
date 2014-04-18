@@ -4,7 +4,7 @@ import scipy.spatial.distance
 import pylab
 
 
-def make_dendrogram(data_array):
+def plot_dendrogram(data_array):
     data_dist = scipy.spatial.distance.pdist(data_array)
     data_link = scipy.cluster.hierarchy.linkage(data_dist,'average')
     pylab.figure()
@@ -12,7 +12,7 @@ def make_dendrogram(data_array):
     pylab.show()
 
 
-def make_centroids(data, clusters=3):
+def plot_centroids(data, clusters=3):
     # computing K-Means with K = 2 (2 clusters)
     centroids, _ = scipy.cluster.vq.kmeans(data, clusters)
 
