@@ -130,6 +130,7 @@ def get_data_music21_stream(music21_stream):
     dic['pitch_contour'] = get_contour(pitches)
     dic['duration_contour'] = get_contour(durations)
     dic['ambitus'] = get_chromatic_ambitus(pitches)
+    dic['length'] = sum(durations)
 
     return dic
 
