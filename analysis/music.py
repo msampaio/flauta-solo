@@ -143,14 +143,20 @@ def get_music21_data_from_single_file(path, fn=get_note_pitch_and_position):
     return fn(flatten_notes)
 
 
-## TODO: Generalize i/o and functions
-def get_music_data(fn=get_note_pitch_and_position, pattern='^((I.*)|(E.*E)).xml$'):
+def get_music_note_data(fn=get_note_pitch_and_position, pattern='^((I.*)|(E.*E)).xml$'):
+    """Return a numpy array with pair of note characteristics, such as
+    pitch and position."""
+
     music_data = []
     for f in files.get_files(pattern):
         print 'Processing {0}'.format(os.path.basename(f))
         try:
             music_data.extend(get_music21_data_from_single_file(f, fn))
 
+        except (AttributeError, music21.converter.ConverterException):
+            pass
+
+    return numpy.array(music_data)
 
         except (AttributeError, music21.converter.ConverterException):
             pass
