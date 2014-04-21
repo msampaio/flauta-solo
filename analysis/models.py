@@ -53,7 +53,7 @@ class Composition(models.Model):
     music_data = models.ForeignKey(MusicData)
 
     composer = models.ForeignKey(Composer)
-    composition_type = models.ForeignKey(CompositionType)
+    composition_type = models.ForeignKey(CompositionType, blank=True, null=True)
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=200)
 
