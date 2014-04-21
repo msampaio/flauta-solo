@@ -3,3 +3,8 @@ south
 pytest
 pytest-django
 djorm-ext-pgarray
+
+numpy
+scipy
+matplotlib
+
