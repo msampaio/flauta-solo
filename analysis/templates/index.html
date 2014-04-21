@@ -1,16 +1,21 @@
 {% extends "base.html" %}
-
+{% load staticfiles %}
 
 {% block title %}
     Flauta Solo
 {% endblock %}
 
 {% block body %}
-<h1>Music</h1>
+<h1>Range</h1>
 
-{% for musicdata in musicdatas %}
-<li>{{ musicdata.score.code }}: {{ musicdata.ambitus }}</li>
-{% endfor %}
+<ul>
+<li>One octave: {{ g1 }}</li>
+<li>Two octaves: {{ g2 }}</li>
+<li>More than two octaves: {{ g3 }}</li>
+</ul>
+
+{% endblock %}
 
 
+{% block javascript %}
 {% endblock %}

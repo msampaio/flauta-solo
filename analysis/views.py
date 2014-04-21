@@ -3,6 +3,14 @@ from analysis.models import MusicData
 
 
 def home(request):
-    musicdatas = MusicData.objects.all().order_by('score__code')
-    args = {'musicdatas': musicdatas}
+    #0-12, 13-24, >25
+    g1 = MusicData.objects.filter(ambitus__lte=12).count()
+    g2 = MusicData.objects.filter(ambitus__gte=13, ambitus__lte=24).count()
+    g3 = MusicData.objects.filter(ambitus__gte=25).count()
+
+    args = {
+        'g1': g1,
+        'g2': g2,
+        'g3': g3,
+    }
     return render(request, "index.html", args)
