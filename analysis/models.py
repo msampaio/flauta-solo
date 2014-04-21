@@ -4,7 +4,7 @@ from djorm_pgarray.fields import ArrayField
 
 class MusicXMLScore(models.Model):
     filename = models.CharField(max_length=300)
-    score_code = models.CharField(max_length=300)
+    code = models.CharField(max_length=300)
     score = models.TextField()
 
 

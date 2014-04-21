@@ -44,23 +44,23 @@ def intervals_midi(notes):
 
 def import_xml_file(filename, options):
     base_filename = os.path.basename(filename)
-    score_code = os.path.splitext(base_filename)[0]
+    code = os.path.splitext(base_filename)[0]
 
     try:
-        score = MusicXMLScore.objects.get(score_code=score_code)
-        logging.info("  - MusicXMLScore exists, don't need to create a new one: %s" % score_code)
+        score = MusicXMLScore.objects.get(code=code)
+        logging.info("  - MusicXMLScore exists, don't need to create a new one: %s" % code)
     except MusicXMLScore.DoesNotExist:
         score = MusicXMLScore()
 
         with open(filename) as text_score:
             score.filename = base_filename
-            score.score_code = score_code
+            score.code = code
             score.score = text_score
             score.save()
 
     try:
         MusicData.objects.get(score=score)
-        logging.info("  - MusicData exists, skiping creation: %s" % score.score_code)
+        logging.info("  - MusicData exists, skiping creation: %s" % score.code)
         return 0
     except MusicData.DoesNotExist:
         musicdata = MusicData(score=score)
