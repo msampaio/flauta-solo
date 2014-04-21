@@ -7,7 +7,7 @@ class Composer(models.Model):
     last_name = models.CharField(max_length=200)
     date_birth = models.DateField()
     date_death = models.DateField()
-    place_birth = models.CharField(max_lenght=200)
+    place_birth = models.CharField(max_length=200)
     place_death = models.CharField(max_length=200)
     nationality = models.CharField(max_length=200)
     time_period = models.CharField(max_length=200)
