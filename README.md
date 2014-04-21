@@ -1,3 +1,11 @@
+## Install Postgres
+
+On the Mac the easiest way is to install the Postgress package: http://postgresapp.com
+
+Add the following to your ~/.bashrc:
+
+	export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
+
 ## Instalation and Requirements
 
 It's useful to add the following configuration in your ~/.ssh/config:
@@ -14,11 +22,19 @@ Install the requirements:
 
 	pip install -r requirements.txt
 
-
 On the Mac you may need to use the following command:
 
-	ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future pip install
+	export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future
 
+## Initialize the Database
+
+Initialize the database with:
+
+	make initialize-development-database
+
+## Import Data
+
+[To be written]
 
 ## Install Music21
 
@@ -33,10 +49,14 @@ It'll only be used to export the musical data to the database.
 
 ## Deployment
 
+To deploy:
+
+	make deploy
+
+
+## Server Setup
+
 To install the dependencies on Webfaction (we don't use virtualenv on Webfaction):
 
     pip3.3 install --user -r requirements.txt
 
-To deploy:
-
-	make deploy

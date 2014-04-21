@@ -1,0 +1,15 @@
+[
+{
+    "pk": 1,
+    "fields": {
+        "is_superuser": true,
+        "is_active": true,
+        "is_staff": true,
+        "email": "kroger@pedrokroger.net",
+        "username": "admin",
+        "password": "pbkdf2_sha256$12000$J7aXGML0QaJx$9Qu5o8QWmcgU61n7tlCzeflv6YCjLs84TMJPSuiI9Jw=",
+        "groups": []
+    },
+    "model": "auth.user"
+}
+]

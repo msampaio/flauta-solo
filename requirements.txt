@@ -2,9 +2,5 @@ django
 south
 pytest
 pytest-django
+psycopg2
 djorm-ext-pgarray
-
-numpy
-scipy
-matplotlib
-

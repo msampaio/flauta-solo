@@ -24,6 +24,17 @@ remote-see-errors:
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && make see-errors"
 
 
+## Database
+
+initialize-development-database:
+	psql -f data/initialize-database.sql
+	./manage.py syncdb --noinput
+	./manage.py loaddata data/adminuser.json
+	
+reset-development-database:
+	psql -f data/reset-database.sql
+
+
 ## We should call these targets on the server only
 
 see-errors:
