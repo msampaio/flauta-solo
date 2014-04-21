@@ -48,6 +48,9 @@ And install Music21:
     cd music21
     python setup.py install
 
+Run the command to import the files, for instance:
+
+    ./manage-local.py importmusic /Users/kroger/Copy/Flauta\ Solo/Partituras/*.xml
 
 ## Deployment
 
@@ -55,10 +58,8 @@ To deploy:
 
 	make deploy
 
-
 ## Server Setup
 
 To install the dependencies on Webfaction (we don't use virtualenv on Webfaction):
 
     pip3.3 install --user -r requirements.txt
-
