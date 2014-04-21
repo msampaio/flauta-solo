@@ -1,4 +1,4 @@
 django
 pytest
 pytest-django
-
+djorm-ext-pgarray
