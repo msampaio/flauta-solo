@@ -42,52 +42,50 @@ def intervals_midi(notes):
     return [notesToChromatic(notes[x], notes[y]).semitones for x, y in pos]
 
 
+def make_music_data(music_stream, musicdata):
+    notes = all_notes(music_stream)
+    musicdata.notes_midi = [note.midi for note in notes]
+    musicdata.notes = [pitchToBase40(note) for note in notes]
+    musicdata.intervals = intervals_without_direction(notes)
+    musicdata.intervals_midi = intervals_midi(notes)
+    musicdata.intervals_with_direction = intervals_with_direction(notes)
+    musicdata.durations = [note.duration.quarterLength for note in notes]
+
+    _key = music_stream.analyze("key")
+    musicdata.mode = _key.mode
+    musicdata.key = _key.tonic.name
+    musicdata.key_midi = _key.tonic.midi
+
+    _measures = music_stream.parts[0].getElementsByClass("Measure")
+    musicdata.time_signature = _measures[0].timeSignature.ratioString
+    musicdata.ambitus = music_stream.analyze("ambitus").chromatic.directed
+
+    # FIXME: add Contour and total_duration
+    musicdata.contour = [1, 3, 4]
+    musicdata.total_duration = 39.5
+
+
 def import_xml_file(filename, options):
     base_filename = os.path.basename(filename)
     code = os.path.splitext(base_filename)[0]
 
+    # Don't create a new MusicXMLScore unless it's necessary
     try:
         score = MusicXMLScore.objects.get(code=code)
-        logging.info("  - MusicXMLScore exists, don't need to create a new one: %s" % code)
     except MusicXMLScore.DoesNotExist:
-        score = MusicXMLScore()
-
         with open(filename) as text_score:
-            score.filename = base_filename
-            score.code = code
-            score.score = text_score
+            score = MusicXMLScore(filename=base_filename, code=code, score=text_score)
             score.save()
 
+    # Don't create a new MusicData unless it's necessary
     try:
         MusicData.objects.get(score=score)
-        logging.info("  - MusicData exists, skiping creation: %s" % score.code)
         return 0
     except MusicData.DoesNotExist:
         musicdata = MusicData(score=score)
-
         try:
             music = music21.converter.parse(filename)
-            notes = all_notes(music)
-            musicdata.notes_midi = [note.midi for note in notes]
-            musicdata.notes = [pitchToBase40(note) for note in notes]
-            musicdata.intervals = intervals_without_direction(notes)
-            musicdata.intervals_midi = intervals_midi(notes)
-            musicdata.intervals_with_direction = intervals_with_direction(notes)
-            musicdata.durations = [note.duration.quarterLength for note in notes]
-
-            _key = music.analyze("key")
-            musicdata.mode = _key.mode
-            musicdata.key = _key.tonic.name
-            musicdata.key_midi = _key.tonic.midi
-
-            _measures = music.parts[0].getElementsByClass("Measure")
-            musicdata.time_signature = _measures[0].timeSignature.ratioString
-            musicdata.ambitus = music.analyze("ambitus").chromatic.directed
-
-            # FIXME:
-            musicdata.contour = [1, 3, 4]
-            musicdata.total_duration = 39.5
-
+            make_music_data(music, musicdata)
             musicdata.save()
             return 0
         except Exception as error:
@@ -104,8 +102,6 @@ class Command(BaseCommand):
         results = 0
 
         for filename in progress(args):
-            #if not options['verbosity'] == '0':
-            #    self.stdout.write('* Importing: %s' % filename)
             result = import_xml_file(filename, options)
             results += result
 
