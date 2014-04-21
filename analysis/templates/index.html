@@ -4,3 +4,13 @@
 {% block title %}
     Flauta Solo
 {% endblock %}
+
+{% block body %}
+<h1>Music</h1>
+
+{% for musicdata in musicdatas %}
+<li>{{ musicdata.score.score_code }}: {{ musicdata.ambitus }}</li>
+{% endfor %}
+
+
+{% endblock %}

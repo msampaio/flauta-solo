@@ -4,28 +4,33 @@ from djorm_pgarray.fields import ArrayField
 
 class MusicXMLScore(models.Model):
     filename = models.CharField(max_length=300)
-    score_id = models.CharField(max_length=300)
+    score_code = models.CharField(max_length=300)
     score = models.TextField()
 
 
 class MusicData(models.Model):
-    musicXML_score = models.ForeignKey(MusicXMLScore)
+    # in MusicXML format
+    score = models.ForeignKey(MusicXMLScore)
 
     notes_midi = ArrayField(dbtype="int")
     # notes are represented in base40
     notes = ArrayField(dbtype="int")
-    intervals = ArrayField(dbtype="int")
-    intervals_with_direction = ArrayField(dbtype="int")
+    intervals = ArrayField(dbtype="varchar")
+    intervals_midi = ArrayField(dbtype="int")
+    intervals_with_direction = ArrayField(dbtype="varchar")
     durations = ArrayField(dbtype="float")
     contour = ArrayField(dbtype="int")
 
     mode = models.CharField(max_length=100)
-    key = models.CharField(max_length=100)
-    time_signature = models.CharField(max_length=100)
+    key = models.CharField(max_length=10)
+    key_midi = models.IntegerField()
+    time_signature = models.CharField(max_length=20)
     # we get it with quarterLength
     total_duration = models.FloatField()
     # as a MIDI interval
     ambitus = models.IntegerField()
+
+    preview = models.ImageField(upload_to='preview', null=True)
 
 
 class Composer(models.Model):

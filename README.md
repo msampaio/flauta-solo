@@ -32,16 +32,18 @@ Initialize the database with:
 
 	make initialize-development-database
 
-## Import Data
+## Import Musical Data
 
-[To be written]
+To import data we need to create a virtualenvironment with Python 2.7, since Music21 doesn't work with Python 3:
 
-## Install Music21
+	mkvirtualenv flauta-solo-django2
 
-Music21 doesn't work with Python 3, so we need a separate virtualenv for it.
-It'll only be used to export the musical data to the database.
+Install the requirements:
 
-    mkvirtualenv music21
+	pip install -r requirements
+
+And install Music21:
+
     git clone https://github.com/cuthbertLab/music21.git
     cd music21
     python setup.py install

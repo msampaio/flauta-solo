@@ -28,8 +28,8 @@ remote-see-errors:
 
 initialize-development-database:
 	psql -f data/initialize-database.sql
-	./manage.py syncdb --noinput
-	./manage.py loaddata data/adminuser.json
+	./manage-local.py syncdb --noinput
+	./manage-local.py loaddata data/adminuser.json
 	
 reset-development-database:
 	psql -f data/reset-database.sql
