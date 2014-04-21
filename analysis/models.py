@@ -22,7 +22,6 @@ class Composition(models.Model):
     composer = models.ForeignKey(Composer)
     composition_type = models.ForeignKey(CompositionType)
 
-    imslp_id = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=200)
     editor = models.CharField(max_length=200)
@@ -42,7 +41,20 @@ class Composition(models.Model):
     intervals_with_direction = ArrayField(dbtype="int")
     durations = ArrayField(dbtype="float")
 
+    mode = models.CharField(max_length=100)
+    key = models.CharField(max_length=100)
+    time_signature = models.CharField(max_length=100)
+    # in ???
+    total_duration = models.IntegerField()
+    # as a MIDI interval
+    ambitus = models.IntegerField()
+    contour = ArrayField(dbtype="int")
+
+    original_filename = models.CharField(max_length=300)
+
+
 
 class Collection(models.Model):
+    imslp_id = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     compositions = models.ForeignKey(Composition)

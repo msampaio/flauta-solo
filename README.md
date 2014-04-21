@@ -35,7 +35,7 @@ It'll only be used to export the musical data to the database.
 
 To install the dependencies on Webfaction (we don't use virtualenv on Webfaction):
 
-    pip3.3 install -r requirements.txt
+    pip3.3 install --user -r requirements.txt
 
 To deploy:
 
