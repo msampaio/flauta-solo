@@ -14,6 +14,9 @@ push:
 deploy: push
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make restart-server"
 
+remote-import-data:
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && python2.7 manage.py importmusic ~/partituras-flauta/*.xml"
+
 remote-update-static-files:
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage.py collectstatic -v0 --noinput"
 	
@@ -22,7 +25,6 @@ remote-restart-server:
 
 remote-see-errors:
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && make see-errors"
-
 
 ## Database
 
@@ -45,6 +47,9 @@ reset-development-database:
 
 
 ## We should call these targets on the server only
+
+import-data:
+	python2.7 manage.py importmusic ~/partituras-flauta/*.xml
 
 see-errors:
 	tail ~/logs/user/error_$(APPNAME).log

@@ -32,7 +32,21 @@ Initialize the database with:
 
 	make initialize-development-database
 
-## Import Musical Data
+
+## Import Musical Data on the Server
+
+
+Go to the directory where the MusicXML files are and sync the files with the server:
+
+	cd Copy/Flauta\ Solo/Partituras/
+	make sync
+	
+Go to the FlautaSolo directory and run the remote code to import the data:
+
+	cd ~/Code/FlautaSolo
+	make remote-import-data
+
+## Import Musical Data Locally
 
 To import data we need to create a virtualenvironment with Python 2.7, since Music21 doesn't work with Python 3:
 
