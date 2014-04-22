@@ -64,7 +64,7 @@ And install Music21:
 
 Run the command to import the files, for instance:
 
-    ./manage-local.py importmusic /Users/kroger/Copy/Flauta\ Solo/Partituras/*.xml
+    ./manage.py importmusic /Users/kroger/Copy/Flauta\ Solo/Partituras/*.xml
 
 ## Deployment
 

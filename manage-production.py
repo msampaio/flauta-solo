@@ -12,5 +12,5 @@ if __name__ == "__main__":
         from django.core.management import execute_from_command_line
         execute_from_command_line(sys.argv)
     else:
-        print("ERROR: You should use manage-local.py instead of manage.py for local development")
+        print("ERROR: You should use manage.py instead of manage-production.py for local development")
         sys.exit()

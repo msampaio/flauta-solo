@@ -1,7 +1,9 @@
 SERVER = genosmus.com
 APPNAME = flute
 
-
+runserver:
+	./manage.py runserver
+	
 tests:
 	py.test
 
@@ -15,10 +17,10 @@ deploy: push
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make restart-server"
 
 remote-import-data:
-	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && python2.7 manage.py importmusic ~/partituras-flauta/*.xml"
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && python2.7 manage-production.py importmusic ~/partituras-flauta/*.xml"
 
 remote-update-static-files:
-	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage.py collectstatic -v0 --noinput"
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage-production.py collectstatic -v0 --noinput"
 	
 remote-restart-server:
 	ssh $(SERVER) "~/webapps/$(APPNAME)/apache2/bin/restart"
@@ -30,17 +32,17 @@ remote-see-errors:
 
 initialize-development-database:
 	psql -f data/initialize-database.sql
-	./manage-local.py syncdb --noinput
-	./manage-local.py migrate
-	./manage-local.py loaddata data/adminuser.json
+	./manage.py syncdb --noinput
+	./manage.py migrate
+	./manage.py loaddata data/adminuser.json
 	
 initialize-development-database-linux:
 	echo "use genos_flute for the password"
 	sudo -u postgres createuser -D -A -P genos_flute
 	sudo -u postgres createdb -O genos_flute genos_flute
-	./manage-local.py syncdb --noinput
-	./manage-local.py migrate
-	./manage-local.py loaddata data/adminuser.json
+	./manage.py syncdb --noinput
+	./manage.py migrate
+	./manage.py loaddata data/adminuser.json
 	
 reset-development-database:
 	psql -f data/reset-database.sql
@@ -49,7 +51,7 @@ reset-development-database:
 ## We should call these targets on the server only
 
 import-data:
-	python2.7 manage.py importmusic ~/partituras-flauta/*.xml
+	python2.7 manage-production.py importmusic ~/partituras-flauta/*.xml
 
 see-errors:
 	tail ~/logs/user/error_$(APPNAME).log
