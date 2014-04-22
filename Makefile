@@ -35,7 +35,7 @@ initialize-development-database:
 initialize-development-database-linux:
 	echo "use genos_flute for the password"
 	sudo -u postgres createuser -D -A -P genos_flute
-	sudo -u postgres createdb -O genos_flute
+	sudo -u postgres createdb -O genos_flute genos_flute
 	./manage-local.py syncdb --noinput
 	./manage-local.py migrate
 	./manage-local.py loaddata data/adminuser.json
