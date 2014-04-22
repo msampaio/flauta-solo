@@ -1,0 +1,15 @@
+ERROR:root:Couldn't parse music file: Error -5 while decompressing data: incomplete or truncated stream, ET00002_01b.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_01.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_02.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_03.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_04.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_05.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_06.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_07.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_08.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_09.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_10.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_11.xml
+ERROR:root:Couldn't parse music file: 'NoneType' object has no attribute 'ratioString', IF34493_12.xml
+ERROR:root:Couldn't parse music file: aggregated ties have a zero duration sum, IF38240_106.xml
+ERROR:root:Couldn't parse music file: aggregated ties have a zero duration sum, IF98166_40.xml
