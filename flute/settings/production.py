@@ -14,7 +14,7 @@ def get_secret():
 
 
 SERVER_CONF = get_secret()
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["flute.genosmus.com"]
 
 SECRET_KEY = SERVER_CONF['secret-key']
 

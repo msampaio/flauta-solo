@@ -36,3 +36,5 @@ nosetests.xml
 
 # Others
 /ignore/
+
+serverconf.json
