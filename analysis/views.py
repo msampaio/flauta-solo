@@ -3,7 +3,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from analysis.models import MusicData, Composition
-from analysis.importmusic import import_musicxml_files
 
 
 def home(request):
@@ -42,11 +41,10 @@ def dashboard(request):
     return render(request, "dashboard.html", args)
 
 
+# FIXME: Now we don't do anything
 def import_music_data(request):
     if request.POST:
         should_replace_data = request.POST.get('replace-data')
-        # FIXME: Now we don't do much
-        #import_musicxml_files.delay(should_replace_data)
 
         return render(request, "dashboard.html", {'importing': True})
     else:
