@@ -45,7 +45,8 @@ def dashboard(request):
 def import_music_data(request):
     if request.POST:
         should_replace_data = request.POST.get('replace-data')
-        import_musicxml_files.delay(should_replace_data)
+        # FIXME: Now we don't do much
+        #import_musicxml_files.delay(should_replace_data)
 
         return render(request, "dashboard.html", {'importing': True})
     else:
