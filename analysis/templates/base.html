@@ -41,7 +41,11 @@
 
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Login</a></li>
+              {% if user.is_authenticated %}
+                <li><a href="{% url 'dashboard' %}">{{ user.username }}</a></li>
+                  {% else %}
+                <li><a href="{% url 'login_user' %}">Login</a></li>
+              {% endif %}
             <li><a href="#">Admin</a></li>
           </ul>
         </div>
