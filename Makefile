@@ -1,9 +1,7 @@
 SERVER = genosmus.com
 APPNAME = flute
 
-run-server:
-	./manage-local.py runserver
-	
+
 tests:
 	py.test
 

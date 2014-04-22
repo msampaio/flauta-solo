@@ -9,8 +9,10 @@
 
     <title>{% block title %}{% endblock %}</title>
 
-  {% block css %}{% endblock %}
+    <!-- Bootstrap core CSS -->
     <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
     <link href="{{ STATIC_URL }}css/application.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -18,6 +20,9 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+  {% block javascript %}
+  {% endblock %}
   </head>
 
   <body>
@@ -50,7 +55,7 @@
             <li class="active"><a href="#">Overview</a></li>
             <li><a href="#">Reports</a></li>
             <li><a href="#">Analytics</a></li>
-            <li><a href="{% url 'import_music_data' %}">Import Data</a></li>
+            <li><a href="/import/">Import</a></li>
           </ul>
         </div>
 
@@ -65,7 +70,6 @@
 
     <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-  {% block javascript %}{% endblock %}
-    <script src="{{ STATIC_URL }}js/application.js"></script>
+    <script src="{{ STATIC_URL }}js/docs.min.js"></script>
   </body>
 </html>
