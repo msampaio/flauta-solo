@@ -6,6 +6,8 @@ import configparser
 import base64
 import urllib
 import json
+import datetime
+import logging
 
 
 def get_cfg_info(section, item, cfg_file='.musiAnalysis.cfg'):
@@ -20,6 +22,32 @@ def get_cfg_info(section, item, cfg_file='.musiAnalysis.cfg'):
 def dic_add_attrib(output_dic, input_dic, pair):
     if pair[1] in input_dic:
         output_dic[pair[0]] = input_dic[pair[1]]
+
+
+def get_date(data_dict):
+    birth = []
+    for k in ['Born Year', 'Born Month','Born Day']:
+        if k.isalnum():
+            birth.append(int(data_dict[k]))
+        else:
+            birth = None
+            break
+
+    if birth != None:
+        birth = datetime.date(*birth)
+
+    death = []
+    for k in ['Died Year', 'Died Month','Died Day']:
+        if k.isalnum():
+            death.append(int(data_dict[k]))
+        else:
+            death = None
+            break
+
+    if death != None:
+        death = datetime.date(*death)
+
+    return birth, death
 
 
 def filename_to_id_code(filename):
@@ -37,10 +65,10 @@ def split_title_composer(parent):
     title, composer = parent.split('(')
     return title.rstrip(' '), composer.rstrip(')')
 
+
 def get_imslp_data(id_number, i_type='3', retformat='json'):
 
     def make_api_info(id_number, i_type, retformat):
-
         api_info = {}
         api_info['account'] = get_cfg_info('Imslp', 'user')
         api_info['type'] = i_type
@@ -59,11 +87,9 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
         return api_info
 
     def make_url(api_info, initURL):
-
         data = []
         for k, v in list(api_info.items()):
             data.append('{0}={1}'.format(k, v))
-
         data = '/'.join(data)
 
         return initURL + data
@@ -79,6 +105,22 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
 
     return json.loads(html)
 
+def make_composer(composer_id, composer=None):
+    composer = Composer()
+
+    imslp_data = get_imslp_data(composer_id, '1')['0']
+    extvals = imslp_data['extvals']
+    intvals = imslp_data['intvals']
+
+    composer.first_name = intvals['firstname']
+    composer.last_name = intvals['lastname']
+    composer.date_birth, composer.date_death = get_date(extvals)
+    if 'Nationality' in extvals:
+        composer.nationality = extvals['Nationality']
+    else:
+        composer.nationality = None
+    composer.time_period = extvals['Time Period']
+
 
 def make_composition(imslp_data, id_code, composition):
 
@@ -89,8 +131,13 @@ def make_composition(imslp_data, id_code, composition):
 
     # TODO: how to handle the composer id in imslp?
     title, composer_name = split_title_composer(imslp_data['parent'])
+
+    composer = Composer()
+    make_composer(composer_name)
+    composer.save()
+
     composition.title = title
-    composition.composer_name = composer_name
+    composition.composer = composer
     composition.publisher_information = extvals['Publisher Information']
     composition.editor = extvals['Editor']
     composition.misc_notes = extvals['Misc. Notes']
@@ -103,21 +150,25 @@ def make_composition(imslp_data, id_code, composition):
     composition.description= intvals['description']
     composition.uploader = intvals['uploader']
 
-    # TODO: how to get these attributes?
-    # composition.composer = None
-    # composition.subtitle = None
+    # TODO: define how to define composition_type
     # composition.composition_type = None
 
 
 def import_imslp_data(filename, options):
+    # criar compositor primeiro, composicao e finalmente colecao
+
+    base_filename = os.path.basename(filename)
+
+    # composition
     composition = Composition()
     try:
         id_code = filename_to_id_code(filename)
         make_composition(get_imslp_data(id_code)['0'], id_code, composition)
         composition.save()
+        print(composition.__dict__)
         return 0
     except Exception as error:
-        # logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
+        logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
         return 1
 
 
