@@ -7,6 +7,9 @@ class MusicXMLScore(models.Model):
     code = models.CharField(max_length=300)
     score = models.TextField()
 
+    def __str__(self):
+        return "<{}>".format(self.code)
+
 
 class MusicData(models.Model):
     # in MusicXML format
@@ -31,6 +34,11 @@ class MusicData(models.Model):
     ambitus = models.IntegerField()
 
     preview = models.ImageField(upload_to='preview', null=True)
+
+    def __str__(self):
+        size = len(self.notes)
+        last = size - 1 if size < 10 else 10
+        return "<{}...>".format(self.notes[0:last])
 
 
 class Composer(models.Model):
