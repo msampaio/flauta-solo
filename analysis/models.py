@@ -34,13 +34,14 @@ class MusicData(models.Model):
 
 
 class Composer(models.Model):
-    first_name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200)
-    date_birth = models.DateField()
-    date_death = models.DateField()
-    place_birth = models.CharField(max_length=200)
-    place_death = models.CharField(max_length=200)
-    nationality = models.CharField(max_length=200)
+    date_birth = models.DateField(blank=True, null=True)
+    date_death = models.DateField(blank=True, null=True)
+    # TODO: confirm if IMSLP provides birth and death places
+    place_birth = models.CharField(max_length=200, blank=True, null=True)
+    place_death = models.CharField(max_length=200, blank=True, null=True)
+    nationality = models.CharField(max_length=200, blank=True, null=True)
     time_period = models.CharField(max_length=200)
 
 
@@ -55,7 +56,7 @@ class Composition(models.Model):
     composer = models.ForeignKey(Composer)
     composition_type = models.ForeignKey(CompositionType, blank=True, null=True)
     title = models.CharField(max_length=200)
-    subtitle = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=200, blank=True, null=True)
 
     editor = models.CharField(max_length=200)
     publisher_information = models.CharField(max_length=200)
