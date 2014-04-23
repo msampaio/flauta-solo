@@ -87,7 +87,7 @@ def import_xml_file(filename, options):
         score = MusicXMLScore.objects.get(code=code)
     except MusicXMLScore.DoesNotExist:
         with open(filename) as text_score:
-            score = MusicXMLScore(filename=base_filename, code=code, score=text_score)
+            score = MusicXMLScore(filename=base_filename, code=code, score=text_score.read())
             score.save()
 
     # Don't create a new MusicData unless it's necessary
