@@ -165,7 +165,6 @@ def import_imslp_data(filename, options):
         id_code = filename_to_id_code(filename)
         make_composition(get_imslp_data(id_code)['0'], id_code, composition)
         composition.save()
-        print(composition.__dict__)
         return 0
     except Exception as error:
         logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
