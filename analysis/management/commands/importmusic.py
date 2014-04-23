@@ -1,18 +1,20 @@
 import os
 import logging
 from django.core.management.base import BaseCommand, CommandError
-from music21.stream import StreamException
 from progressbar import ProgressBar
 from analysis.models import MusicData, MusicXMLScore
 import music21
+from music21.stream import StreamException
 from music21.musedata.base40 import pitchToBase40
 from music21.interval import notesToInterval, notesToChromatic
+from music21.contour import Contour
+
 
 logging.basicConfig(filename='importmusic.log',level=logging.ERROR)
 
 
 def all_notes(score):
-    # FIXME: is this still valid?
+    # FIXME: is this still necessary?
     # For some reason Stream([n for n in score.flat.notes]) accumulate
     # notes in the wrong order, so we append them explicitly.
 
@@ -63,20 +65,17 @@ def make_music_data(music_stream, musicdata):
     musicdata.intervals = intervals_without_direction(notes)
     musicdata.intervals_midi = intervals_midi(notes)
     musicdata.intervals_with_direction = intervals_with_direction(notes)
-    musicdata.durations = [note.duration.quarterLength for note in notes]
-
+    _durations = [note.duration.quarterLength for note in notes]
+    musicdata.durations = _durations
     musicdata.time_signature = get_time_signature(music_stream)
     _key = music_stream.analyze("key")
     musicdata.mode = _key.mode
     musicdata.key = _key.tonic.name
     musicdata.key_midi = _key.tonic.midi
-
-
     musicdata.ambitus = music_stream.analyze("ambitus").chromatic.directed
-
-    # FIXME: add Contour and total_duration
-    musicdata.contour = [1, 3, 4]
-    musicdata.total_duration = 39.5
+    contour = Contour(notes)
+    musicdata.contour = contour.items
+    musicdata.total_duration = sum(_durations)
 
 
 def import_xml_file(filename, options):
