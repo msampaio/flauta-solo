@@ -2,9 +2,9 @@ from django.core.management.base import BaseCommand, CommandError
 from progressbar import ProgressBar
 from analysis.models import Composition, Composer, CompositionType
 import os
-import ConfigParser
+import configparser
 import base64
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import json
 
 
@@ -12,7 +12,7 @@ import json
 def get_cfg_info(section, item, cfg_file='.musiAnalysis.cfg'):
     basename = os.path.expanduser('~')
     path = os.path.join(basename, cfg_file)
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(path)
 
     return config.get(section, item)
@@ -30,9 +30,9 @@ def filename_to_id_code(filename):
     if first_char == 'I':
         return base[2:].split('_')[0]
     elif first_char == 'E':
-        print("There is no IMSLP code for {0}.".format(base))
+        print(("There is no IMSLP code for {0}.".format(base)))
     else:
-        print("Wrong file. {0}.".format(base))
+        print(("Wrong file. {0}.".format(base)))
 
 
 # imslp data functions
@@ -47,7 +47,10 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
         if i_type == '1':
             id_number = 'Category:' + id_number
 
-        api_info['id'] = base64.b64encode(str(id_number.lstrip('0')))
+        bytes_id = bytes(id_number.lstrip('0'), 'utf-8')
+        id_number = base64.b64encode(bytes_id).decode('utf-8')
+
+        api_info['id'] = id_number
         api_info['disclaimer'] = 'accepted'
         api_info['retformat'] = retformat
 
@@ -56,7 +59,7 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
     def make_url(api_info, initURL):
 
         data = []
-        for k, v in api_info.items():
+        for k, v in list(api_info.items()):
             data.append('{0}={1}'.format(k, v))
 
         data = '/'.join(data)
@@ -64,13 +67,13 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
         return initURL + data
 
     def get_url(url):
-        response = urllib.urlopen(url)
+        response = urllib.request.urlopen(url)
         return response.read()
 
     initURL='http://imslp.org/imslpscripts/API.ISCR.php?'
     api_info = make_api_info(id_number, i_type, retformat)
     url = make_url(api_info, initURL)
-    html = get_url(url)
+    html = get_url(url).decode('utf-8')
 
     return json.loads(html)
 
@@ -110,7 +113,7 @@ def get_imslp_source_data(id_number):
         if ext_pair[1] in extvals:
             dic_add_attrib(imslp_source, extvals, ext_pair)
 
-    for k in intvals.keys():
+    for k in list(intvals.keys()):
         if k.isdigit:
             if 'index' in intvals[k]:
                 if intvals[k]['index'] == id_number:
@@ -127,7 +130,7 @@ def get_imslp_composer_data(parent_composer):
     """Return an object of ImslpComposer class."""
 
     imslp_composer = {}
-    dic = get_imslp_data(unicode(parent_composer).encode('utf-8'), '1')['0']
+    dic = get_imslp_data(str(parent_composer).encode('utf-8'), '1')['0']
 
     parent = dic['parent']
     extvals = dic['extvals']
