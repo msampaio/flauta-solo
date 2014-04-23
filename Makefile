@@ -2,6 +2,7 @@ SERVER = genosmus.com
 APPNAME = flute
 TODAY = $(shell date '+%Y-%m-%d')
 DATABASE = genos_flute
+DATABASE_DUMP = flute-$(TODAY).json.gz
 
 runserver:
 	./manage.py runserver
@@ -32,22 +33,15 @@ remote-see-errors:
 
 ## Database
 
-import-server-data2:
-	ssh $(SERVER) "pg_dump $(DATABASE) -U genos_flute -F t -w | gzip > database/flute-$(TODAY).dump.gz"
-	scp $(SERVER):database/flute-$(TODAY).dump.gz /tmp/
-	psql -f data/reset-database.sql
-	psql -f data/initialize-database.sql
-	gunzip -c /tmp/flute-$(TODAY).dump.gz | pg_restore -C -d $(DATABASE)
-
-initialize-dev-database-with-data-from-server:
+reset-dev-database-with-data-from-server:
 	$(MAKE) reset-development-database
 	$(MAKE) initialize-development-database
 	$(MAKE) import-server-data
 
 import-server-data:
-	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage-production.py dumpdata | gzip -c > ~/database/flute-$(TODAY).data.gz"
-	scp $(SERVER):database/flute-$(TODAY).data.gz /tmp/
-	./manage.py loaddata /tmp/flute-$(TODAY).data.gz
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage-production.py dumpdata analysis | gzip -c > ~/database/$(DATABASE_DUMP)"
+	scp $(SERVER):database/$(DATABASE_DUMP) /tmp/
+	./manage.py loaddata /tmp/$(DATABASE_DUMP)
 
 initialize-development-database:
 	psql -f data/initialize-database.sql
