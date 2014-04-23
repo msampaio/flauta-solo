@@ -41,6 +41,20 @@ environment by running the command:
 
 Keep in mind that this will **delete all the data on the local development's database**
 
+## Run the Local Development Server
+
+You can run the local dev server with:
+
+	make
+	
+Two another options are:
+
+	make runserver
+	
+or
+
+	./manage.py runserver
+
 ## Import Musical Data on the Server
 
 Go to the directory where the MusicXML files are and sync the files with the server:
