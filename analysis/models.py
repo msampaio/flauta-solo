@@ -59,12 +59,13 @@ class Composition(models.Model):
 
     editor = models.CharField(max_length=200)
     publisher_information = models.CharField(max_length=200)
-    misc_notes = models.CharField(max_length=200)
+    misc_notes = models.TextField(max_length=200)
     description = models.TextField()
     uploader = models.CharField(max_length=200)
     pagecount = models.IntegerField()
     raw_pagecount = models.IntegerField()
     rating = models.IntegerField()
+    imslp_filename = models.CharField(max_length=200)
 
 
 class Collection(models.Model):

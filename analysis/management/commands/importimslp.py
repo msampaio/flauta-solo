@@ -4,11 +4,10 @@ from analysis.models import Composition, Composer, CompositionType
 import os
 import configparser
 import base64
-import urllib.request, urllib.parse, urllib.error
+import urllib
 import json
 
 
-# auxiliary functions
 def get_cfg_info(section, item, cfg_file='.musiAnalysis.cfg'):
     basename = os.path.expanduser('~')
     path = os.path.join(basename, cfg_file)
@@ -23,19 +22,21 @@ def dic_add_attrib(output_dic, input_dic, pair):
         output_dic[pair[0]] = input_dic[pair[1]]
 
 
-# imslp id class and functions
 def filename_to_id_code(filename):
-    base = os.path.basename(filename).rstrip('.xml')
-    first_char = base[0]
+    base_filename = os.path.splitext(os.path.basename(filename))[0]
+    first_char = base_filename[0]
     if first_char == 'I':
-        return base[2:].split('_')[0]
+        return base_filename[2:].split('_')[0]
     elif first_char == 'E':
-        print(("There is no IMSLP code for {0}.".format(base)))
+        print(("There is no IMSLP code for {0}.".format(base_filename)))
     else:
-        print(("Wrong file. {0}.".format(base)))
+        print(("Wrong file. {0}.".format(base_filename)))
 
 
-# imslp data functions
+def split_title_composer(parent):
+    title, composer = parent.split('(')
+    return title.rstrip(' '), composer.rstrip(')')
+
 def get_imslp_data(id_number, i_type='3', retformat='json'):
 
     def make_api_info(id_number, i_type, retformat):
@@ -44,6 +45,7 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
         api_info['account'] = get_cfg_info('Imslp', 'user')
         api_info['type'] = i_type
 
+        id_number = str(id_number)
         if i_type == '1':
             id_number = 'Category:' + id_number
 
@@ -78,101 +80,45 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
     return json.loads(html)
 
 
-def get_imslp_source_data(id_number):
-
-    imslp_source = {}
-    imslp_data = get_imslp_data(id_number, '3')['0']
+def make_composition(imslp_data, id_code, composition):
 
     extvals = imslp_data['extvals']
-    intvals = imslp_data['intvals']
 
-    ext_seq = (
-        ('editor', 'Editor'),
-        ('publisherInformation', 'Publisher Information'),
-        ('miscNotes', 'Misc. Notes')
-        )
+    # TODO: confirm intvals key = '0'
+    intvals = imslp_data['intvals']['0']
 
-    score_info_seq = (
-        ('description', 'description'),
-        ('uploader', 'uploader'),
-        ('id', 'index'),
-        ('timestamp', 'timestamp'),
-        ('pagecount', 'pagecount'),
-        ('rawpagecount', 'rawpagecount'),
-        ('rating', 'rating')
-        )
+    # TODO: how to handle the composer id in imslp?
+    title, composer_name = split_title_composer(imslp_data['parent'])
+    composition.title = title
+    composition.composer_name = composer_name
+    composition.publisher_information = extvals['Publisher Information']
+    composition.editor = extvals['Editor']
+    composition.misc_notes = extvals['Misc. Notes']
 
-    parent = imslp_data['parent']
-    # extract composer from parent
-    parent_composer = parent[parent.find("(")+1:parent.find(")")]
+    composition.uploader = intvals['uploader']
+    composition.raw_pagecount = intvals['rawpagecount']
+    composition.pagecount = intvals['pagecount']
+    composition.imslp_filename = intvals['filename']
+    composition.rating = intvals['rating']
+    composition.description= intvals['description']
+    composition.uploader = intvals['uploader']
 
-    imslp_source['parent'] = parent
-    imslp_source['parent_composer'] = parent_composer
-
-    for ext_pair in ext_seq:
-        if ext_pair[1] in extvals:
-            dic_add_attrib(imslp_source, extvals, ext_pair)
-
-    for k in list(intvals.keys()):
-        if k.isdigit:
-            if 'index' in intvals[k]:
-                if intvals[k]['index'] == id_number:
-                    score_info = intvals[k]
-                    for score_info_pair in score_info_seq:
-                        dic_add_attrib(imslp_source, score_info, score_info_pair)
-
-    imslp_source['title'] = parent.split(' (')[0]
-
-    return imslp_source
+    # TODO: how to get these attributes?
+    # composition.composer = None
+    # composition.subtitle = None
+    # composition.composition_type = None
 
 
-def get_imslp_composer_data(parent_composer):
-    """Return an object of ImslpComposer class."""
-
-    imslp_composer = {}
-    dic = get_imslp_data(str(parent_composer).encode('utf-8'), '1')['0']
-
-    parent = dic['parent']
-    extvals = dic['extvals']
-    intvals = dic['intvals']
-
-    ext_seq = (('birthDate', 'Birth Date'),
-              ('bornDay', 'Born Day'),
-              ('bornMonth', 'Born Month'),
-              ('bornYear', 'Born Year'),
-              ('deathDate', 'Death Date'),
-              ('diedDay', 'Died Day'),
-              ('diedMonth', 'Died Month'),
-              ('diedYear', 'Died Year'),
-              ('pictureCaption', 'Picture Caption'),
-              ('timePeriod', 'Time Period'),
-              ('nationality', 'Nationality'))
-
-    intSeq = (('firstName', 'firstname'),
-              ('lastName', 'lastname'),
-              ('normal_name', 'normalname'),
-              ('pictureLinkRaw', 'picturelinkraw'),
-              ('rawCats', 'rawcats'),
-              ('totalDate', 'totaldate'))
-
-    imslp_composer['parent'] = parent
-
-    for ext_pair in ext_seq:
-        dic_add_attrib(imslp_composer, extvals, ext_pair)
-
-    for int_pair in intSeq:
-        dic_add_attrib(imslp_composer, intvals, int_pair)
-
-    return imslp_composer
-
-
-def import_imslp_data(filename, options=None):
-    id_code = filename_to_id_code(filename)
-    source_data = get_imslp_source_data(id_code)
-    composer = source_data['parent_composer']
-    composer_data = get_imslp_composer_data(composer)
-
-    pass
+def import_imslp_data(filename, options):
+    composition = Composition()
+    try:
+        id_code = filename_to_id_code(filename)
+        make_composition(get_imslp_data(id_code)['0'], id_code, composition)
+        composition.save()
+        return 0
+    except Exception as error:
+        # logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
+        return 1
 
 
 class Command(BaseCommand):
