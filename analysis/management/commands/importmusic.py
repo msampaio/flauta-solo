@@ -7,7 +7,6 @@ import music21
 from music21.stream import StreamException
 from music21.musedata.base40 import pitchToBase40
 from music21.interval import notesToInterval, notesToChromatic
-from music21.contour import Contour
 
 
 logging.basicConfig(filename='importmusic.log',level=logging.ERROR)
@@ -58,6 +57,14 @@ def get_time_signature(music_stream):
     return _time_signature.ratioString if _time_signature else ""
 
 
+def get_contour(number_sequence):
+    aux = {}
+    for n, value in enumerate(sorted(list(set(number_sequence)))):
+        aux[value] = n
+
+    return [aux[n] for n in number_sequence]
+
+
 def make_music_data(music_stream, musicdata):
     notes = all_notes(music_stream)
     musicdata.notes_midi = [note.midi for note in notes]
@@ -73,8 +80,7 @@ def make_music_data(music_stream, musicdata):
     musicdata.key = _key.tonic.name
     musicdata.key_midi = _key.tonic.midi
     musicdata.ambitus = music_stream.analyze("ambitus").chromatic.directed
-    contour = Contour(notes)
-    musicdata.contour = contour.items
+    musicdata.contour = get_contour(notes)
     musicdata.total_duration = sum(_durations)
 
 
