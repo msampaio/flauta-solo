@@ -58,9 +58,7 @@ Install the requirements:
 
 And install Music21:
 
-    git clone https://github.com/cuthbertLab/music21.git
-    cd music21
-    python setup.py install
+    pip install git+https://github.com/GenosResearchGroup/music21.git@contour
 
 Run the command to import the files, for instance:
 
@@ -77,3 +75,4 @@ To deploy:
 To install the dependencies on Webfaction (we don't use virtualenv on Webfaction):
 
     pip3.3 install --user -r requirements.txt
+    pip2.7 install git+https://github.com/GenosResearchGroup/music21.git@contour
