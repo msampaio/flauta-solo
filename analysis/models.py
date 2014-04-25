@@ -52,6 +52,8 @@ class Composer(models.Model):
     nationality = models.CharField(max_length=200, blank=True, null=True)
     time_period = models.CharField(max_length=200)
 
+    def __str__(self):
+        return "<{}, {}>".format(self.last_name, self.first_name)
 
 class CompositionType(models.Model):
     """Things like Symphony, Etude, etc"""
@@ -76,6 +78,8 @@ class Composition(models.Model):
     rating = models.IntegerField()
     imslp_filename = models.CharField(max_length=200)
 
+    def __str__(self):
+        return "<{}>".format(self.title)
 
 class Collection(models.Model):
     imslp_id = models.CharField(max_length=200)
