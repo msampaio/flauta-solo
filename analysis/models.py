@@ -42,6 +42,7 @@ class MusicData(models.Model):
 
 
 class Composer(models.Model):
+    imslp_id = models.CharField(max_length=200, blank=True, null=True)
     first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200)
     date_birth = models.DateField(blank=True, null=True)
@@ -73,9 +74,9 @@ class Composition(models.Model):
     misc_notes = models.TextField(max_length=200)
     description = models.TextField()
     uploader = models.CharField(max_length=200)
-    pagecount = models.IntegerField()
-    raw_pagecount = models.IntegerField()
-    rating = models.IntegerField()
+    pagecount = models.CharField(max_length=200)
+    raw_pagecount = models.CharField(max_length=200)
+    rating = models.CharField(max_length=200)
     imslp_filename = models.CharField(max_length=200)
 
     def __str__(self):
