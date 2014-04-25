@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from progressbar import ProgressBar
-from analysis.models import Composition, Composer, CompositionType
+from analysis.models import Composition, Composer, CompositionType, MusicXMLScore, MusicData
 import os
 import configparser
 import base64
-import urllib
+import urllib.request
 import json
 import datetime
 import logging
@@ -105,13 +105,13 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
 
     return json.loads(html)
 
-def make_composer(composer_id, composer=None):
-    composer = Composer()
 
+def make_composer(composer_id, composer):
     imslp_data = get_imslp_data(composer_id, '1')['0']
     extvals = imslp_data['extvals']
     intvals = imslp_data['intvals']
 
+    composer.imslp_id = composer_id
     composer.first_name = intvals['firstname']
     composer.last_name = intvals['lastname']
     composer.date_birth, composer.date_death = get_date(extvals)
@@ -122,19 +122,22 @@ def make_composer(composer_id, composer=None):
     composer.time_period = extvals['Time Period']
 
 
-def make_composition(imslp_data, id_code, composition):
+def make_composition(imslp_data, composition):
 
     extvals = imslp_data['extvals']
 
     # TODO: confirm intvals key = '0'
     intvals = imslp_data['intvals']['0']
 
-    # TODO: how to handle the composer id in imslp?
-    title, composer_name = split_title_composer(imslp_data['parent'])
+    title, composer_id = split_title_composer(imslp_data['parent'])
 
-    composer = Composer()
-    make_composer(composer_name)
-    composer.save()
+    # Don't create a new Composer unless it's necessary
+    try:
+        composer = Composer.objects.get(imslp_id=composer_id)
+    except Composer.DoesNotExist:
+        composer = Composer()
+        make_composer(composer_id, composer)
+        composer.save()
 
     composition.title = title
     composition.composer = composer
@@ -145,13 +148,13 @@ def make_composition(imslp_data, id_code, composition):
     composition.uploader = intvals['uploader']
     composition.raw_pagecount = intvals['rawpagecount']
     composition.pagecount = intvals['pagecount']
+    composition.description = intvals['description']
     composition.imslp_filename = intvals['filename']
     composition.rating = intvals['rating']
-    composition.description= intvals['description']
-    composition.uploader = intvals['uploader']
 
-    # TODO: define how to define composition_type
-    # composition.composition_type = None
+    # TODO: define how to get composition_type and subtitle
+    composition.composition_type = None
+    composition.subtitle = None
 
 
 def import_imslp_data(filename, options):
@@ -160,15 +163,22 @@ def import_imslp_data(filename, options):
     base_filename = os.path.basename(filename)
 
     # composition
-    composition = Composition()
     try:
-        id_code = filename_to_id_code(filename)
-        make_composition(get_imslp_data(id_code)['0'], id_code, composition)
-        composition.save()
-        return 0
-    except Exception as error:
-        logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
-        return 1
+        score = MusicXMLScore.objects.get(filename=base_filename)
+        music_data = MusicData.objects.get(score=score)
+        composition = Composition.objects.get(music_data=music_data)
+    except Composer.DoesNotExist:
+        try:
+            composition = Composition()
+            id_code = filename_to_id_code(filename)
+            score = MusicXMLScore.objects.get(filename=base_filename)
+            composition.music_data = MusicData.objects.get(score=score)
+            make_composition(get_imslp_data(id_code)['0'], composition)
+            composition.save()
+            return 0
+        except Exception as error:
+            logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
+            return 1
 
 
 class Command(BaseCommand):
