@@ -167,7 +167,7 @@ def import_imslp_data(filename, options):
         score = MusicXMLScore.objects.get(filename=base_filename)
         music_data = MusicData.objects.get(score=score)
         composition = Composition.objects.get(music_data=music_data)
-    except Composer.DoesNotExist:
+    except Composition.DoesNotExist:
         try:
             composition = Composition()
             id_code = filename_to_id_code(filename)
