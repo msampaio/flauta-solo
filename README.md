@@ -37,7 +37,7 @@ Initialize the database with:
 You can copy the current data on the server's database and load on your development
 environment by running the command:
 
-    make reset-dev-database-with-data-from-server:
+    make reset-dev-database-with-data-from-server
 
 Keep in mind that this will **delete all the data on the local development's database**
 
