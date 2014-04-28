@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from progressbar import ProgressBar
-from analysis.models import Composition, Composer, CompositionType, MusicXMLScore, MusicData
+from analysis.models import Composition, Composer, Collection, CompositionType, MusicXMLScore, MusicData
 import os
 import configparser
 import base64
@@ -122,7 +122,21 @@ def make_composer(composer_id, composer):
     composer.time_period = extvals['Time Period']
 
 
-def make_composition(imslp_data, composition):
+def make_collection(composition, imslp_id):
+    # testa se não existe coleção ou se não existe apenas a música na coleção
+    try:
+        collection = Collection.objects.get(imslp_id=imslp_id)
+        collection.compositions.add(composition)
+    except Collection.DoesNotExist:
+        collection = Collection()
+        collection.imslp_id = imslp_id
+        collection.name = composition.title
+        collection.compositions.add(composition)
+
+    collection.save()
+
+
+def make_composition(imslp_data, id_code, composition):
 
     extvals = imslp_data['extvals']
 
@@ -157,6 +171,15 @@ def make_composition(imslp_data, composition):
     composition.subtitle = None
 
 
+
+def aux_collection(composition, filename):
+    id_code = filename_to_id_code(filename)
+    if composition.collection_set.count() == 0:
+        id_code = filename_to_id_code(filename)
+        make_collection(composition, id_code)
+
+
+
 def import_imslp_data(filename, options):
     # criar compositor primeiro, composicao e finalmente colecao
 
@@ -167,14 +190,17 @@ def import_imslp_data(filename, options):
         score = MusicXMLScore.objects.get(filename=base_filename)
         music_data = MusicData.objects.get(score=score)
         composition = Composition.objects.get(music_data=music_data)
+        aux_collection(composition, base_filename)
     except Composition.DoesNotExist:
         try:
+            print(base_filename)
             composition = Composition()
             id_code = filename_to_id_code(filename)
             score = MusicXMLScore.objects.get(filename=base_filename)
             composition.music_data = MusicData.objects.get(score=score)
-            make_composition(get_imslp_data(id_code)['0'], composition)
+            make_composition(get_imslp_data(id_code)['0'], id_code, composition)
             composition.save()
+            aux_collection(composition, base_filename)
             return 0
         except Exception as error:
             logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
