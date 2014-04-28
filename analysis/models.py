@@ -80,7 +80,8 @@ class Composition(models.Model):
     imslp_filename = models.CharField(max_length=200)
 
     def __str__(self):
-        return "<{}>".format(self.title)
+        return "<{}, {}>".format(self.title, self.music_data.score.code)
+
 
 class Collection(models.Model):
     imslp_id = models.CharField(max_length=200)
