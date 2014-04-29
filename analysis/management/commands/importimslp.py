@@ -7,7 +7,6 @@ import base64
 import urllib.request
 import json
 import datetime
-import logging
 
 
 IMSLP_USERNAME = None
@@ -48,17 +47,6 @@ def get_date(data_dict):
         death = datetime.date(*death)
 
     return birth, death
-
-
-def filename_to_id_code(filename):
-    base_filename = os.path.splitext(os.path.basename(filename))[0]
-    first_char = base_filename[0]
-    if first_char == 'I':
-        return base_filename[2:].split('_')[0]
-    elif first_char == 'E':
-        print("There is no IMSLP code for {0}.".format(base_filename))
-    else:
-        print("Wrong file. {0}.".format(base_filename))
 
 
 def split_title_composer(parent):
@@ -119,20 +107,6 @@ def make_composer(composer_id, composer):
     composer.time_period = extvals['Time Period']
 
 
-def make_collection(composition, imslp_id):
-    # testa se não existe coleção ou se não existe apenas a música na coleção
-    try:
-        collection = Collection.objects.get(imslp_id=imslp_id)
-        collection.compositions.add(composition)
-    except Collection.DoesNotExist:
-        collection = Collection()
-        collection.imslp_id = imslp_id
-        collection.name = composition.title
-        collection.compositions.add(composition)
-
-    collection.save()
-
-
 def make_composition(imslp_data, composition):
 
     extvals = imslp_data['extvals']
@@ -168,38 +142,48 @@ def make_composition(imslp_data, composition):
     composition.subtitle = None
 
 
-def aux_collection(composition, filename):
-    filename_to_id_code(filename)
+def make_collection(composition, filename, imslp_id_code):
     if composition.collection_set.count() == 0:
-        id_code = filename_to_id_code(filename)
-        make_collection(composition, id_code)
+        try:
+            collection = Collection.objects.get(imslp_id=imslp_id_code)
+            collection.compositions.add(composition)
+        except Collection.DoesNotExist:
+            collection = Collection()
+            collection.imslp_id = imslp_id_code
+            collection.name = composition.title
+            collection.compositions.add(composition)
+
+        collection.save()
 
 
-def import_imslp_data(filename):
+def import_imslp_data(base_filename, imslp_id_code):
     # criar compositor primeiro, composicao e finalmente colecao
-
-    base_filename = os.path.basename(filename)
-
-    # composition
     try:
         score = MusicXMLScore.objects.get(filename=base_filename)
         music_data = MusicData.objects.get(score=score)
         composition = Composition.objects.get(music_data=music_data)
-        aux_collection(composition, base_filename)
+        make_collection(composition, base_filename, imslp_id_code)
     except Composition.DoesNotExist:
-        try:
-            print(base_filename)
-            composition = Composition()
-            id_code = filename_to_id_code(filename)
-            score = MusicXMLScore.objects.get(filename=base_filename)
-            composition.music_data = MusicData.objects.get(score=score)
-            make_composition(get_imslp_data(id_code)['0'], composition)
-            composition.save()
-            aux_collection(composition, base_filename)
-            return 0
-        except Exception as error:
-            logging.error("Couldn't parse music file: %s, %s" % (error, base_filename))
-            return 1
+        composition = Composition()
+        score = MusicXMLScore.objects.get(filename=base_filename)
+        composition.music_data = MusicData.objects.get(score=score)
+        make_composition(get_imslp_data(imslp_id_code)['0'], composition)
+        composition.save()
+        make_collection(composition, base_filename)
+
+
+## main
+
+def get_code_from_filename(filename):
+    base_filename = os.path.splitext(filename)[0]
+    first_char = base_filename[0]
+
+    if first_char == 'I':
+        return base_filename[2:].split('_')[0]
+    elif first_char == 'E':
+        raise CommandError("There is no IMSLP code for {0}.".format(base_filename))
+    else:
+        raise("Wrong file. {0}.".format(base_filename))
 
 
 class Command(BaseCommand):
@@ -217,4 +201,6 @@ class Command(BaseCommand):
             raise CommandError("Can't read the ~/.musiAnalysis.cfg file")
 
         for filename in progress(args):
-            import_imslp_data(filename)
+            base_filename = os.path.basename(filename)
+            imslp_id_code = get_code_from_filename(base_filename)
+            import_imslp_data(base_filename, imslp_id_code)
