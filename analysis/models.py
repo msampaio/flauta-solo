@@ -62,8 +62,17 @@ class CompositionType(models.Model):
     name = models.CharField(max_length=200)
 
 
+class Collection(models.Model):
+    imslp_id = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "<{} - {}>".format(self.imslp_id, self.name)
+
+
 class Composition(models.Model):
     music_data = models.ForeignKey(MusicData)
+    collection = models.ForeignKey(Collection)
 
     composer = models.ForeignKey(Composer)
     composition_type = models.ForeignKey(CompositionType, blank=True, null=True)
@@ -82,9 +91,3 @@ class Composition(models.Model):
 
     def __str__(self):
         return "<{}, {}>".format(self.title, self.music_data.score.code)
-
-
-class Collection(models.Model):
-    imslp_id = models.CharField(max_length=200)
-    name = models.CharField(max_length=200)
-    compositions = models.ForeignKey(Composition)

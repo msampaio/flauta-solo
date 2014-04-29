@@ -47,7 +47,7 @@ initialize-development-database:
 	psql -f data/initialize-database.sql
 	./manage.py syncdb --noinput
 	./manage.py migrate
-	#./manage.py loaddata data/adminuser.json
+	./manage.py loaddata data/adminuser.json
 	
 initialize-development-database-linux:
 	echo "use genos_flute for the password"

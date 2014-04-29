@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ObjectDoesNotExist
 from progressbar import ProgressBar
 from analysis.models import Composition, Composer, Collection, CompositionType, MusicXMLScore, MusicData
 import os
@@ -10,12 +11,6 @@ import datetime
 
 
 IMSLP_USERNAME = None
-
-
-def get_imslp_username():
-    config = configparser.ConfigParser()
-    config.read(os.path.expanduser('~/.musiAnalysis.cfg'))
-    return config.get('Imslp', 'user')
 
 
 def dic_add_attrib(output_dic, input_dic, pair):
@@ -100,6 +95,7 @@ def make_composer(composer_id, composer):
     composer.first_name = intvals['firstname']
     composer.last_name = intvals['lastname']
     composer.date_birth, composer.date_death = get_date(extvals)
+
     if 'Nationality' in extvals:
         composer.nationality = extvals['Nationality']
     else:
@@ -107,16 +103,16 @@ def make_composer(composer_id, composer):
     composer.time_period = extvals['Time Period']
 
 
-def make_composition(imslp_data, composition):
-
-    extvals = imslp_data['extvals']
+def make_composition(imslp_id_code):
+    imslp_data = get_imslp_data(imslp_id_code)['0']
 
     # TODO: confirm intvals key = '0'
     intvals = imslp_data['intvals']['0']
-
+    extvals = imslp_data['extvals']
     title, composer_id = split_title_composer(imslp_data['parent'])
 
-    # Don't create a new Composer unless it's necessary
+    composition = Composition()
+
     try:
         composer = Composer.objects.get(imslp_id=composer_id)
     except Composer.DoesNotExist:
@@ -124,8 +120,12 @@ def make_composition(imslp_data, composition):
         make_composer(composer_id, composer)
         composer.save()
 
-    composition.title = title
+    collection, created = Collection.objects.get_or_create(imslp_id=imslp_id_code, name=title)
+
     composition.composer = composer
+    composition.collection = collection
+
+    composition.title = title
     composition.publisher_information = extvals['Publisher Information']
     composition.editor = extvals['Editor']
     composition.misc_notes = extvals['Misc. Notes']
@@ -141,38 +141,30 @@ def make_composition(imslp_data, composition):
     composition.composition_type = None
     composition.subtitle = None
 
-
-def make_collection(composition, imslp_id_code):
-    if composition.collection_set.count() == 0:
-        try:
-            collection = Collection.objects.get(imslp_id=imslp_id_code)
-            collection.compositions.add(composition)
-        except Collection.DoesNotExist:
-            collection = Collection()
-            collection.imslp_id = imslp_id_code
-            collection.name = composition.title
-            collection.compositions.add(composition)
-
-        collection.save()
+    return composition
 
 
 def import_imslp_data(base_filename, imslp_id_code):
-    # criar compositor primeiro, composicao e finalmente colecao
     try:
-        score = MusicXMLScore.objects.get(filename=base_filename)
-        music_data = MusicData.objects.get(score=score)
-        composition = Composition.objects.get(music_data=music_data)
-        make_collection(composition, imslp_id_code)
-    except Composition.DoesNotExist:
-        composition = Composition()
-        score = MusicXMLScore.objects.get(filename=base_filename)
-        composition.music_data = MusicData.objects.get(score=score)
-        make_composition(get_imslp_data(imslp_id_code)['0'], composition)
+        music_data = MusicData.objects.get(score__filename=base_filename)
+    except MusicData.DoesNotExist:
+        raise("Don't have MusicData for %s. Aborting" % base_filename)
+
+    try:
+        Composition.objects.get(music_data=music_data)
+    except ObjectDoesNotExist:
+        composition = make_composition(imslp_id_code)
+        composition.music_data = music_data
         composition.save()
-        make_collection(composition, imslp_id_code)
 
 
 ## main
+
+def get_imslp_username():
+    config = configparser.ConfigParser()
+    config.read(os.path.expanduser('~/.musiAnalysis.cfg'))
+    return config.get('Imslp', 'user')
+
 
 def get_code_from_filename(filename):
     base_filename = os.path.splitext(filename)[0]
