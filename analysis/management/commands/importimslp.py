@@ -10,13 +10,13 @@ import datetime
 import logging
 
 
-def get_cfg_info(section, item, cfg_file='.musiAnalysis.cfg'):
-    basename = os.path.expanduser('~')
-    path = os.path.join(basename, cfg_file)
-    config = configparser.ConfigParser()
-    config.read(path)
+IMSLP_USERNAME = None
 
-    return config.get(section, item)
+
+def get_imslp_username():
+    config = configparser.ConfigParser()
+    config.read(os.path.expanduser('~/.musiAnalysis.cfg'))
+    return config.get('Imslp', 'user')
 
 
 def dic_add_attrib(output_dic, input_dic, pair):
@@ -33,7 +33,7 @@ def get_date(data_dict):
             birth = None
             break
 
-    if birth != None:
+    if birth:
         birth = datetime.date(*birth)
 
     death = []
@@ -44,7 +44,7 @@ def get_date(data_dict):
             death = None
             break
 
-    if death != None:
+    if death:
         death = datetime.date(*death)
 
     return birth, death
@@ -56,9 +56,9 @@ def filename_to_id_code(filename):
     if first_char == 'I':
         return base_filename[2:].split('_')[0]
     elif first_char == 'E':
-        print(("There is no IMSLP code for {0}.".format(base_filename)))
+        print("There is no IMSLP code for {0}.".format(base_filename))
     else:
-        print(("Wrong file. {0}.".format(base_filename)))
+        print("Wrong file. {0}.".format(base_filename))
 
 
 def split_title_composer(parent):
@@ -68,12 +68,13 @@ def split_title_composer(parent):
 
 def get_imslp_data(id_number, i_type='3', retformat='json'):
 
-    def make_api_info(id_number, i_type, retformat):
-        api_info = {}
-        api_info['account'] = get_cfg_info('Imslp', 'user')
-        api_info['type'] = i_type
+    def make_api_info(o_id_number):
+        api_info = {
+            'account': IMSLP_USERNAME,
+            'type': i_type
+        }
 
-        id_number = str(id_number)
+        id_number = str(o_id_number)
         if i_type == '1':
             id_number = 'Category:' + id_number
 
@@ -86,23 +87,19 @@ def get_imslp_data(id_number, i_type='3', retformat='json'):
 
         return api_info
 
-    def make_url(api_info, initURL):
+    def make_url(api_info):
+        api_base_url = 'http://imslp.org/imslpscripts/API.ISCR.php?'
         data = []
         for k, v in list(api_info.items()):
             data.append('{0}={1}'.format(k, v))
         data = '/'.join(data)
 
-        return initURL + data
+        return api_base_url + data
 
-    def get_url(url):
-        response = urllib.request.urlopen(url)
-        return response.read()
-
-    initURL='http://imslp.org/imslpscripts/API.ISCR.php?'
-    api_info = make_api_info(id_number, i_type, retformat)
-    url = make_url(api_info, initURL)
-    html = get_url(url).decode('utf-8')
-
+    api_information = make_api_info(id_number)
+    url = make_url(api_information)
+    response = urllib.request.urlopen(url)
+    html = response.read().decode('utf-8')
     return json.loads(html)
 
 
@@ -136,7 +133,7 @@ def make_collection(composition, imslp_id):
     collection.save()
 
 
-def make_composition(imslp_data, id_code, composition):
+def make_composition(imslp_data, composition):
 
     extvals = imslp_data['extvals']
 
@@ -171,16 +168,14 @@ def make_composition(imslp_data, id_code, composition):
     composition.subtitle = None
 
 
-
 def aux_collection(composition, filename):
-    id_code = filename_to_id_code(filename)
+    filename_to_id_code(filename)
     if composition.collection_set.count() == 0:
         id_code = filename_to_id_code(filename)
         make_collection(composition, id_code)
 
 
-
-def import_imslp_data(filename, options):
+def import_imslp_data(filename):
     # criar compositor primeiro, composicao e finalmente colecao
 
     base_filename = os.path.basename(filename)
@@ -198,7 +193,7 @@ def import_imslp_data(filename, options):
             id_code = filename_to_id_code(filename)
             score = MusicXMLScore.objects.get(filename=base_filename)
             composition.music_data = MusicData.objects.get(score=score)
-            make_composition(get_imslp_data(id_code)['0'], id_code, composition)
+            make_composition(get_imslp_data(id_code)['0'], composition)
             composition.save()
             aux_collection(composition, base_filename)
             return 0
@@ -212,7 +207,14 @@ class Command(BaseCommand):
     help = 'Import metadata from IMSLP'
 
     def handle(self, *args, **options):
+        global IMSLP_USERNAME
+
         progress = ProgressBar()
 
+        try:
+            IMSLP_USERNAME = get_imslp_username()
+        except configparser.NoSectionError:
+            raise CommandError("Can't read the ~/.musiAnalysis.cfg file")
+
         for filename in progress(args):
-            import_imslp_data(filename, options)
+            import_imslp_data(filename)
