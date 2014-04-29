@@ -56,6 +56,7 @@ class Composer(models.Model):
     def __str__(self):
         return "<{}, {}>".format(self.last_name, self.first_name)
 
+
 class CompositionType(models.Model):
     """Things like Symphony, Etude, etc"""
     name = models.CharField(max_length=200)

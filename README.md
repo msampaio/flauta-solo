@@ -67,6 +67,11 @@ Go to the FlautaSolo directory and run the remote code to import the data:
 	cd ~/Code/FlautaSolo
 	make remote-import-data
 
+# Migration
+
+	./manage.py schemamigration analysis —auto
+	./manage.py migrate analysis
+
 ## Deployment
 
 To deploy:
