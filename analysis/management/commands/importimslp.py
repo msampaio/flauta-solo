@@ -168,14 +168,7 @@ def get_imslp_username():
 
 def get_code_from_filename(filename):
     base_filename = os.path.splitext(filename)[0]
-    first_char = base_filename[0]
-
-    if first_char == 'I':
-        return base_filename[2:].split('_')[0]
-    elif first_char == 'E':
-        raise CommandError("There is no IMSLP code for {0}.".format(base_filename))
-    else:
-        raise("Wrong file. {0}.".format(base_filename))
+    return base_filename[2:].split('_')[0]
 
 
 class Command(BaseCommand):
@@ -186,13 +179,14 @@ class Command(BaseCommand):
         global IMSLP_USERNAME
 
         progress = ProgressBar()
+        files = [x for x in args if os.path.basename(x)[0] == 'I']
 
         try:
             IMSLP_USERNAME = get_imslp_username()
         except configparser.NoSectionError:
             raise CommandError("Can't read the ~/.musiAnalysis.cfg file")
 
-        for filename in progress(args):
+        for filename in progress(files):
             base_filename = os.path.basename(filename)
             imslp_id_code = get_code_from_filename(base_filename)
             import_imslp_data(base_filename, imslp_id_code)
