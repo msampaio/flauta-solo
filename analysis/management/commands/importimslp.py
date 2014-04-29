@@ -142,7 +142,7 @@ def make_composition(imslp_data, composition):
     composition.subtitle = None
 
 
-def make_collection(composition, filename, imslp_id_code):
+def make_collection(composition, imslp_id_code):
     if composition.collection_set.count() == 0:
         try:
             collection = Collection.objects.get(imslp_id=imslp_id_code)
@@ -162,14 +162,14 @@ def import_imslp_data(base_filename, imslp_id_code):
         score = MusicXMLScore.objects.get(filename=base_filename)
         music_data = MusicData.objects.get(score=score)
         composition = Composition.objects.get(music_data=music_data)
-        make_collection(composition, base_filename, imslp_id_code)
+        make_collection(composition, imslp_id_code)
     except Composition.DoesNotExist:
         composition = Composition()
         score = MusicXMLScore.objects.get(filename=base_filename)
         composition.music_data = MusicData.objects.get(score=score)
         make_composition(get_imslp_data(imslp_id_code)['0'], composition)
         composition.save()
-        make_collection(composition, base_filename)
+        make_collection(composition, imslp_id_code)
 
 
 ## main
