@@ -12,6 +12,7 @@ tests:
 
 clean:
 	find . -name *.pyc -exec rm {} \;
+	-find . -name "__pycache__" -exec rm -rf {} \;
 
 push:
 	git push
