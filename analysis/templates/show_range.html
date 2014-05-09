@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Flauta Solo | Range
+{% endblock %}
+
+
+{% block body %}
+    <h1>Range</h1>
+
+    <ul>
+        <li>One octave: {{ g1 }}</li>
+        <li>Two octaves: {{ g2 }}</li>
+        <li>More than two octaves: {{ g3 }}</li>
+    </ul>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+    $(document).ready(function () {
+        $(".nav li").removeClass("active");
+        $('#range').addClass('active');
+    });
+    </script>
+{% endblock %}

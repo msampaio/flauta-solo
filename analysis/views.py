@@ -2,16 +2,12 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response
 from analysis.models import MusicData, Composition
 
 
 def home(request):
-    g1 = MusicData.objects.filter(ambitus__lte=12).count()
-    g2 = MusicData.objects.filter(ambitus__gte=13, ambitus__lte=24).count()
-    g3 = MusicData.objects.filter(ambitus__gte=25).count()
-
-    args = {'g1': g1, 'g2': g2, 'g3': g3}
-    return render(request, "index.html", args)
+    return render(request, "index.html")
 
 
 def login_user(request):
@@ -41,11 +37,11 @@ def dashboard(request):
     return render(request, "dashboard.html", args)
 
 
-# FIXME: Now we don't do anything
-def import_music_data(request):
-    if request.POST:
-        should_replace_data = request.POST.get('replace-data')
+def show_range(request):
+    g1 = MusicData.objects.filter(ambitus__lte=12).count()
+    g2 = MusicData.objects.filter(ambitus__gte=13, ambitus__lte=24).count()
+    g3 = MusicData.objects.filter(ambitus__gte=25).count()
 
-        return render(request, "dashboard.html", {'importing': True})
-    else:
-        return HttpResponseRedirect(reverse("import_music_data"))
+    args = {'g1': g1, 'g2': g2, 'g3': g3}
+
+    return render(request, 'show_range.html', args)
