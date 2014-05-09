@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+Range Result
+{% endblock %}
+
+{% block body %}
+<h1>Range Results</h1>
+
+    <a href='{% url 'range' %}'><< back</a>
+
+    <p>{{ result }}</p>
+{% endblock %}
