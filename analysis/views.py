@@ -40,8 +40,8 @@ def dashboard(request):
 
 def show_range(request):
     def uniq_items_in_model(item, model=MusicData):
-        result = model.objects.values(item).distinct().order_by(item)
-        return [x[item] for x in result]
+        items = model.objects.values(item).distinct().order_by(item)
+        return [x[item] for x in items]
 
     def select_filter(name, item, arguments, template='music_data__%s'):
         if item != "all":
