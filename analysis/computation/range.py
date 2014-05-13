@@ -1,23 +1,14 @@
+from collections import Counter
 import numpy
+
 
 def range_analysis(compositions):
     range_list = [c.music_data.ambitus for c in compositions]
+    frequency = Counter(range_list)
+    values = [{"label": k, "value": v} for k, v in sorted(frequency.items())]
 
-    # ambitus frequency analysis - for histogram
-    frequency = {}
-    for v in range_list:
-        if(v not in frequency):
-            frequency[v] = 0
-        frequency[v] +=1
+    return [{"key": "Cumulative Return", "values": values}]
 
-    values = []
-    for k, v in sorted(frequency.items()):
-        values.append({"label": k, "value": v})
-
-    r = [{"key": "Cumulative Return",
-          "values": values}]
-
-    return r
     # range_statistics = {}
     # range_statistics['Min'] = min(range_list)
     # range_statistics['Max'] = max(range_list)
