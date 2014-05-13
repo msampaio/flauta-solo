@@ -20,7 +20,7 @@ Range Result
 
 {% block javascript %}
     <script type="text/javascript">
-        range_data = {{ result }}
+        range_data = {{ result|safe }}
 
         nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
