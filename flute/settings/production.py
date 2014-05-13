@@ -18,6 +18,8 @@ ALLOWED_HOSTS = ["flute.genosmus.com"]
 
 SECRET_KEY = SERVER_CONF['secret-key']
 
+STATIC_ROOT = '/home/genos/webapps/flute_static/'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
