@@ -27,12 +27,12 @@ USE_TZ = True
 MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
+#STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    normpath(join(SITE_ROOT, 'static')),
-)
+#STATICFILES_DIRS = (
+#    normpath(join(SITE_ROOT, 'static')),
+#)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
