@@ -13,12 +13,21 @@ def get_secret():
         raise ImproperlyConfigured("Create a proper serverconf.json")
 
 
+# Leave this commented, only use in an emergency ;-)
+# DEBUG = True
+# TEMPLATE_DEBUG = DEBUG
+
+
 SERVER_CONF = get_secret()
 ALLOWED_HOSTS = ["flute.genosmus.com"]
-
 SECRET_KEY = SERVER_CONF['secret-key']
-
 STATIC_ROOT = '/home/genos/webapps/flute_static/'
+
+EMAIL_HOST = 'smtp.webfaction.com'
+EMAIL_HOST_USER = 'genos'
+EMAIL_HOST_PASSWORD = SERVER_CONF['email-password']
+DEFAULT_FROM_EMAIL = 'genos@genosmus.com'
+SERVER_EMAIL = 'genos@genosmus.com'
 
 DATABASES = {
     'default': {
