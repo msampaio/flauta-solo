@@ -72,3 +72,8 @@ def show_range(request):
             'signatures': uniq_items_in_model('time_signature'),
             }
     return render(request, 'range.html', args)
+
+
+def d3(request):
+    args = {}
+    return render(request, 'd3.html', args)
