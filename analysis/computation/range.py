@@ -1,5 +1,4 @@
 import numpy
-import json
 
 def range_analysis(compositions):
     range_list = [c.music_data.ambitus for c in compositions]
@@ -18,7 +17,7 @@ def range_analysis(compositions):
     r = [{"key": "Cumulative Return",
           "values": values}]
 
-    return json.dumps(r)
+    return r
     # range_statistics = {}
     # range_statistics['Min'] = min(range_list)
     # range_statistics['Max'] = max(range_list)
