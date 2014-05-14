@@ -19,8 +19,8 @@ Range Result
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript">
-        range_data = {{ result|safe }}
+    <script type="text/javascript" id="range_histogram">
+        range_data = {{ result.histogram|safe }}
 
         nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
