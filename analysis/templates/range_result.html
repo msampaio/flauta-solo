@@ -7,7 +7,7 @@ Range Result
     <h1>Range results</h1>
 
     <div id="chart">
-        <h2>Histogram</h2>
+        <h2>Values</h2>
         <svg></svg>
     </div>
 
@@ -48,8 +48,8 @@ Range Result
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" id="range_histogram">
-        range_data = {{ result.histogram|safe }}
+    <script type="text/javascript" id="range_values">
+        range_data = {{ result.values|safe }}
 
         nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
