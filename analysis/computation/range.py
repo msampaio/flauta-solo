@@ -14,6 +14,9 @@ def range_basics(range_list):
     data['Min'] = min(range_list)
     data['Max'] = max(range_list)
     data['Mean'] = numpy.mean(range_list)
+    data['Median'] = numpy.median(range_list)
+    data['Quartile 1'] = numpy.percentile(range_list, 25)
+    data['Quartile 3'] = numpy.percentile(range_list, 75)
     data['Standard deviation'] = numpy.std(range_list)
     return data
 
