@@ -9,6 +9,13 @@ def range_values(range_list):
     values = [{"label": k, "value": v} for k, v in sorted(frequency.items())]
     return [{"key": "Cumulative Return", "values": values}]
 
+def range_histogram(range_list):
+    bins = 10;
+    histogram = numpy.histogram(range_list, bins)
+    values = [{"label": histogram[1][i], "value": histogram[0][i]} for i in range(bins)]
+
+    return [{"key": "Cumulative Return", "values": values}]
+
 def range_basics(range_list):
     data = {}
     data['Min'] = min(range_list)
@@ -25,6 +32,7 @@ def range_analysis(compositions):
 
     data = {}
     data['values'] = range_values(range_list)
+    data['histogram'] = range_histogram(range_list)
     data['statistics'] = range_basics(range_list)
 
     return data

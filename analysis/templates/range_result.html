@@ -6,8 +6,13 @@ Range Result
 {% block body %}
     <h1>Range results</h1>
 
-    <div id="chart">
+    <div id="chart_values">
         <h2>Values</h2>
+        <svg></svg>
+    </div>
+
+    <div id="chart_histogram">
+        <h2>Histogram</h2>
         <svg></svg>
     </div>
 
@@ -41,7 +46,10 @@ Range Result
 {% block style %}
     <link href="/static/css/jquery.dataTables.css" rel="stylesheet">
     <style>
-        #chart svg {
+        #chart_values svg {
+            height: 400px;
+        }
+        #chart_histogram svg {
             height: 400px;
         }
     </style>
@@ -49,25 +57,48 @@ Range Result
 
 {% block javascript %}
     <script type="text/javascript" id="range_values">
-        range_data = {{ result.values|safe }}
+        range_data_values = {{ result.values|safe }}
 
         nv.addGraph(function() {
-            var chart = nv.models.discreteBarChart()
+            var chart_values = nv.models.discreteBarChart()
                 .x(function(d) { return d.label })
                 .y(function(d) { return d.value })
                 .staggerLabels(true)
                 .tooltips(false)
                 .showValues(true)
 
-            d3.select('#chart svg')
-                .datum(range_data)
+            d3.select('#chart_values svg')
+                .datum(range_data_values)
                 .transition().duration(500)
-                .call(chart)
+                .call(chart_values)
             ;
 
-            nv.utils.windowResize(chart.update);
+            nv.utils.windowResize(chart_values.update);
 
-            return chart;
+            return chart_values;
+        });
+    </script>
+
+    <script type="text/javascript" id="range_histogram">
+        range_data_histogram = {{ result.histogram|safe }}
+
+        nv.addGraph(function() {
+            var chart_histogram = nv.models.discreteBarChart()
+                .x(function(d) { return d.label })
+                .y(function(d) { return d.value })
+                .staggerLabels(true)
+                .tooltips(false)
+                .showValues(true)
+
+            d3.select('#chart_histogram svg')
+                .datum(range_data_histogram)
+                .transition().duration(500)
+                .call(chart_histogram)
+            ;
+
+            nv.utils.windowResize(chart_histogram.update);
+
+            return chart_histogram;
         });
     </script>
 
