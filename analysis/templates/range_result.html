@@ -7,8 +7,8 @@
 {% block body %}
     <h1>Range results</h1>
 
-    <div id="chart-with-lines">
-        <h2>Chart With Lines</h2>
+    <div id="chart-frequency-distribution">
+        <h2>Frequency and distribution</h2>
         <svg></svg>
     </div>
 
@@ -44,19 +44,19 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript">
-        range_data_values = {{ values|safe }};
-        curve_values = {{ curve_values|safe }};
+    <script type="text/javascript" id="frequency-distribution">
+        frequency_data = {{ frequency|safe }};
+        distribution = {{ distribution|safe }};
 
         data = [
             {
                 "key": "Range",
                 "bar": true,
-                "values": range_data_values
+                "values": frequency_data
             },
             {
                 "key": "Curve",
-                "values": curve_values
+                "values": distribution
             }
         ]
 
@@ -75,7 +75,7 @@
             chart.y2Axis.tickFormat(d3.format(',f'));
             chart.bars.forceY([0]);
 
-            d3.select('#chart-with-lines svg')
+            d3.select('#chart-frequency-distribution svg')
                     .datum(data)
                     .transition()
                     .duration(500)
