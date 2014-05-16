@@ -1,10 +1,8 @@
-from collections import Counter
 import json
+from collections import Counter
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response
 from analysis.models import MusicData, Composition
 from analysis.computation.range import range_analysis
 

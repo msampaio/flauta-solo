@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}
-Range Result
+    Range Result
 {% endblock %}
+
 {% block body %}
     <h1>Range results</h1>
 
@@ -20,92 +21,92 @@ Range Result
         <h2>Statistics</h2>
         <table id="range_statistics" class="display">
             <thead>
-                <tr>
-                    <th>Measure</th>
-                    <th>Value</th>
-                </tr>
+            <tr>
+                <th>Measure</th>
+                <th>Value</th>
+            </tr>
             </thead>
             <tbody>
-                {% for measure, value in result.statistics.items %}
-                    <tr>
-                        <td>{{ measure }}</td>
-                        <td>{{ value }}</td>
-                    </tr>
-                {% endfor %}
+            {% for measure, value in result.statistics.items %}
+                <tr>
+                    <td>{{ measure }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
             <tfoot>
-                <tr>
-                    <th>Operation</th>
-                    <th>Value</th>
-                </tr>
+            <tr>
+                <th>Operation</th>
+                <th>Value</th>
+            </tr>
             </tfoot>
 
         </table>
     </div>
 {% endblock %}
-{% block style %}
-    <link href="/static/css/jquery.dataTables.css" rel="stylesheet">
-    <style>
-        #chart_values svg {
-            height: 400px;
-        }
-        #chart_histogram svg {
-            height: 400px;
-        }
-    </style>
-{% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" id="range_values">
+        });
+    </script>
+
+    <script type="text/javascript">
         range_data_values = {{ result.values|safe }}
 
-        nv.addGraph(function() {
-            var chart_values = nv.models.discreteBarChart()
-                .x(function(d) { return d.label })
-                .y(function(d) { return d.value })
-                .staggerLabels(true)
-                .tooltips(false)
-                .showValues(true)
+                nv.addGraph(function () {
+                    var chart_values = nv.models.discreteBarChart()
+                            .x(function (d) {
+                                return d.label
+                            })
+                            .y(function (d) {
+                                return d.value
+                            })
+                            .staggerLabels(true)
+                            .tooltips(false)
+                            .showValues(true)
 
-            d3.select('#chart_values svg')
-                .datum(range_data_values)
-                .transition().duration(500)
-                .call(chart_values)
-            ;
+                    d3.select('#chart_values svg')
+                            .datum(range_data_values)
+                            .transition()
+                            .duration(500)
+                            .call(chart_values)
+                    ;
 
-            nv.utils.windowResize(chart_values.update);
+                    nv.utils.windowResize(chart_values.update);
 
-            return chart_values;
-        });
+                    return chart_values;
+                });
     </script>
 
-    <script type="text/javascript" id="range_histogram">
+    <script type="text/javascript">
         range_data_histogram = {{ result.histogram|safe }}
 
-        nv.addGraph(function() {
-            var chart_histogram = nv.models.discreteBarChart()
-                .x(function(d) { return d.label })
-                .y(function(d) { return d.value })
-                .staggerLabels(true)
-                .tooltips(false)
-                .showValues(true)
+                nv.addGraph(function () {
+                    var chart_histogram = nv.models.discreteBarChart()
+                            .x(function (d) {
+                                return d.label
+                            })
+                            .y(function (d) {
+                                return d.value
+                            })
+                            .staggerLabels(true)
+                            .tooltips(false)
+                            .showValues(true)
 
-            d3.select('#chart_histogram svg')
-                .datum(range_data_histogram)
-                .transition().duration(500)
-                .call(chart_histogram)
-            ;
+                    d3.select('#chart_histogram svg')
+                            .datum(range_data_histogram)
+                            .transition().duration(500)
+                            .call(chart_histogram)
+                    ;
 
-            nv.utils.windowResize(chart_histogram.update);
+                    nv.utils.windowResize(chart_histogram.update);
 
-            return chart_histogram;
-        });
+                    return chart_histogram;
+                });
     </script>
 
-    <script src="/static/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" id="range_statistics">
-        $(document).ready(function() {
+    <script type="text/javascript">
+        $(document).ready(function () {
             $('#range_statistics').dataTable();
-        } );
+        });
     </script>
 {% endblock %}
