@@ -10,9 +10,12 @@ def get_ambitus_list(compositions):
     return [c.music_data.ambitus for c in compositions]
 
 
-def histogram(range_list):
+def histogram(range_list, listOutput=True):
     bins = 10
     histogram = numpy.histogram(range_list, bins)
+    if listOutput:
+        return [[histogram[1][i], histogram[0][i]] for i in range(bins)]
+
     values = [{"label": histogram[1][i], "value": histogram[0][i]} for i in range(bins)]
 
     return [{"key": "Cumulative Return", "values": values}]
@@ -54,11 +57,11 @@ def analysis(compositions):
     basic_stats_dic = basic_stats(range_list)
 
     args = {
-        'frequency': frequency(range_list, False),
-        'frequency2': frequency(range_list, True),
-        'distribution': distribution(basic_stats_dic),
-        'histogram': histogram(range_list),
         'basic_stats': basic_stats_dic,
+        'frequency': frequency(range_list, False),
+        'histogram': histogram(range_list, False),
+        'histogram_list': histogram(range_list, True),
+        'distribution': distribution(basic_stats_dic),
     }
 
     return args

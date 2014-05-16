@@ -8,22 +8,23 @@
     <h1>Range results</h1>
 
     <div id="chart-frequency-distribution">
-        <h2>Frequency and distribution</h2>
+        <h2>Frequency analysis</h2>
+        <h3>Histogram and distribution</h3>
         <svg></svg>
     </div>
 
     <div id="chart_values">
-        <h2>Frequency</h2>
+        <h3>Frequency</h3>
         <svg></svg>
     </div>
 
     <div id="chart_histogram">
-        <h2>Histogram</h2>
+        <h3>Histogram</h3>
         <svg></svg>
     </div>
 
     <div>
-        <h2>Statistics</h2>
+        <h2>Basic Statistics</h2>
         <table id="basic_statistics" class="display">
             <thead>
             <tr>
@@ -45,14 +46,14 @@
 
 {% block javascript %}
     <script type="text/javascript" id="frequency-distribution">
-        frequency_data2 = {{ frequency2|safe }};
+        histogram_list_data = {{ histogram_list|safe }};
         distribution = {{ distribution|safe }};
 
         data = [
             {
                 "key": "Pieces",
                 "bar": true,
-                "values": frequency_data2
+                "values": histogram_list_data
             },
             {
                 "key": "Sigma",
