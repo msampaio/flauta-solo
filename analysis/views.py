@@ -78,25 +78,3 @@ def show_range(request):
             'signatures': uniq_items_in_model('time_signature'),
     }
     return render(request, 'range.html', args)
-
-
-def d3(request):
-    args = {}
-    return render(request, 'd3.html', args)
-
-
-def range_data(request):
-    compositions = Composition.objects.all()
-    range_list = [c.music_data.ambitus for c in compositions]
-    frequency = Counter(range_list)
-    values = [{"label": k, "value": v} for k, v in sorted(frequency.items())]
-
-    data = [
-        {
-            "key": "Quantity",
-            "bar": True,
-            "color": "#ccf",
-            "values": values
-        }]
-
-    return HttpResponse(json.dumps(data), mimetype="application/javascript")
