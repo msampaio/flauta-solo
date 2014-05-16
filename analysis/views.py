@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from analysis.models import MusicData, Composition
 from analysis.computation.range import range_analysis
+from analysis.computation import range
 
 
 def home(request):
@@ -62,8 +63,13 @@ def show_range(request):
 
         compositions = Composition.objects.filter(**kwargs)
         result = range_analysis(compositions)
+        values, curve_values = range.range_values2(compositions)
 
-        args = {'result': result}
+        args = {'result': result,
+                'values': values,
+                'curve_values': curve_values,
+                }
+
         return render(request, 'range_result.html', args)
 
     args = {'compositions': uniq_items_in_model('title', Composition),
