@@ -13,7 +13,7 @@
     </div>
 
     <div id="chart_values">
-        <h2>Values</h2>
+        <h2>Frequency</h2>
         <svg></svg>
     </div>
 
@@ -24,7 +24,7 @@
 
     <div>
         <h2>Statistics</h2>
-        <table id="range_statistics" class="display">
+        <table id="basic_statistics" class="display">
             <thead>
             <tr>
                 <th>Measure</th>
@@ -45,17 +45,17 @@
 
 {% block javascript %}
     <script type="text/javascript" id="frequency-distribution">
-        frequency_data = {{ frequency|safe }};
+        frequency_data2 = {{ frequency2|safe }};
         distribution = {{ distribution|safe }};
 
         data = [
             {
-                "key": "Range",
+                "key": "Pieces",
                 "bar": true,
-                "values": frequency_data
+                "values": frequency_data2
             },
             {
-                "key": "Curve",
+                "key": "Sigma",
                 "values": distribution
             }
         ]
@@ -88,7 +88,7 @@
     </script>
 
     <script type="text/javascript">
-        range_data_values = {{ values|safe }}
+        frequency_data = {{ frequency|safe }}
 
                 nv.addGraph(function () {
                     var chart_values = nv.models.discreteBarChart()
@@ -103,7 +103,7 @@
                             .showValues(true)
 
                     d3.select('#chart_values svg')
-                            .datum(range_data_values)
+                            .datum(frequency_data)
                             .transition()
                             .duration(500)
                             .call(chart_values)
@@ -145,7 +145,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#range_statistics').dataTable();
+            $('#basic_statistics').dataTable();
         });
     </script>
 {% endblock %}

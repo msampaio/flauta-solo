@@ -10,30 +10,33 @@ def get_ambitus_list(compositions):
     return [c.music_data.ambitus for c in compositions]
 
 
-def range_values2(compositions):
-    range_list = get_ambitus_list(compositions)
-    frequency = Counter(range_list)
-    values = [[k, v] for k, v in sorted(frequency.items())]
-    curve = enumerate(gaussian(numpy.linspace(-3, 3, 120), -1, 1))
-    curve_lists = [[x, y] for x, y in curve]
-    return values, curve_lists
-
-
-def range_values(range_list):
-    frequency = Counter(range_list)
-    values = [{"label": k, "value": v} for k, v in sorted(frequency.items())]
-    return [{"key": "Cumulative Return", "values": values}]
-
-
-def range_histogram(range_list):
+def histogram(range_list):
     bins = 10
     histogram = numpy.histogram(range_list, bins)
     values = [{"label": histogram[1][i], "value": histogram[0][i]} for i in range(bins)]
 
     return [{"key": "Cumulative Return", "values": values}]
 
+def frequency(range_list, listOutput=True):
+    frequency = Counter(range_list)
 
-def range_basics(range_list):
+    if listOutput:
+        return [[k, v] for k, v in sorted(frequency.items())]
+
+    values = [{"label": k, "value": v} for k, v in sorted(frequency.items())]
+    return [{"key": "Cumulative Return", "values": values}]
+
+
+def distribution(basic_stats_dic):
+    print(basic_stats_dic['Max'])
+    x = numpy.linspace(-3, 3, basic_stats_dic['Max'])
+    mu = -1
+    sig = 1
+    curve = enumerate(gaussian(x, mu, sig))
+    return [[x, y] for x, y in curve]
+
+
+def basic_stats(range_list):
     data = {'Min': min(range_list),
             'Max': max(range_list),
             'Mean': numpy.mean(range_list),
@@ -48,14 +51,14 @@ def range_basics(range_list):
 def analysis(compositions):
 
     range_list = get_ambitus_list(compositions)
-    frequency, distribution = range_values2(compositions)
+    basic_stats_dic = basic_stats(range_list)
 
-    args = {'result': result,
-            'frequency': frequency,
-            'distribution': distribution,
-            'basic_stats': range_basics(range_list),
-            'histogram': range_histogram(range_list),
-            'values': range_values(range_list),
-            }
+    args = {
+        'frequency': frequency(range_list, False),
+        'frequency2': frequency(range_list, True),
+        'distribution': distribution(basic_stats_dic),
+        'histogram': histogram(range_list),
+        'basic_stats': basic_stats_dic,
+    }
 
     return args
