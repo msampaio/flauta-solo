@@ -54,3 +54,16 @@ def range_analysis(compositions):
     }
 
     return data
+
+
+def analysis(compositions):
+
+    result = range_analysis(compositions)
+    values, curve_values = range_values2(compositions)
+
+    args = {'result': result,
+            'values': values,
+            'curve_values': curve_values,
+            }
+
+    return args

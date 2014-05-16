@@ -1,10 +1,8 @@
 import json
-from collections import Counter
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from analysis.models import MusicData, Composition
-from analysis.computation.range import range_analysis
 from analysis.computation import range
 
 
@@ -62,13 +60,8 @@ def show_range(request):
         select_filter('time_signature', time_signature, kwargs)
 
         compositions = Composition.objects.filter(**kwargs)
-        result = range_analysis(compositions)
-        values, curve_values = range.range_values2(compositions)
 
-        args = {'result': result,
-                'values': values,
-                'curve_values': curve_values,
-                }
+        args = range.analysis(compositions)
 
         return render(request, 'range_result.html', args)
 
