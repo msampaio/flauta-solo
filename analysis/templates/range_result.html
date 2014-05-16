@@ -32,7 +32,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for measure, value in result.statistics.items %}
+            {% for measure, value in basic_stats.items %}
                 <tr>
                     <td>{{ measure }}</td>
                     <td>{{ value }}</td>
@@ -88,7 +88,7 @@
     </script>
 
     <script type="text/javascript">
-        range_data_values = {{ result.values|safe }}
+        range_data_values = {{ values|safe }}
 
                 nv.addGraph(function () {
                     var chart_values = nv.models.discreteBarChart()
@@ -116,7 +116,7 @@
     </script>
 
     <script type="text/javascript">
-        range_data_histogram = {{ result.histogram|safe }}
+        range_data_histogram = {{ histogram|safe }}
 
                 nv.addGraph(function () {
                     var chart_histogram = nv.models.discreteBarChart()

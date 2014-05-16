@@ -45,25 +45,17 @@ def range_basics(range_list):
     return data
 
 
-def range_analysis(compositions):
-    range_list = get_ambitus_list(compositions)
-
-    data = {'values': range_values(range_list),
-            'histogram': range_histogram(range_list),
-            'statistics': range_basics(range_list)
-    }
-
-    return data
-
-
 def analysis(compositions):
 
-    result = range_analysis(compositions)
+    range_list = get_ambitus_list(compositions)
     frequency, distribution = range_values2(compositions)
 
     args = {'result': result,
             'frequency': frequency,
             'distribution': distribution,
+            'basic_stats': range_basics(range_list),
+            'histogram': range_histogram(range_list),
+            'values': range_values(range_list),
             }
 
     return args
