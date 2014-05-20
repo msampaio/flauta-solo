@@ -7,10 +7,13 @@
 {% block body %}
     <h1>Range results</h1>
 
+    <div id="chart-with-lines-new"></div>
+
     <div id="chart-with-lines">
         <h2>Chart With Lines</h2>
         <svg></svg>
     </div>
+
 
     <div id="chart_values">
         <h2>Values</h2>
@@ -45,47 +48,27 @@
 
 {% block javascript %}
     <script type="text/javascript">
-        range_data_values = {{ values|safe }};
-        curve_values = {{ curve_values|safe }};
+    range_data_values = ['data1'];
+    curve_values = ['data2'];
 
-        data = [
-            {
-                "key": "Range",
-                "bar": true,
-                "values": range_data_values
-            },
-            {
-                "key": "Curve",
-                "values": curve_values
+    range_data_values += {{ values|safe }};
+    curve_values += {{ curve_values|safe }};
+
+        var chart = c3.generate({
+            bindto: '#chart-with-lines-new',
+            data: {
+                columns: [
+                    range_data_values,
+                    // Uncomment to show lines
+                    //curve_values
+                ],
+                type: 'bar',
+                types: {
+                    data2: 'spline'
+                }
             }
-        ]
-
-        nv.addGraph(function () {
-            var chart = nv.models.linePlusBarChart()
-                            .margin({top: 30, right: 60, bottom: 50, left: 70})
-                        //We can set x data accessor to use index. Reason? So the bars all appear evenly spaced.
-                            .x(function (d, i) {
-                                return i
-                            })
-                            .y(function (d, i) {
-                                return d[1]
-                            });
-
-            chart.y1Axis.tickFormat(d3.format(',f'));
-            chart.y2Axis.tickFormat(d3.format(',f'));
-            chart.bars.forceY([0]);
-
-            d3.select('#chart-with-lines svg')
-                    .datum(data)
-                    .transition()
-                    .duration(500)
-                    .call(chart);
-
-            nv.utils.windowResize(chart.update);
-
-            return chart;
         });
-    </script>
+   </script>
 
     <script type="text/javascript">
         range_data_values = {{ result.values|safe }}

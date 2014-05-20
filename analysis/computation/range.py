@@ -13,10 +13,9 @@ def get_ambitus_list(compositions):
 def range_values2(compositions):
     range_list = get_ambitus_list(compositions)
     frequency = Counter(range_list)
-    values = [[k, v] for k, v in sorted(frequency.items())]
-    curve = enumerate(gaussian(numpy.linspace(-3, 3, 120), -1, 1))
-    curve_lists = [[x, y] for x, y in curve]
-    return values, curve_lists
+    values = [v for (k, v) in sorted(frequency.items())]
+    curve = [x for x in gaussian(numpy.linspace(-3, 3, 120), -1, 1)]
+    return values, curve
 
 
 def range_values(range_list):
