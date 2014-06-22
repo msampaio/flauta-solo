@@ -7,21 +7,8 @@
 {% block body %}
     <h1>Range results</h1>
 
-    <div id="chart-frequency-distribution">
-        <h2>Frequency analysis</h2>
-        <h3>Histogram and distribution</h3>
-        <svg></svg>
-    </div>
-
-    <div id="chart_values">
-        <h3>Frequency</h3>
-        <svg></svg>
-    </div>
-
-    <div id="chart_histogram">
-        <h3>Histogram</h3>
-        <svg></svg>
-    </div>
+    <div id="chart_frequency" style="width: 1000px; height: 400px;"></div>
+    <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
 
     <div>
         <h2>Basic Statistics</h2>
@@ -45,104 +32,66 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" id="frequency-distribution">
-        histogram_list_data = {{ histogram_list|safe }};
-        distribution = {{ distribution|safe }};
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" id="frequency">
 
-        data = [
-            {
-                "key": "Pieces",
-                "bar": true,
-                "values": histogram_list_data
-            },
-            {
-                "key": "Sigma",
-                "values": distribution
-            }
-        ]
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
 
-        nv.addGraph(function () {
-            var chart = nv.models.linePlusBarChart()
-                            .margin({top: 30, right: 60, bottom: 50, left: 70})
-                        //We can set x data accessor to use index. Reason? So the bars all appear evenly spaced.
-                            .x(function (d, i) {
-                                return i
-                            })
-                            .y(function (d, i) {
-                                return d[1]
-                            });
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
 
-            chart.y1Axis.tickFormat(d3.format(',f'));
-            chart.y2Axis.tickFormat(d3.format(',f'));
-            chart.bars.forceY([0]);
 
-            d3.select('#chart-frequency-distribution svg')
-                    .datum(data)
-                    .transition()
-                    .duration(500)
-                    .call(chart);
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
 
-            nv.utils.windowResize(chart.update);
+      // Create the data table.
+      var data = google.visualization.arrayToDataTable({{ frequency|safe }});
 
-            return chart;
-        });
+      // Set chart options
+      var options = {'title':'Frequency',
+                     hAxis: {title: 'Semitones'},
+                     vAxis: {title: 'Pieces amount'}
+                     };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_frequency'));
+      chart.draw(data, options);
+    }
     </script>
 
-    <script type="text/javascript">
-        frequency_data = {{ frequency|safe }}
+    <script type="text/javascript" id="new_histogram">
 
-                nv.addGraph(function () {
-                    var chart_values = nv.models.discreteBarChart()
-                            .x(function (d) {
-                                return d.label
-                            })
-                            .y(function (d) {
-                                return d.value
-                            })
-                            .staggerLabels(true)
-                            .tooltips(false)
-                            .showValues(true)
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
 
-                    d3.select('#chart_values svg')
-                            .datum(frequency_data)
-                            .transition()
-                            .duration(500)
-                            .call(chart_values)
-                    ;
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
 
-                    nv.utils.windowResize(chart_values.update);
 
-                    return chart_values;
-                });
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+      // Create the data table.
+      var data = google.visualization.arrayToDataTable({{ histogram|safe }});
+
+      // Set chart options
+      var options = {'title':'Histogram',
+                     hAxis: {title: 'Semitones (percentiles)'},
+                     vAxis: {title: 'Pieces amount'}
+                     };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_histogram'));
+      chart.draw(data, options);
+    }
     </script>
 
-    <script type="text/javascript">
-        range_data_histogram = {{ histogram|safe }}
-
-                nv.addGraph(function () {
-                    var chart_histogram = nv.models.discreteBarChart()
-                            .x(function (d) {
-                                return d.label
-                            })
-                            .y(function (d) {
-                                return d.value
-                            })
-                            .staggerLabels(true)
-                            .tooltips(false)
-                            .showValues(true)
-
-                    d3.select('#chart_histogram svg')
-                            .datum(range_data_histogram)
-                            .transition()
-                            .duration(500)
-                            .call(chart_histogram)
-                    ;
-
-                    nv.utils.windowResize(chart_histogram.update);
-
-                    return chart_histogram;
-                });
-    </script>
 
     <script type="text/javascript">
         $(document).ready(function () {
