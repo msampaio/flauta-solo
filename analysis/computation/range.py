@@ -36,15 +36,42 @@ def basic_stats(range_list):
     return data
 
 
+def normal_distribution(x, mu, sigma):
+    first = 1 / (sigma * numpy.sqrt(2 * numpy.pi))
+    second = -1/2 * (((x - mu) / sigma) ** 2)
+
+    return first * (numpy.e ** second)
+
+
+def distribution(range_list):
+
+    basic_data = basic_stats(range_list)
+    mu = basic_data['Mean']
+    sigma = basic_data['Standard deviation']
+
+    d = [(v - mu) / sigma for v in range_list]
+
+    bins = 12
+    histogram = numpy.histogram(d, bins)
+    total = histogram[0].sum()
+    r = [['Sigma', 'Histogram', 'Range distribution', 'Normal distribution']]
+    values = zip(histogram[0], histogram[1])
+    for v, k in values:
+        r.append([k, v / total, v/total, normal_distribution(k, 0, 1)])
+
+    return r
+
 def analysis(compositions):
 
     range_list = get_ambitus_list(compositions)
     basic_stats_dic = basic_stats(range_list)
+    distribution(range_list)
 
     args = {
         'basic_stats': basic_stats_dic,
         'frequency': frequency(range_list),
         'histogram': histogram(range_list),
+        'distribution': distribution(range_list)
     }
 
     return args
