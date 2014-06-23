@@ -54,7 +54,7 @@
       // Set chart options
       var options = {'title':'Frequency',
                      hAxis: {title: 'Semitones'},
-                     vAxis: {title: 'Pieces amount'}
+                     vAxis: {title: 'Pieces per range'}
                      };
 
       // Instantiate and draw our chart, passing in some options.
@@ -63,7 +63,7 @@
     }
     </script>
 
-    <script type="text/javascript" id="new_histogram">
+    <script type="text/javascript" id="histogram">
 
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
@@ -83,7 +83,7 @@
       // Set chart options
       var options = {'title':'Histogram',
                      hAxis: {title: 'Semitones (percentiles)'},
-                     vAxis: {title: 'Pieces amount'}
+                     vAxis: {title: 'Pieces per bin'}
                      };
 
       // Instantiate and draw our chart, passing in some options.
