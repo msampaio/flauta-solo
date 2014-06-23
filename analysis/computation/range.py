@@ -42,6 +42,8 @@ def normal_distribution(x, mu, sigma):
 
     return first * (numpy.e ** second)
 
+def normalization(value, mu, sigma):
+    return (value - mu) / sigma
 
 def distribution(range_list):
 
@@ -49,13 +51,16 @@ def distribution(range_list):
     mu = basic_data['Mean']
     sigma = basic_data['Standard deviation']
 
-    d = [(v - mu) / sigma for v in range_list]
+    normalized = [normalization(value, mu, sigma) for value in range_list]
 
-    bins = 12
-    histogram = numpy.histogram(d, bins)
+    bins = 10
+    histogram = numpy.histogram(normalized, bins)
     total = histogram[0].sum()
+
     r = [['Sigma', 'Histogram', 'Range distribution', 'Normal distribution']]
+
     values = zip(histogram[0], histogram[1])
+
     for v, k in values:
         r.append([k, v / total, v/total, normal_distribution(k, 0, 1)])
 
