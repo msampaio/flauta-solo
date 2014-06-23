@@ -141,21 +141,15 @@
       function drawChart() {
 
       // Create the data table.
-      var data = google.visualization.arrayToDataTable([
-      ['Quartile', 'First', 'Second', 'Third', 'Fourth', { role: 'annotation' }],
-      {{ boxplot|safe }}
-      ]);
+      var data = google.visualization.arrayToDataTable([{{ boxplot|safe }}], true);
 
       // Set chart options
       var options = {'title':'Boxplot',
-                     bar: { groupWidth: '75%' },
-                     isStacked: true,
-                     legend: { position: 'top', maxLines: 3 },
-                     hAxis: {title: 'Pieces'},
+                     'legend': 'none',
                      };
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.BarChart(document.getElementById('chart_boxplot'));
+      var chart = new google.visualization.CandlestickChart(document.getElementById('chart_boxplot'));
       chart.draw(data, options);
     }
     </script>

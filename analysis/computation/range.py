@@ -68,20 +68,12 @@ def distribution(range_list):
 
 def boxplot(range_list):
     basic_data = basic_stats(range_list)
-    min = basic_data['Min']
-    max = basic_data['Max']
+    minimum = basic_data['Min']
+    maximum = basic_data['Max']
     quartile_1 = basic_data['Quartile 1']
     quartile_3 = basic_data['Quartile 3']
-    median = basic_data['Median']
 
-    r = ['']
-    r.append(quartile_1 - min)
-    r.append(median - quartile_1)
-    r.append(quartile_3 - median)
-    r.append(max - quartile_3)
-    r.append('')
-
-    return r
+    return ['', maximum, quartile_3, quartile_1, minimum]
 
 def analysis(compositions):
 
