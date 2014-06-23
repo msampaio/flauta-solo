@@ -31,7 +31,8 @@ def basic_stats(range_list):
             'Median': numpy.median(range_list),
             'Quartile 1': numpy.percentile(range_list, 25),
             'Quartile 3': numpy.percentile(range_list, 75),
-            'Standard deviation': numpy.std(range_list)
+            'Standard deviation': numpy.std(range_list),
+            'Pieces number': len(range_list)
     }
     return data
 
