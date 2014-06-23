@@ -66,6 +66,23 @@ def distribution(range_list):
 
     return r
 
+def boxplot(range_list):
+    basic_data = basic_stats(range_list)
+    min = basic_data['Min']
+    max = basic_data['Max']
+    quartile_1 = basic_data['Quartile 1']
+    quartile_3 = basic_data['Quartile 3']
+    median = basic_data['Median']
+
+    r = ['']
+    r.append(quartile_1 - min)
+    r.append(median - quartile_1)
+    r.append(quartile_3 - median)
+    r.append(max - quartile_3)
+    r.append('')
+
+    return r
+
 def analysis(compositions):
 
     range_list = get_ambitus_list(compositions)
@@ -76,7 +93,8 @@ def analysis(compositions):
         'basic_stats': basic_stats_dic,
         'frequency': frequency(range_list),
         'histogram': histogram(range_list),
-        'distribution': distribution(range_list)
+        'distribution': distribution(range_list),
+        'boxplot': boxplot(range_list),
     }
 
     return args
