@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Intervals Result
+{% endblock %}
+
+{% block body %}
+    <h1>Intervals results</h1>
+
+    <div id="chart_frequency" style="width: 1000px; height: 400px;"></div>
+
+    <div>
+        <h2>Basic Statistics</h2>
+        <table id="basic_statistics" class="display">
+            <thead>
+            <tr>
+                <th>Measure</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for measure, value in basic_stats.items %}
+                <tr>
+                    <td>{{ measure }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" id="frequency_scatter">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+      // Create the data table.
+      var data = google.visualization.arrayToDataTable({{ frequency_scatter|safe }});
+
+      // Set chart options
+      var options = {'title':'Intervals frequency',
+                     hAxis: {title: 'Semitones'},
+                     vAxis: {title: 'Amount (normalized by std dev.)'},
+                     pointSize: 5,
+                     };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.ScatterChart(document.getElementById('chart_frequency'));
+      chart.draw(data, options);
+    }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#basic_statistics').dataTable();
+        });
+    </script>
+{% endblock %}
