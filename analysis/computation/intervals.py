@@ -75,6 +75,13 @@ def frequency_scatter(intervals):
     return seq
 
 
+def frequency_pie(intervals):
+    all_intervals = flatten(intervals)
+    r = sorted(([str(k), v] for k, v in count_intervals(all_intervals).items()), key = lambda x: x[1], reverse=True)
+    r.insert(0, ['Interval', 'Amount'])
+    return r
+
+
 def basic_stats(intervals_list):
     flat = flatten(intervals_list)
     data = {'Min': min(flat),
@@ -91,6 +98,7 @@ def analysis(compositions):
     args = {
         'frequency_scatter': frequency_scatter(intervals),
         'basic_stats': basic_stats(intervals),
+        'frequency_pie': frequency_pie(intervals),
     }
 
     return args
