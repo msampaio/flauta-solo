@@ -10,20 +10,27 @@ def flatten(seq):
 def get_intervals_list(compositions):
     return [c.music_data.intervals_midi for c in compositions]
 
+
+
+def count_intervals(intervals_list, proportional=False, limit=48):
+    counted = Counter(intervals_list)
+    total = len(intervals_list)
+
+    if limit != None:
+        intervals_range = range(-limit, limit + 1)
+        for i in intervals_range:
+            if i not in counted:
+                counted[i] = 0
+            if proportional:
+                counted[i] = counted[i] / total
+
+    return counted
+
+
 def get_piece_frequency(intervals_list, proportional=False, limit=48):
-    intervals_range = range(-limit, limit + 1)
-    c = Counter()
-    for i in intervals_range:
-        c[i] = 0
-    c.update(intervals_list)
+    counted = count_intervals(intervals_list, proportional, limit)
 
-    seq = numpy.array([c[i] for i in intervals_range])
-    total = seq.sum()
-
-    if proportional:
-        seq = numpy.array([(el/total) for el in seq])
-
-    return seq
+    return numpy.array([v for _, v in sorted(counted.items())])
 
 
 def normalize_array(array, column=0):
