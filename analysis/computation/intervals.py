@@ -83,11 +83,11 @@ def frequency_pie(intervals):
 
 
 def basic_stats(intervals_list):
-    flat = flatten(intervals_list)
-    data = {'Min': min(flat),
-            'Max': max(flat),
-            'Mean': numpy.mean(flat),
-            'Standard deviation': numpy.std(flat),
+    all_intervals = flatten(intervals_list)
+    data = {'Min': min(all_intervals),
+            'Max': max(all_intervals),
+            'Mean': numpy.mean(all_intervals),
+            'Standard deviation': numpy.std(all_intervals),
             'Pieces number': len(intervals_list),
     }
     return data
