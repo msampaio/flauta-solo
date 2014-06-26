@@ -8,6 +8,8 @@
     <h1>Intervals results</h1>
 
     <div id="chart_frequency_scatter" style="width: 1000px; height: 400px;"></div>
+    <div id="chart_frequency_pie" style="width: 1000px; height: 400px;"></div>
+    <div id="chart_chromatic_frequency_pie" style="width: 1000px; height: 400px;"></div>
 
     <div>
         <h2>Basic Statistics</h2>
@@ -62,6 +64,61 @@
       chart.draw(data, options);
     }
     </script>
+
+    <script type="text/javascript" id="frequency_pie">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+      // Create the data table.
+      var data = google.visualization.arrayToDataTable({{ frequency_pie|safe }});
+
+      // Set chart options
+      var options = {'title':'Intervals frequency',
+                     };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie'));
+      chart.draw(data, options);
+    }
+    </script>
+
+    <script type="text/javascript" id="chromatic_frequency_pie">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+      // Create the data table.
+      var data = google.visualization.arrayToDataTable({{ chromatic_frequency_pie|safe }});
+
+      // Set chart options
+      var options = {'title':'Chromatic intervals frequency',
+                     };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_frequency_pie'));
+      chart.draw(data, options);
+    }
+    </script>
+
 
     <script type="text/javascript">
         $(document).ready(function () {

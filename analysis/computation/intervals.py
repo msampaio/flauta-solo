@@ -7,9 +7,12 @@ def flatten(seq):
     return [el for l in seq for el in l]
 
 
-def get_intervals_list(compositions):
+def get_midi_intervals(compositions):
     return [c.music_data.intervals_midi for c in compositions]
 
+
+def get_chromatic_intervals(compositions):
+    return [c.music_data.intervals for c in compositions]
 
 
 def count_intervals(intervals_list, proportional=False, limit=48):
@@ -84,6 +87,11 @@ def frequency_pie(intervals):
     r = aux_pie_chart(count_intervals(all_intervals))
     r.insert(0, ['Interval', 'Amount'])
     return r
+
+
+def chromatic_frequency_pie(chromatic_intervals):
+    all_chromatic_intervals = flatten(chromatic_intervals)
+    r = aux_pie_chart(count_intervals(all_chromatic_intervals, False, None))
     r.insert(0, ['Interval', 'Amount'])
     return r
 
@@ -100,11 +108,13 @@ def basic_stats(intervals_list):
 
 
 def analysis(compositions):
-    intervals = get_intervals_list(compositions)
+    midi_intervals = get_midi_intervals(compositions)
+    chromatic_intervals = get_chromatic_intervals(compositions)
     args = {
-        'frequency_scatter': frequency_scatter(intervals),
-        'basic_stats': basic_stats(intervals),
-        'frequency_pie': frequency_pie(intervals),
+        'frequency_scatter': frequency_scatter(midi_intervals),
+        'basic_stats': basic_stats(midi_intervals),
+        'frequency_pie': frequency_pie(midi_intervals),
+        'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals)
     }
 
     return args
