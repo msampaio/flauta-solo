@@ -2,6 +2,11 @@ import numpy
 
 from collections import Counter
 
+
+def flatten(seq):
+    return [el for l in seq for el in l]
+
+
 def get_intervals_list(compositions):
     return [c.music_data.intervals_midi for c in compositions]
 
@@ -56,17 +61,29 @@ def array_to_pairs(array, init=None):
 
 
 def frequency_scatter(intervals):
-    limit = 24
+    limit = 48
     array = get_frequency(intervals, True, limit)
     seq = array_to_pairs(array, -limit)
     seq.insert(0, ['Interval', 'Amount'])
     return seq
 
 
+def basic_stats(intervals_list):
+    flat = flatten(intervals_list)
+    data = {'Min': min(flat),
+            'Max': max(flat),
+            'Mean': numpy.mean(flat),
+            'Standard deviation': numpy.std(flat),
+            'Pieces number': len(intervals_list),
+    }
+    return data
+
+
 def analysis(compositions):
     intervals = get_intervals_list(compositions)
     args = {
-        'frequency_scatter': frequency_scatter(intervals)
+        'frequency_scatter': frequency_scatter(intervals),
+        'basic_stats': basic_stats(intervals),
     }
 
     return args
