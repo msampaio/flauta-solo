@@ -96,6 +96,16 @@ def chromatic_frequency_pie(chromatic_intervals):
     return r
 
 
+def chromatic_leaps_frequency_pie(chromatic_intervals):
+    all_chromatic_intervals = flatten(chromatic_intervals)
+    counted = count_intervals(all_chromatic_intervals, False, None)
+    for i in ['P1', 'M2', 'm2', 'M3', 'm3']:
+        del counted[i]
+    r = aux_pie_chart(counted)
+    r.insert(0, ['Interval', 'Amount'])
+    return r
+
+
 def basic_stats(intervals_list):
     all_intervals = flatten(intervals_list)
     data = {'Min': min(all_intervals),
@@ -114,7 +124,8 @@ def analysis(compositions):
         'frequency_scatter': frequency_scatter(midi_intervals),
         'basic_stats': basic_stats(midi_intervals),
         'frequency_pie': frequency_pie(midi_intervals),
-        'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals)
+        'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
+        'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
     }
 
     return args
