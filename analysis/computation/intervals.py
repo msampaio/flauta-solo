@@ -75,9 +75,15 @@ def frequency_scatter(intervals):
     return seq
 
 
+def aux_pie_chart(counted_dic):
+    return sorted(([str(k), v] for k, v in counted_dic.items()), key = lambda x: x[1], reverse=True)
+
+
 def frequency_pie(intervals):
     all_intervals = flatten(intervals)
-    r = sorted(([str(k), v] for k, v in count_intervals(all_intervals).items()), key = lambda x: x[1], reverse=True)
+    r = aux_pie_chart(count_intervals(all_intervals))
+    r.insert(0, ['Interval', 'Amount'])
+    return r
     r.insert(0, ['Interval', 'Amount'])
     return r
 
