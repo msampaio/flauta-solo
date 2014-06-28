@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from analysis.models import MusicData, Composition
-from analysis.computation import range
+from analysis.computation import ambitus
 from analysis.computation import intervals
 
 
@@ -38,7 +38,7 @@ def dashboard(request):
     return render(request, "dashboard.html", args)
 
 
-def show_range(request):
+def show_ambitus(request):
     def uniq_items_in_model(item, model=MusicData):
         items = model.objects.values(item).distinct().order_by(item)
         return [x[item] for x in items]
@@ -62,16 +62,16 @@ def show_range(request):
 
         compositions = Composition.objects.filter(**kwargs)
 
-        args = range.analysis(compositions)
+        args = ambitus.analysis(compositions)
 
-        return render(request, 'range_result.html', args)
+        return render(request, 'ambitus_result.html', args)
 
     args = {'compositions': uniq_items_in_model('title', Composition),
             'keys': uniq_items_in_model('key'),
             'durations': uniq_items_in_model('total_duration'),
             'signatures': uniq_items_in_model('time_signature'),
     }
-    return render(request, 'range.html', args)
+    return render(request, 'ambitus.html', args)
 
 
 def show_intervals(request):

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Flauta Solo | Range
+    Flauta Solo | Ambitus
 {% endblock %}
 
 
 {% block body %}
-    <h1>Range</h1>
+    <h1>Ambitus</h1>
 
-    <form class="form-horizontal" action='{% url "range" %}' method="post">
+    <form class="form-horizontal" action='{% url "ambitus" %}' method="post">
         {% csrf_token %}
         <fieldset>
             <div class="form-group">
@@ -71,7 +71,7 @@
     <script>
         $(document).ready(function () {
             $(".nav li").removeClass("active");
-            $('#range').addClass('active');
+            $('#ambitus').addClass('active');
         });
     </script>
 {% endblock %}
