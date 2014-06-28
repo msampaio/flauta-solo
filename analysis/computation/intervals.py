@@ -19,13 +19,13 @@ def count_intervals(intervals_list, proportional=False, limit=48):
     counted = Counter(intervals_list)
     total = len(intervals_list)
 
-    if limit != None:
+    if limit:
         intervals_range = range(-limit, limit + 1)
         for i in intervals_range:
             if i not in counted:
                 counted[i] = 0
             if proportional:
-                counted[i] = counted[i] / total
+                counted[i] /= total
 
     return counted
 
@@ -41,7 +41,7 @@ def normalize_array(array, column=0):
     mean = c_array.mean()
     std = c_array.std()
     if std != 0:
-        array[:,column] = (array[:,column] - mean) / std
+        array[:, column] = (array[:, column] - mean) / std
 
     return array
 
@@ -58,13 +58,14 @@ def get_frequency(intervals_list, normalized=False, limit=48):
 
     return array
 
+
 def array_to_pairs(array, init=None):
     pairs = []
     for column in range(len(array[0])):
-        rows = array[:,column]
+        rows = array[:, column]
         for row in rows:
             c = column
-            if init != None:
+            if init:
                 c = init + c
             pairs.append([c, rows[row]])
     return pairs
@@ -79,7 +80,7 @@ def frequency_scatter(intervals):
 
 
 def aux_pie_chart(counted_dic):
-    return sorted(([str(k), v] for k, v in counted_dic.items()), key = lambda x: x[1], reverse=True)
+    return sorted(([str(k), v] for k, v in counted_dic.items()), key=lambda x: x[1], reverse=True)
 
 
 def frequency_pie(intervals):
@@ -113,7 +114,7 @@ def basic_stats(intervals_list):
             'Mean': numpy.mean(all_intervals),
             'Standard deviation': numpy.std(all_intervals),
             'Pieces number': len(intervals_list),
-    }
+            }
     return data
 
 
