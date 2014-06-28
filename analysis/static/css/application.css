@@ -107,3 +107,8 @@ svg {
     width: 1000px;
     height: 400px;
 }
+
+
+.table {
+    width: auto !important;
+}
