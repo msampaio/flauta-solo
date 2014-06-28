@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Range Result
+    Ambitus Result
 {% endblock %}
 
 {% block body %}
-    <h1>Range results</h1>
+    <h1>Ambitus results</h1>
 
     <div id="chart_frequency" style="width: 1000px; height: 400px;"></div>
     <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
@@ -56,7 +56,7 @@
       // Set chart options
       var options = {'title':'Frequency',
                      hAxis: {title: 'Semitones'},
-                     vAxis: {title: 'Pieces per range'}
+                     vAxis: {title: 'Pieces per ambitus'}
                      };
 
       // Instantiate and draw our chart, passing in some options.

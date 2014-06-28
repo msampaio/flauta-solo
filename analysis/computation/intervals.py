@@ -1,10 +1,6 @@
-import numpy
-
 from collections import Counter
-
-
-def flatten(seq):
-    return [el for l in seq for el in l]
+import numpy
+from analysis.computation import utils
 
 
 def get_midi_intervals(compositions):
@@ -36,16 +32,6 @@ def get_piece_frequency(intervals_list, proportional=False, limit=48):
     return numpy.array([v for _, v in sorted(counted.items())])
 
 
-def normalize_array(array, column=0):
-    c_array = array[:,column]
-    mean = c_array.mean()
-    std = c_array.std()
-    if std != 0:
-        array[:, column] = (array[:, column] - mean) / std
-
-    return array
-
-
 def get_frequency(intervals_list, normalized=False, limit=48):
     seq = [get_piece_frequency(s, normalized, limit) for s in intervals_list]
 
@@ -54,7 +40,7 @@ def get_frequency(intervals_list, normalized=False, limit=48):
     if normalized:
         row_size = len(array[0])
         for i in range(row_size):
-            normalize_array(array, 1)
+            utils.normalize_array(array, 1)
 
     return array
 
@@ -79,36 +65,32 @@ def frequency_scatter(intervals):
     return seq
 
 
-def aux_pie_chart(counted_dic):
-    return sorted(([str(k), v] for k, v in counted_dic.items()), key=lambda x: x[1], reverse=True)
-
-
 def frequency_pie(intervals):
-    all_intervals = flatten(intervals)
-    r = aux_pie_chart(count_intervals(all_intervals))
+    all_intervals = utils.flatten(intervals)
+    r = utils.aux_pie_chart(count_intervals(all_intervals))
     r.insert(0, ['Interval', 'Amount'])
     return r
 
 
 def chromatic_frequency_pie(chromatic_intervals):
-    all_chromatic_intervals = flatten(chromatic_intervals)
-    r = aux_pie_chart(count_intervals(all_chromatic_intervals, False, None))
+    all_chromatic_intervals = utils.flatten(chromatic_intervals)
+    r = utils.aux_pie_chart(count_intervals(all_chromatic_intervals, False, None))
     r.insert(0, ['Interval', 'Amount'])
     return r
 
 
 def chromatic_leaps_frequency_pie(chromatic_intervals):
-    all_chromatic_intervals = flatten(chromatic_intervals)
+    all_chromatic_intervals = utils.flatten(chromatic_intervals)
     counted = count_intervals(all_chromatic_intervals, False, None)
     for i in ['P1', 'M2', 'm2', 'M3', 'm3']:
         del counted[i]
-    r = aux_pie_chart(counted)
+    r = utils.aux_pie_chart(counted)
     r.insert(0, ['Interval', 'Amount'])
     return r
 
 
 def basic_stats(intervals_list):
-    all_intervals = flatten(intervals_list)
+    all_intervals = utils.flatten(intervals_list)
     data = {'Min': min(all_intervals),
             'Max': max(all_intervals),
             'Mean': numpy.mean(all_intervals),
@@ -120,6 +102,7 @@ def basic_stats(intervals_list):
 
 def analysis(compositions):
     midi_intervals = get_midi_intervals(compositions)
+    all_midi_intervals = utils.flatten(midi_intervals)
     chromatic_intervals = get_chromatic_intervals(compositions)
     args = {
         'frequency_scatter': frequency_scatter(midi_intervals),
@@ -127,6 +110,7 @@ def analysis(compositions):
         'frequency_pie': frequency_pie(midi_intervals),
         'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
         'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
+        'histogram': utils.histogram(all_midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
     }
 
     return args
