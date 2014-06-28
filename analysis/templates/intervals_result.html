@@ -12,139 +12,75 @@
     <div class="interval-chart" id="chart_chromatic_frequency_pie"></div>
     <div class="interval-chart" id="chart_chromatic_leaps_frequency_pie"></div>
 
-    <div>
-        <h2>Basic Statistics</h2>
-        <table id="basic_statistics" class="display">
-            <thead>
+    <h2>Basic Statistics</h2>
+    <table id="basic_statistics" class="display">
+        <thead>
+        <tr>
+            <th>Measure</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for measure, value in basic_stats.items %}
             <tr>
-                <th>Measure</th>
-                <th>Value</th>
+                <td>{{ measure }}</td>
+                <td>{{ value }}</td>
             </tr>
-            </thead>
-            <tbody>
-            {% for measure, value in basic_stats.items %}
-                <tr>
-                    <td>{{ measure }}</td>
-                    <td>{{ value }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        {% endfor %}
+        </tbody>
+    </table>
+
 {% endblock %}
 
 {% block javascript %}
-    <!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" id="frequency_scatter">
+{#    Use Autoloading: https://developers.google.com/chart/interactive/docs/library_loading_enhancements #}
+    <script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
 
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart']});
+    <script type="text/javascript">
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
+    google.setOnLoadCallback(init);
 
-
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
-
-      // Create the data table.
-      var data = google.visualization.arrayToDataTable({{ frequency_scatter|safe }});
-
-      // Set chart options
-      var options = {'title':'Intervals frequency',
-                     hAxis: {title: 'Semitones'},
-                     vAxis: {title: 'Amount (normalized by std dev.)'},
-                     pointSize: 5,
-                     };
-
-      // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.ScatterChart(document.getElementById('chart_frequency_scatter'));
-      chart.draw(data, options);
+    function init() {
+        drawChart1()
+        drawChart2()
+        drawChart3()
+        drawChart4()
     }
-    </script>
 
-    <script type="text/javascript" id="frequency_pie">
+    function drawChart1() {
+        var data = google.visualization.arrayToDataTable( {{ frequency_scatter | safe }} );
 
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart']});
+        var options = {
+            'title': 'Intervals frequency',
+            hAxis: {title: 'Semitones'},
+            vAxis: {title: 'Amount (normalized by std dev.)'},
+            pointSize: 5
+        };
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_frequency_scatter'));
+        chart.draw(data, options);
+        }
 
+      function drawChart2() {
+          var data = google.visualization.arrayToDataTable({{ frequency_pie|safe }});
+          var options = {'title': 'Intervals frequency' };
+          var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie'));
+          chart.draw(data, options);
+      }
 
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
+      function drawChart3() {
+          var data = google.visualization.arrayToDataTable({{ chromatic_frequency_pie|safe }});
+          var options = {'title':'Chromatic intervals frequency' };
+          var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_frequency_pie'));
+          chart.draw(data, options);
+       }
 
-      // Create the data table.
-      var data = google.visualization.arrayToDataTable({{ frequency_pie|safe }});
-
-      // Set chart options
-      var options = {'title':'Intervals frequency',
-                     };
-
-      // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie'));
-      chart.draw(data, options);
-    }
-    </script>
-
-    <script type="text/javascript" id="chromatic_frequency_pie">
-
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
-
-
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
-
-      // Create the data table.
-      var data = google.visualization.arrayToDataTable({{ chromatic_frequency_pie|safe }});
-
-      // Set chart options
-      var options = {'title':'Chromatic intervals frequency',
-                     };
-
-      // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_frequency_pie'));
-      chart.draw(data, options);
-    }
-    </script>
-
-    <script type="text/javascript" id="chromatic_leaps_frequency_pie">
-
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
-
-
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
-
-      // Create the data table.
-      var data = google.visualization.arrayToDataTable({{ chromatic_leaps_frequency_pie|safe }});
-
-      // Set chart options
-      var options = {'title':'Chromatic leaps frequency (without 2nd and 3rds)',
-                     };
-
-      // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_leaps_frequency_pie'));
-      chart.draw(data, options);
-    }
+      function drawChart4() {
+          var data = google.visualization.arrayToDataTable({{ chromatic_leaps_frequency_pie|safe }});
+          var options = {'title':'Chromatic leaps frequency (without 2nd and 3rds)' };
+          var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_leaps_frequency_pie'));
+          chart.draw(data, options);
+       }
     </script>
 
     <script type="text/javascript">
