@@ -60,7 +60,7 @@ def analysis(compositions):
     args = {
         'basic_stats': basic_stats_dic,
         'frequency': frequency(ambitus_list),
-        'histogram': utils.histogram(ambitus_list, 10, ['Ambitus', 'Pieces'], True),
+        'histogram': utils.histogram(ambitus_list, 10, ['Ambitus', 'Pieces'], False, True),
         'distribution': distribution(ambitus_list),
         'boxplot': utils.boxplot(basic_stats_dic),
     }

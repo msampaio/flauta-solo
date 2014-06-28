@@ -28,14 +28,17 @@ def normalize_array(array, column=0):
 
 # chart functions #
 
-def histogram(int_sequence, bins, label, string=True):
+def histogram(int_sequence, bins, label, swap=True, string=True):
     hist_data = numpy.histogram(int_sequence, bins)
     r = [label]
+
     for i in range(bins):
+        pair = [hist_data[1][i], hist_data[0][i]]
+        if swap:
+            pair.reverse()
         if string:
-            r.append([str(hist_data[1][i]), hist_data[0][i]])
-        else:
-            r.append([hist_data[1][i], hist_data[0][i]])
+            pair[0] = str(pair[0])
+        r.append(pair)
 
     return r
 
