@@ -102,6 +102,7 @@ def basic_stats(intervals_list):
 
 def analysis(compositions):
     midi_intervals = get_midi_intervals(compositions)
+    all_midi_intervals = utils.flatten(midi_intervals)
     chromatic_intervals = get_chromatic_intervals(compositions)
     args = {
         'frequency_scatter': frequency_scatter(midi_intervals),
@@ -109,6 +110,7 @@ def analysis(compositions):
         'frequency_pie': frequency_pie(midi_intervals),
         'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
         'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
+        'histogram': utils.histogram(all_midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
     }
 
     return args
