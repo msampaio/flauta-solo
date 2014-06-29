@@ -63,6 +63,10 @@ def frequency_scatter(intervals):
     array = get_frequency(intervals, True, limit)
     seq = array_to_pairs(array, -limit)
     seq.insert(0, ['Interval', 'Amount'])
+    # TODO: decide if remove pairs here or in get_frequency
+    for pair in seq[1:]:
+        if pair[1] == 0:
+            seq.remove(pair)
     return seq
 
 
