@@ -92,13 +92,27 @@ def chromatic_leaps_frequency_pie(chromatic_intervals):
 
 def basic_stats(intervals_list):
     all_intervals = utils.flatten(intervals_list)
+    freq = Counter(all_intervals)
+    freq_values = list(freq.values())
+
     data = SortedDict([
-            ('Min', min(all_intervals)),
-            ('Max', max(all_intervals)),
-            ('Mean', numpy.mean(all_intervals)),
-            ('Standard deviation', numpy.std(all_intervals)),
+            ('Value Min', min(all_intervals)),
+            ('Value Max', max(all_intervals)),
+            ('Value Mean', numpy.mean(all_intervals)),
+            ('Value Median', numpy.median(all_intervals)),
+            ('Value Standard deviation', numpy.std(all_intervals)),
+            ('Value Quartile 1', numpy.percentile(all_intervals, 25)),
+            ('Value Quartile 3', numpy.percentile(all_intervals, 75)),
+            ('Amount with most common', max(freq.values())),
+            ('Amount with less common', min(freq.values())),
+            ('Amount Mean', numpy.mean(freq_values)),
+            ('Amount Median', numpy.median(freq_values)),
+            ('Amount Standard deviation', numpy.std(freq_values)),
+            ('Amount Quartile 1', numpy.percentile(freq_values, 25)),
+            ('Amount Quartile 3', numpy.percentile(freq_values, 75)),
+            ('Intervals number', len(all_intervals)),
             ('Pieces number', len(intervals_list)),
-            ])
+    ])
     return data
 
 

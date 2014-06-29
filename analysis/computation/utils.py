@@ -44,10 +44,10 @@ def histogram(int_sequence, bins, label, swap=True, string=True):
 
 
 def boxplot(basic_data):
-    minimum = basic_data['Min']
-    maximum = basic_data['Max']
-    quartile_1 = basic_data['Quartile 1']
-    quartile_3 = basic_data['Quartile 3']
+    minimum = basic_data['Value Min']
+    maximum = basic_data['Value Max']
+    quartile_1 = basic_data['Value Quartile 1']
+    quartile_3 = basic_data['Value Quartile 3']
 
     return ['', maximum, quartile_3, quartile_1, minimum]
 
