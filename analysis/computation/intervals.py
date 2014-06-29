@@ -90,8 +90,7 @@ def chromatic_leaps_frequency_pie(chromatic_intervals):
     return r
 
 
-def basic_stats(intervals_list):
-    all_intervals = utils.flatten(intervals_list)
+def basic_stats(all_intervals):
     freq = Counter(all_intervals)
     freq_values = list(freq.values())
 
@@ -111,7 +110,6 @@ def basic_stats(intervals_list):
             ('Amount Quartile 1', numpy.percentile(freq_values, 25)),
             ('Amount Quartile 3', numpy.percentile(freq_values, 75)),
             ('Intervals number', len(all_intervals)),
-            ('Pieces number', len(intervals_list)),
     ])
     return data
 
@@ -122,7 +120,7 @@ def analysis(compositions):
     chromatic_intervals = get_chromatic_intervals(compositions)
     args = {
         'frequency_scatter': frequency_scatter(midi_intervals),
-        'basic_stats': basic_stats(midi_intervals),
+        'basic_stats': basic_stats(all_midi_intervals),
         'frequency_pie': frequency_pie(midi_intervals),
         'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
         'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
