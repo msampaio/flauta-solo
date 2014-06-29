@@ -14,7 +14,7 @@
 
     <div>
         <h2>Basic Statistics</h2>
-        <table id="basic_statistics" class="display">
+        <table id="basic_statistics" class="table">
             <thead>
             <tr>
                 <th>Measure</th>
@@ -24,8 +24,8 @@
             <tbody>
             {% for measure, value in basic_stats.items %}
                 <tr>
-                    <td>{{ measure }}</td>
-                    <td>{{ value }}</td>
+                    <td class="simple-table-measure">{{ measure }}</td>
+                    <td class="simple-table-value">{{ value }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -102,11 +102,5 @@
         var chart = new google.visualization.CandlestickChart(document.getElementById('chart_boxplot'));
         chart.draw(data, options);
         }
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#basic_statistics').dataTable();
-        });
     </script>
 {% endblock %}
