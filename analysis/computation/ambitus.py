@@ -1,4 +1,5 @@
 from collections import Counter
+from django.utils.datastructures import SortedDict
 import numpy
 from analysis.computation import utils
 
@@ -17,15 +18,16 @@ def frequency(ambitus_list):
 
 
 def basic_stats(ambitus_list):
-    data = {'Min': min(ambitus_list),
-            'Max': max(ambitus_list),
-            'Mean': numpy.mean(ambitus_list),
-            'Median': numpy.median(ambitus_list),
-            'Quartile 1': numpy.percentile(ambitus_list, 25),
-            'Quartile 3': numpy.percentile(ambitus_list, 75),
-            'Standard deviation': numpy.std(ambitus_list),
-            'Pieces number': len(ambitus_list)
-    }
+    data = SortedDict([
+            ('Min', min(ambitus_list)),
+            ('Max', max(ambitus_list)),
+            ('Mean', numpy.mean(ambitus_list)),
+            ('Median', numpy.median(ambitus_list)),
+            ('Standard deviation', numpy.std(ambitus_list)),
+            ('Quartile 1', numpy.percentile(ambitus_list, 25)),
+            ('Quartile 3', numpy.percentile(ambitus_list, 75)),
+            ('Pieces number', len(ambitus_list)),
+    ])
     return data
 
 

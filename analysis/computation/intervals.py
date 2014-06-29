@@ -1,4 +1,5 @@
 from collections import Counter
+from django.utils.datastructures import SortedDict
 import numpy
 from analysis.computation import utils
 
@@ -91,12 +92,13 @@ def chromatic_leaps_frequency_pie(chromatic_intervals):
 
 def basic_stats(intervals_list):
     all_intervals = utils.flatten(intervals_list)
-    data = {'Min': min(all_intervals),
-            'Max': max(all_intervals),
-            'Mean': numpy.mean(all_intervals),
-            'Standard deviation': numpy.std(all_intervals),
-            'Pieces number': len(intervals_list),
-            }
+    data = SortedDict([
+            ('Min', min(all_intervals)),
+            ('Max', max(all_intervals)),
+            ('Mean', numpy.mean(all_intervals)),
+            ('Standard deviation', numpy.std(all_intervals)),
+            ('Pieces number', len(intervals_list)),
+            ])
     return data
 
 
