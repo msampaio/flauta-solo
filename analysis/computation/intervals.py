@@ -114,6 +114,29 @@ def basic_stats(all_intervals):
     return data
 
 
+def distribution_amount(all_intervals):
+    freq = Counter(all_intervals)
+
+    basic_data = basic_stats(all_intervals)
+    mu = basic_data['Amount Mean']
+    sigma = basic_data['Amount Standard deviation']
+
+    normalized = [utils.normalization(value, mu, sigma) for value in list(freq.values())]
+
+    bins = 10
+    histogram = numpy.histogram(normalized, bins)
+    total = histogram[0].sum()
+
+    r = [['Sigma', 'Histogram', 'Amount distribution', 'Normal distribution']]
+
+    values = zip(histogram[0], histogram[1])
+
+    for v, k in values:
+        r.append([k, v / total, v/total, utils.normal_distribution(k, 0, 1)])
+
+    return r
+
+
 def analysis(compositions):
     midi_intervals = get_midi_intervals(compositions)
     all_midi_intervals = utils.flatten(midi_intervals)
@@ -125,6 +148,7 @@ def analysis(compositions):
         'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
         'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
         'histogram': utils.histogram(all_midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
+        'distribution_amount': distribution_amount(all_midi_intervals),
     }
 
     return args

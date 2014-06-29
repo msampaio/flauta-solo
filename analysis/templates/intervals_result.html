@@ -9,6 +9,7 @@
 
     <div class="interval-chart" id="chart_frequency_scatter"></div>
     <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
+    <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
     <div class="interval-chart" id="chart_frequency_pie"></div>
     <div class="interval-chart" id="chart_chromatic_frequency_pie"></div>
     <div class="interval-chart" id="chart_chromatic_leaps_frequency_pie"></div>
@@ -47,6 +48,7 @@
         drawChart3()
         drawChart4()
         drawChart5()
+        drawChart6()
     }
 
     function drawChart1() {
@@ -77,21 +79,38 @@
         chart.draw(data, options);
         }
 
-      function drawChart3() {
+    function drawChart3() {
+        var data = google.visualization.arrayToDataTable( {{ distribution_amount | safe }} );
+
+        var options = {
+            'title':'Distribution by intervals amount per interval type',
+            hAxis: {title: 'Sigma',
+            ticks: [-3, -2, -1, 0, 1, 2, 3]},
+            seriesType: "bars",
+            series: {1: {type: "line", curveType: 'function'},
+                     2: {type: "line", curveType: 'function'}},
+
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_distribution_amount'));
+        chart.draw(data, options);
+        }
+
+      function drawChart4() {
           var data = google.visualization.arrayToDataTable({{ frequency_pie|safe }});
           var options = {'title': 'Intervals frequency' };
           var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie'));
           chart.draw(data, options);
       }
 
-      function drawChart4() {
+      function drawChart5() {
           var data = google.visualization.arrayToDataTable({{ chromatic_frequency_pie|safe }});
           var options = {'title':'Chromatic intervals frequency' };
           var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_frequency_pie'));
           chart.draw(data, options);
        }
 
-      function drawChart5() {
+      function drawChart6() {
           var data = google.visualization.arrayToDataTable({{ chromatic_leaps_frequency_pie|safe }});
           var options = {'title':'Chromatic leaps frequency (without 2nd and 3rds)' };
           var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_leaps_frequency_pie'));
