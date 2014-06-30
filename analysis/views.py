@@ -2,6 +2,7 @@ import json
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+from django.shortcuts import render_to_response
 from analysis.models import MusicData, Composition
 from analysis.computation import ambitus
 from analysis.computation import intervals
@@ -108,3 +109,12 @@ def show_intervals(request):
             'signatures': uniq_items_in_model('time_signature'),
     }
     return render(request, 'intervals.html', args)
+
+
+def stats(request):
+    args = {
+        'music_data': MusicData.objects.all().order_by('score__filename'),
+        'number_music_data': MusicData.objects.count(),
+        'number_compositions': Composition.objects.count(),
+    }
+    return render(request, 'stats.html', args)

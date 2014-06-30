@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^ambitus/$', 'analysis.views.show_ambitus', name='ambitus'),
     url(r'^intervals/$', 'analysis.views.show_intervals', name='intervals'),
     url(r'^dashboard/$', 'analysis.views.dashboard', name='dashboard'),
+    url(r'^stats/$', 'analysis.views.stats', name='stats'),
     url(r'^admin/', include(admin.site.urls)),
 )
