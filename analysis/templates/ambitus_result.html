@@ -11,6 +11,7 @@
     <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
     <div id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
     <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
+    <div id="chart_frequency_pie" style="width: 1000px; height: 400px;"></div>
     <div id="chart_boxplot" style="width: 1000px; height: 400px;"></div>
 
     <div>
@@ -48,6 +49,7 @@
         drawChart3()
         drawChart4()
         drawChart5()
+        drawChart6()
     }
 
     function drawChart1() {
@@ -81,7 +83,7 @@
 
         var options = {
             'title':'Distribution by ambitus values',
-            hAxis: {title: 'Sigma',
+            hAxis: {title: '\u03C3', // sigma
             ticks: [-3, -2, -1, 0, 1, 2, 3]},
             seriesType: "bars",
             series: {1: {type: "line", curveType: 'function'},
@@ -98,7 +100,7 @@
 
         var options = {
             'title':'Distribution by pieces amount per ambitus',
-            hAxis: {title: 'Sigma',
+            hAxis: {title: '\u03C3', // sigma
             ticks: [-3, -2, -1, 0, 1, 2, 3]},
             seriesType: "bars",
             series: {1: {type: "line", curveType: 'function'},
@@ -110,7 +112,14 @@
         chart.draw(data, options);
         }
 
-    function drawChart5() {
+      function drawChart5() {
+          var data = google.visualization.arrayToDataTable({{ frequency_pie | safe }});
+          var options = {'title': 'Ambitus frequency (semitones)'};
+          var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie'));
+          chart.draw(data, options);
+      }
+
+    function drawChart6() {
         var data = google.visualization.arrayToDataTable( [{{ boxplot | safe }}], true );
 
         var options = {
