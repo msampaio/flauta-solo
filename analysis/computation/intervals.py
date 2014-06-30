@@ -12,61 +12,29 @@ def get_chromatic_intervals(compositions):
     return [c.music_data.intervals for c in compositions]
 
 
-def count_intervals(intervals_list, proportional=False, limit=48):
+def count_intervals(intervals_list, proportional=False, normalized=False):
     counted = Counter(intervals_list)
     total = len(intervals_list)
 
-    if limit:
-        intervals_range = range(-limit, limit + 1)
-        for i in intervals_range:
-            if i not in counted:
-                counted[i] = 0
-            if proportional:
-                counted[i] /= total
+    if proportional:
+        for key in counted.keys():
+            counted[key] /= total
+
+    if normalized:
+        array = numpy.array(counted.values())
+        mean = array.mean()
+        std_dev = array.std()
+
+        for key in counted.keys():
+            counted[key] = utils.normalization(counted[key], mean, std_dev)
 
     return counted
 
 
-def get_piece_frequency(intervals_list, proportional=False, limit=48):
-    counted = count_intervals(intervals_list, proportional, limit)
-
-    return numpy.array([v for _, v in sorted(counted.items())])
-
-
-def get_frequency(intervals_list, normalized=False, limit=48):
-    seq = [get_piece_frequency(s, normalized, limit) for s in intervals_list]
-
-    array = numpy.array(seq)
-
-    if normalized:
-        row_size = len(array[0])
-        for i in range(row_size):
-            utils.normalize_array(array, 1)
-
-    return array
-
-
-def array_to_pairs(array, init=None):
-    pairs = []
-    for column in range(len(array[0])):
-        rows = array[:, column]
-        for row in rows:
-            c = column
-            if init:
-                c = init + c
-            pairs.append([c, rows[row]])
-    return pairs
-
-
 def frequency_scatter(intervals):
-    limit = 48
-    array = get_frequency(intervals, True, limit)
-    seq = array_to_pairs(array, -limit)
+    counted = count_intervals(intervals, True)
+    seq = sorted(map(list, counted.items()))
     seq.insert(0, ['Interval', 'Amount'])
-    # TODO: decide if remove pairs here or in get_frequency
-    for pair in seq[1:]:
-        if pair[1] == 0:
-            seq.remove(pair)
     return seq
 
 
@@ -79,14 +47,14 @@ def frequency_pie(intervals):
 
 def chromatic_frequency_pie(chromatic_intervals):
     all_chromatic_intervals = utils.flatten(chromatic_intervals)
-    r = utils.aux_pie_chart(count_intervals(all_chromatic_intervals, False, None))
+    r = utils.aux_pie_chart(count_intervals(all_chromatic_intervals, False))
     r.insert(0, ['Interval', 'Amount'])
     return r
 
 
 def chromatic_leaps_frequency_pie(chromatic_intervals):
     all_chromatic_intervals = utils.flatten(chromatic_intervals)
-    counted = count_intervals(all_chromatic_intervals, False, None)
+    counted = count_intervals(all_chromatic_intervals, False)
     for i in ['P1', 'M2', 'm2', 'M3', 'm3']:
         del counted[i]
     r = utils.aux_pie_chart(counted)
@@ -146,7 +114,7 @@ def analysis(compositions):
     all_midi_intervals = utils.flatten(midi_intervals)
     chromatic_intervals = get_chromatic_intervals(compositions)
     args = {
-        'frequency_scatter': frequency_scatter(midi_intervals),
+        'frequency_scatter': frequency_scatter(all_midi_intervals),
         'basic_stats': basic_stats(all_midi_intervals),
         'frequency_pie': frequency_pie(midi_intervals),
         'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
