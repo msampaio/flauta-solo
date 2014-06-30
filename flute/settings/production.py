@@ -29,6 +29,8 @@ EMAIL_HOST_PASSWORD = SERVER_CONF['email-password']
 DEFAULT_FROM_EMAIL = 'genos@genosmus.com'
 SERVER_EMAIL = 'genos@genosmus.com'
 
+DEALER_PATH = "/home/genos/webapps/flute/flute"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
