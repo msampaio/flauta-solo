@@ -86,6 +86,12 @@ def distribution_amount(ambitus_list):
     return r
 
 
+def frequency_pie(ambitus_list):
+    r = utils.aux_pie_chart(Counter(ambitus_list))
+    r.insert(0, ['Ambitus', 'Amount'])
+    return r
+
+
 def analysis(compositions):
 
     ambitus_list = get_ambitus_list(compositions)
@@ -98,6 +104,7 @@ def analysis(compositions):
         'histogram': utils.histogram(ambitus_list, 10, ['Ambitus', 'Pieces'], False, True),
         'distribution_value': distribution_value(ambitus_list),
         'distribution_amount': distribution_amount(ambitus_list),
+        'frequency_pie': frequency_pie(ambitus_list),
         'boxplot': utils.boxplot(basic_stats_dic),
     }
 
