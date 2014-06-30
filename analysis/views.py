@@ -113,7 +113,6 @@ def show_intervals(request):
 
 def stats(request):
     args = {
-        'music_data': MusicData.objects.all().order_by('score__filename'),
         'number_music_data': MusicData.objects.count(),
         'number_compositions': Composition.objects.count(),
     }

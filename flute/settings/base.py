@@ -125,3 +125,6 @@ INSTALLED_APPS += (
 )
 
 SOUTH_TESTS_MIGRATE = False
+
+# Get git commit
+TEMPLATE_CONTEXT_PROCESSORS += 'dealer.contrib.django.context_processor',

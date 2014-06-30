@@ -6,3 +6,4 @@ psycopg2
 djorm-ext-pgarray
 Pillow
 git+https://github.com/coagulant/progressbar-python3.git
+dealer

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load git %}
 
 {% block title %}
     Stats - Flauta Solo
@@ -18,19 +17,10 @@
         </thead>
         <tbody>
         <tr>
-            <td>{% git_short_version %}</td>
+            <td>{{ REVISION }}</td>
             <td>{{ number_music_data }}</td>
             <td>{{ number_compositions }}</td>
         </tr>
         </tbody>
     </table>
-
-
-    <h2>Music Data</h2>
-
-    <ul>
-        {% for data in music_data %}
-            <li>{{ data.score.filename }}</li>
-        {% endfor %}
-    </ul>
 {% endblock %}
