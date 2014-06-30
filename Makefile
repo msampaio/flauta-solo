@@ -21,8 +21,7 @@ deploy: push
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make restart-server"
 
 remote-import-data:
-	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && python2.7 manage-production.py importmusic \
-	~/partituras-flauta/*.xml && python3.3 manage-production.py importimslp ~/partituras-flauta/*.xml"
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && make import-data"
 
 remote-update-static-files:
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage-production.py collectstatic -v0 --noinput"
@@ -67,7 +66,7 @@ reset-development-database:
 
 import-data:
 	python2.7 manage-production.py importmusic ~/partituras-flauta/*.xml
-	python2.7 manage-production.py importimslp ~/partituras-flauta/*.xml
+	python3.3 manage-production.py importimslp ~/partituras-flauta/*.xml
 
 see-errors:
 	tail ~/logs/user/error_$(APPNAME).log
