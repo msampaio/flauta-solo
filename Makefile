@@ -18,14 +18,11 @@ push:
 	git push
 
 deploy: push
-	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make restart-server"
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make deploy"
 
 remote-import-data:
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && make import-data"
 
-remote-update-static-files:
-	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && ./manage-production.py collectstatic -v0 --noinput"
-	
 remote-restart-server:
 	ssh $(SERVER) "~/webapps/$(APPNAME)/apache2/bin/restart"
 
@@ -63,6 +60,17 @@ reset-development-database:
 
 
 ## We should call these targets on the server only
+
+deploy:
+	$(MAKE) migrate
+	$(MAKE) update-static-files
+	$(MAKE) restart-server
+	
+migrate:
+	./manage-production.py migrate analysis
+
+update-static-files:
+	./manage-production.py collectstatic -v0 --noinput
 
 import-data:
 	python2.7 manage-production.py importmusic ~/partituras-flauta/I*.xml
