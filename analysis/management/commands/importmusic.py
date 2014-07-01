@@ -76,7 +76,8 @@ def get_contour(number_sequence):
 
 def make_music_data(music_stream, musicdata):
     notes = all_notes(music_stream)
-    musicdata.notes_midi = [note.midi for note in notes]
+    notes_midi = [note.midi for note in notes]
+    musicdata.notes_midi = notes_midi
     musicdata.notes = [pitchToBase40(note) for note in notes]
     musicdata.intervals = intervals_without_direction(notes)
     musicdata.intervals_midi = intervals_midi(notes)
