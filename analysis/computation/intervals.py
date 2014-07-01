@@ -4,14 +4,6 @@ import numpy
 from analysis.computation import utils
 
 
-def get_midi_intervals(compositions):
-    return [c.music_data.intervals_midi for c in compositions]
-
-
-def get_chromatic_intervals(compositions):
-    return [c.music_data.intervals for c in compositions]
-
-
 def count_intervals(intervals_list, proportional=False, normalized=False):
     counted = Counter(intervals_list)
     total = len(intervals_list)
@@ -39,22 +31,19 @@ def frequency_scatter(intervals):
 
 
 def frequency_pie(intervals):
-    all_intervals = utils.flatten(intervals)
-    r = utils.aux_pie_chart(count_intervals(all_intervals))
+    r = utils.aux_pie_chart(count_intervals(intervals))
     r.insert(0, ['Interval', 'Amount'])
     return r
 
 
 def chromatic_frequency_pie(chromatic_intervals):
-    all_chromatic_intervals = utils.flatten(chromatic_intervals)
-    r = utils.aux_pie_chart(count_intervals(all_chromatic_intervals, False))
+    r = utils.aux_pie_chart(count_intervals(chromatic_intervals, False))
     r.insert(0, ['Interval', 'Amount'])
     return r
 
 
 def chromatic_leaps_frequency_pie(chromatic_intervals):
-    all_chromatic_intervals = utils.flatten(chromatic_intervals)
-    counted = count_intervals(all_chromatic_intervals, False)
+    counted = count_intervals(chromatic_intervals, False)
     for i in ['P1', 'M2', 'm2', 'M3', 'm3']:
         del counted[i]
     r = utils.aux_pie_chart(counted)
@@ -110,17 +99,16 @@ def distribution_amount(all_intervals):
 
 
 def analysis(compositions):
-    midi_intervals = get_midi_intervals(compositions)
-    all_midi_intervals = utils.flatten(midi_intervals)
-    chromatic_intervals = get_chromatic_intervals(compositions)
+    midi_intervals = utils.get_music_data_attrib(compositions, 'intervals_midi')
+    chromatic_intervals = utils.get_music_data_attrib(compositions, 'intervals')
     args = {
-        'frequency_scatter': frequency_scatter(all_midi_intervals),
-        'basic_stats': basic_stats(all_midi_intervals),
+        'frequency_scatter': frequency_scatter(midi_intervals),
+        'basic_stats': basic_stats(midi_intervals),
         'frequency_pie': frequency_pie(midi_intervals),
         'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
         'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
-        'histogram': utils.histogram(all_midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
-        'distribution_amount': distribution_amount(all_midi_intervals),
+        'histogram': utils.histogram(midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
+        'distribution_amount': distribution_amount(midi_intervals),
     }
 
     return args

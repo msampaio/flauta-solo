@@ -54,3 +54,16 @@ def boxplot(basic_data):
 
 def aux_pie_chart(counted_dic):
     return sorted(([str(k), v] for k, v in counted_dic.items()), key = lambda x: x[1], reverse=True)
+
+
+# music functions #
+
+def get_single_music_data_attrib(compositions, attrib):
+    return [getattr(composition.music_data, attrib) for composition in compositions]
+
+
+def get_music_data_attrib(compositions, attrib):
+    seq = []
+    for composition in compositions:
+        seq.extend(getattr(composition.music_data, attrib))
+    return seq

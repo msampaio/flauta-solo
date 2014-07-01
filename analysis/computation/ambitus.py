@@ -4,10 +4,6 @@ import numpy
 from analysis.computation import utils
 
 
-def get_ambitus_list(compositions):
-    return [c.music_data.ambitus for c in compositions]
-
-
 def frequency(ambitus_list):
     freq = Counter(ambitus_list)
 
@@ -93,8 +89,7 @@ def frequency_pie(ambitus_list):
 
 
 def analysis(compositions):
-
-    ambitus_list = get_ambitus_list(compositions)
+    ambitus_list = utils.get_single_music_data_attrib(compositions, 'ambitus')
     basic_stats_dic = basic_stats(ambitus_list)
     distribution_value(ambitus_list)
 
