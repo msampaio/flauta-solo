@@ -8,7 +8,7 @@ import base64
 import urllib.request
 import json
 import datetime
-
+import re
 
 IMSLP_USERNAME = None
 
@@ -176,10 +176,20 @@ class Command(BaseCommand):
     help = 'Import metadata from IMSLP'
 
     def handle(self, *args, **options):
+        # FIXME: find the problem with IF322968 files
+        def not_pattern(x):
+            pattern = '^IF322968.*E.xml$'
+            if re.match(pattern, x):
+                return False
+            else:
+                return True
+
         global IMSLP_USERNAME
 
         progress = ProgressBar()
-        files = [x for x in args if os.path.basename(x)[0] == 'I']
+        # FIXME: find the problem with IF322968 files
+        files = [x for x in args if os.path.basename(x)[0] == 'I' and not_pattern(x)]
+        # files = [x for x in args if os.path.basename(x)[0] == 'I']
 
         try:
             IMSLP_USERNAME = get_imslp_username()
