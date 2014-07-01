@@ -51,6 +51,12 @@ def intervals_midi(notes):
     return [notesToChromatic(notes[x], notes[y]).semitones for x, y in pos]
 
 
+def intervals_classes(notes):
+    size = len(notes)
+    pos = zip(range(size-1), range(1, size))
+    return [notesToInterval(notes[x], notes[y]).simpleName for x, y in pos]
+
+
 def get_time_signature(music_stream):
     _measures = music_stream.parts[0].getElementsByClass("Measure")
     _time_signature = _measures[0].timeSignature
@@ -72,6 +78,7 @@ def make_music_data(music_stream, musicdata):
     musicdata.intervals = intervals_without_direction(notes)
     musicdata.intervals_midi = intervals_midi(notes)
     musicdata.intervals_with_direction = intervals_with_direction(notes)
+    musicdata.intervals_classes = intervals_classes(notes)
     _durations = [note.duration.quarterLength for note in notes]
     musicdata.durations = _durations
     musicdata.time_signature = get_time_signature(music_stream)

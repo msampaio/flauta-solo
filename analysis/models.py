@@ -21,6 +21,7 @@ class MusicData(models.Model):
     intervals = ArrayField(dbtype="varchar")
     intervals_midi = ArrayField(dbtype="int")
     intervals_with_direction = ArrayField(dbtype="varchar")
+    intervals_classes = ArrayField(dbtype="varchar")
     durations = ArrayField(dbtype="float")
     contour = ArrayField(dbtype="int")
 
