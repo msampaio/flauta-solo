@@ -65,8 +65,8 @@ def get_time_signature(music_stream):
 
 def get_contour(number_sequence):
     transition = {}
-    for v, k in enumerate(sorted(set(number_sequence))):
-        transition[k] = v
+    for translated, original in enumerate(sorted(set(number_sequence))):
+        transition[original] = translated
 
     for i in range(len(number_sequence)):
         number_sequence[i] = transition[number_sequence[i]]
@@ -90,7 +90,7 @@ def make_music_data(music_stream, musicdata):
     musicdata.key = _key.tonic.name
     musicdata.key_midi = _key.tonic.midi
     musicdata.ambitus = music_stream.analyze("ambitus").chromatic.directed
-    musicdata.contour = get_contour(notes)
+    musicdata.contour = get_contour(notes_midi)
     musicdata.total_duration = sum(_durations)
 
 
