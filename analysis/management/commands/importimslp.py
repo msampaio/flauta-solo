@@ -177,18 +177,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # FIXME: find the problem with IF322968 files
-        def not_pattern(x):
-            pattern = '^IF322968.*E.xml$'
+        def has_pattern(x):
+            pattern = '^.*322968.*.xml$'
             if re.match(pattern, x):
-                return False
-            else:
                 return True
+            else:
+                return False
 
         global IMSLP_USERNAME
 
         progress = ProgressBar()
         # FIXME: find the problem with IF322968 files
-        files = [x for x in args if os.path.basename(x)[0] == 'I' and not_pattern(x)]
+        files = [x for x in args if os.path.basename(x)[0] == 'I' and not has_pattern(x)]
         # files = [x for x in args if os.path.basename(x)[0] == 'I']
 
         try:
