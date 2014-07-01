@@ -18,7 +18,7 @@ push:
 	git push
 
 deploy: push
-	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make deploy"
+	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && git pull && make deploy-server"
 
 remote-import-data:
 	ssh $(SERVER) "cd ~/webapps/$(APPNAME)/$(APPNAME) && make import-data"
@@ -61,7 +61,7 @@ reset-development-database:
 
 ## We should call these targets on the server only
 
-deploy:
+deploy-server:
 	$(MAKE) migrate
 	$(MAKE) update-static-files
 	$(MAKE) restart-server
