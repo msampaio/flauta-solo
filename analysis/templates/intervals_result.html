@@ -8,6 +8,7 @@
     <h1>Intervals results</h1>
 
     <div class="interval-chart" id="chart_frequency_scatter"></div>
+    <div class="interval-chart" id="chart_frequency_basic_scatter"></div>
     <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
     <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
     <div class="interval-chart" id="chart_frequency_pie"></div>
@@ -43,12 +44,14 @@
     google.setOnLoadCallback(init);
 
     function init() {
-        drawChart1()
-        drawChart2()
-        drawChart3()
-        drawChart4()
-        drawChart5()
-        drawChart6()
+        drawChart1();
+        drawChart2();
+        drawChart3();
+        drawChart4();
+        drawChart5();
+        drawChart6();
+        drawChart7();
+
     }
 
     function drawChart1() {
@@ -62,6 +65,20 @@
         };
 
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_frequency_scatter'));
+        chart.draw(data, options);
+        }
+
+    function drawChart7() {
+        var data = google.visualization.arrayToDataTable( {{ frequency_basic_scatter | safe }} );
+
+        var options = {
+            'title': 'Intervals frequency',
+            hAxis: {title: 'Semitones'},
+            vAxis: {title: 'Amount (normalized by std dev.)'},
+            pointSize: 5
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_frequency_basic_scatter'));
         chart.draw(data, options);
         }
 

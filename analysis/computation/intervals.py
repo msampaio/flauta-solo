@@ -30,6 +30,14 @@ def frequency_scatter(intervals):
     return seq
 
 
+def frequency_basic_scatter(intervals):
+    simple_intervals = [abs(x) % 12 for x in intervals]
+    counted = count_intervals(simple_intervals, True)
+    seq = sorted(map(list, counted.items()))
+    seq.insert(0, ['Interval', 'Amount'])
+    return seq
+
+
 def frequency_pie(intervals):
     r = utils.aux_pie_chart(count_intervals(intervals))
     r.insert(0, ['Interval', 'Amount'])
@@ -105,6 +113,7 @@ def analysis(compositions):
     if midi_intervals and chromatic_intervals:
         args = {
             'frequency_scatter': frequency_scatter(midi_intervals),
+            'frequency_basic_scatter': frequency_basic_scatter(midi_intervals),
             'basic_stats': basic_stats(midi_intervals),
             'frequency_pie': frequency_pie(midi_intervals),
             'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
