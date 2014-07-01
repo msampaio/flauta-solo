@@ -83,11 +83,15 @@ def basic_stats(contour_list):
 
 def analysis(compositions):
     contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
-    args = {
-        'basic_stats': basic_stats(contour_list),
-        'frequency_pie_2': frequency_pie(contour_list, 2),
-        'frequency_pie_3': frequency_pie(contour_list, 3),
-        'frequency_pie_4': frequency_pie(contour_list, 4),
-    }
 
+    if contour_list:
+        args = {
+            'basic_stats': basic_stats(contour_list),
+            'frequency_pie_2': frequency_pie(contour_list, 2),
+            'frequency_pie_3': frequency_pie(contour_list, 3),
+            'frequency_pie_4': frequency_pie(contour_list, 4),
+        }
+    else:
+        args = {}
+        
     return args

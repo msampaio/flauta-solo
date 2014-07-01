@@ -90,17 +90,20 @@ def frequency_pie(ambitus_list):
 
 def analysis(compositions):
     ambitus_list = utils.get_single_music_data_attrib(compositions, 'ambitus')
-    basic_stats_dic = basic_stats(ambitus_list)
-    distribution_value(ambitus_list)
 
-    args = {
-        'basic_stats': basic_stats_dic,
-        'frequency': frequency(ambitus_list),
-        'histogram': utils.histogram(ambitus_list, 10, ['Ambitus', 'Pieces'], False, True),
-        'distribution_value': distribution_value(ambitus_list),
-        'distribution_amount': distribution_amount(ambitus_list),
-        'frequency_pie': frequency_pie(ambitus_list),
-        'boxplot': utils.boxplot(basic_stats_dic),
-    }
+    if ambitus_list:
+        basic_stats_dic = basic_stats(ambitus_list)
+        distribution_value(ambitus_list)
 
-    return args
+        args = {
+            'basic_stats': basic_stats_dic,
+            'frequency': frequency(ambitus_list),
+            'histogram': utils.histogram(ambitus_list, 10, ['Ambitus', 'Pieces'], False, True),
+            'distribution_value': distribution_value(ambitus_list),
+            'distribution_amount': distribution_amount(ambitus_list),
+            'frequency_pie': frequency_pie(ambitus_list),
+            'boxplot': utils.boxplot(basic_stats_dic),
+        }
+        return args
+    else:
+        return {}
