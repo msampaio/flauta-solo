@@ -64,11 +64,14 @@ def get_time_signature(music_stream):
 
 
 def get_contour(number_sequence):
-    aux = {}
-    for n, value in enumerate(sorted(list(set(number_sequence)))):
-        aux[value] = n
+    transition = {}
+    for v, k in enumerate(sorted(set(number_sequence))):
+        transition[k] = v
 
-    return [aux[n] for n in number_sequence]
+    for i in range(len(number_sequence)):
+        number_sequence[i] = transition[number_sequence[i]]
+
+    return number_sequence
 
 
 def make_music_data(music_stream, musicdata):
