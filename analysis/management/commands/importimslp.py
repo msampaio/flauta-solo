@@ -179,7 +179,7 @@ class Command(BaseCommand):
         # FIXME: find the problem with IF322968 files
         def has_pattern(x):
             name = os.path.basename(x)
-            return name[0] == 'I' and name[0:8] == "IF322968"
+            return name[0] == 'I' and name[0:8] != "IF322968"
 
         global IMSLP_USERNAME
 
