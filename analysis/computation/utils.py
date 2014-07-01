@@ -67,3 +67,7 @@ def get_music_data_attrib(compositions, attrib):
     for composition in compositions:
         seq.extend(getattr(composition.music_data, attrib))
     return seq
+
+def comparison(pair):
+    a, b = pair
+    return (a > b) - (a < b)
