@@ -104,6 +104,34 @@ def aux_pie_chart(counted_dic):
     return sorted(([str(k), v] for k, v in counted_dic.items()), key = lambda x: x[1], reverse=True)
 
 
+def distribution(data_seq, basic_stats, amount=False):
+
+    label = 'Value'
+    if amount:
+        label = 'Amount'
+        data_seq = Counter(data_seq).values()
+
+    label = label + ' distribution'
+
+    mu = basic_stats['Amount Mean']
+    sigma = basic_stats['Amount Standard deviation']
+
+    normalized = [normalization(value, mu, sigma) for value in data_seq]
+
+    bins = 10
+    histogram = numpy.histogram(normalized, bins)
+    total = histogram[0].sum()
+
+    r = [['Sigma', 'Histogram', label, 'Normal distribution']]
+
+    values = zip(histogram[0], histogram[1])
+
+    for v, k in values:
+        r.append([k, v / total, v/total, normal_distribution(k, 0, 1)])
+
+    return r
+
+
 # music functions #
 
 def get_single_music_data_attrib(compositions, attrib):
