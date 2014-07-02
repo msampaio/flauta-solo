@@ -1,3 +1,4 @@
+from collections import Counter
 import numpy
 
 
@@ -25,6 +26,24 @@ def normalize_array(array, column=0):
 
     return array
 
+
+def special_counter(seq, proportional=False, normalized=False):
+    counted = Counter(seq)
+    total = len(seq)
+
+    if proportional:
+        for key in counted.keys():
+            counted[key] /= total
+
+    if normalized:
+        values = counted.values()
+        mean = numpy.mean(values)
+        std_dev = numpy.std(values)
+
+        for key in counted.keys():
+            counted[key] = normalization(counted[key], mean, std_dev)
+
+    return counted
 
 # chart functions #
 
