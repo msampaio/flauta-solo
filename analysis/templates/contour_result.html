@@ -7,27 +7,48 @@
 {% block body %}
     <h1>Contour results</h1>
 
-    <div class="contour-chart" id="chart_frequency_pie_2"></div>
-    <div class="contour-chart" id="chart_frequency_pie_3"></div>
-    <div class="contour-chart" id="chart_frequency_pie_4"></div>
+    <div class="contour-chart" id="chart_frequency_pie_2" style="width: 1000px; height: 400px;"></div>
+    <div class="contour-chart" id="chart_frequency_pie_3" style="width: 1000px; height: 400px;"></div>
+    <div class="contour-chart" id="chart_frequency_pie_4" style="width: 1000px; height: 400px;"></div>
+    <div class="contour-chart" id="chart_proportion_scatter" style="width: 1000px; height: 400px;"></div>
+    <div class="contour-chart" id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
 
     <h2>Basic Statistics</h2>
-    <table id="basic_statistics" class="table">
-        <thead>
-        <tr>
-            <th>Measure</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for measure, value in basic_stats.items %}
+        <h3>General contour</h3>
+        <table id="basic_statistics" class="table">
+            <thead>
             <tr>
-                <td class="simple-table-measure">{{ measure }}</td>
-                <td class="simple-table-value">{{ value }}</td>
+                <th>Measure</th>
+                <th>Value</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for measure, value in basic_stats.items %}
+                <tr>
+                    <td class="simple-table-measure">{{ measure }}</td>
+                    <td class="simple-table-value">{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h3>Repetition index</h3>
+        <table id="repetition_statistics" class="table">
+            <thead>
+            <tr>
+                <th>Measure</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for measure, value in repetition_stats.items %}
+                <tr>
+                    <td class="simple-table-measure">{{ measure }}</td>
+                    <td class="simple-table-value">{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
 
 {% endblock %}
 
@@ -42,6 +63,8 @@
         drawChart1()
         drawChart2()
         drawChart3()
+        drawChart4()
+        drawChart5()
     }
 
     function drawChart1() {
@@ -64,6 +87,38 @@
         var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie_4'));
         chart.draw(data, options);
     }
+
+    function drawChart4() {
+        var data = google.visualization.arrayToDataTable( {{ repetition_scatter | safe }} );
+
+        var options = {
+            'title': 'C-point repetition frequency',
+            hAxis: {title: 'Repetition index'},
+            vAxis: {title: 'Amount (normalized by std dev.)'},
+            pointSize: 5
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_proportion_scatter'));
+        chart.draw(data, options);
+        }
+
+    function drawChart5() {
+        var data = google.visualization.arrayToDataTable( {{ distribution_value | safe }} );
+
+        var options = {
+            'title':'Distribution by C-point repetition index',
+            hAxis: {
+                title: '\u03C3', // sigma
+                },
+            seriesType: "bars",
+            series: {1: {type: "line", curveType: 'function'},
+                     2: {type: "line", curveType: 'function'}},
+
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_distribution_value'));
+        chart.draw(data, options);
+        }
     </script>
 
 {% endblock %}

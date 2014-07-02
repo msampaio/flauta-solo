@@ -1,4 +1,5 @@
 from collections import Counter
+import itertools
 from analysis.computation import utils
 
 # contour operations #
@@ -36,6 +37,27 @@ def print_cseg(cseg):
     return "< {0} >".format(" ".join(str(p) for p in cseg))
 
 
+def remove_adjacent_repetition(cseg):
+    return [point for point, _ in itertools.groupby(cseg)]
+
+
+def single_repetition_index(cseg):
+    without_repetition = remove_adjacent_repetition(cseg)
+    return 1 - (max(without_repetition) / float(len(without_repetition)))
+
+
+def repetition_index(contour_list):
+    return [single_repetition_index(cseg) for cseg in contour_list]
+
+
+def repetition_scatter(contour_list):
+    repetition = repetition_index(contour_list)
+    counted = utils.special_counter(repetition, True)
+    seq = sorted(map(list, counted.items()))
+    seq.insert(0, ['Proportion', 'Amount'])
+    return seq
+
+
 def frequency_pie(contour_list, size=2):
     splitted = []
     for cseg in contour_list:
@@ -58,11 +80,20 @@ def analysis(compositions):
     contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
 
     if contour_list:
+        basic_stats = utils.aux_basic_stats(contour_list, 'Contour number', True)
+        repetition_seq = repetition_index(contour_list)
+        repetition = repetition_scatter(contour_list)
+        repetition_stats = utils.aux_basic_stats(repetition_seq, 'Pieces Number', False)
+        dist_value = utils.distribution(repetition_seq, repetition_stats, False)
+
         args = {
-            'basic_stats': utils.aux_basic_stats(contour_list, 'Contour number', True),
+            'basic_stats': basic_stats,
+            'repetition_stats': repetition_stats,
             'frequency_pie_2': frequency_pie(contour_list, 2),
             'frequency_pie_3': frequency_pie(contour_list, 3),
             'frequency_pie_4': frequency_pie(contour_list, 4),
+            'repetition_scatter': repetition,
+            'distribution_value': dist_value,
         }
     else:
         args = {}
