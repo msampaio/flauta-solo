@@ -1,6 +1,4 @@
 from collections import Counter
-from django.utils.datastructures import SortedDict
-import numpy
 from analysis.computation import utils
 
 # contour operations #
@@ -56,37 +54,12 @@ def count_contour_subseq(cseg, n):
     return Counter(map(tuple, slices))
 
 
-def basic_stats(contour_list):
-    contour_list = utils.flatten(contour_list)
-    freq = Counter(contour_list)
-    freq_values = list(freq.values())
-
-    data = SortedDict([
-            ('Value Min', min(contour_list)),
-            ('Value Max', max(contour_list)),
-            ('Value Mean', numpy.mean(contour_list)),
-            ('Value Median', numpy.median(contour_list)),
-            ('Value Standard deviation', numpy.std(contour_list)),
-            ('Value Quartile 1', numpy.percentile(contour_list, 25)),
-            ('Value Quartile 3', numpy.percentile(contour_list, 75)),
-            ('Amount with most common', max(freq.values())),
-            ('Amount with less common', min(freq.values())),
-            ('Amount Mean', numpy.mean(freq_values)),
-            ('Amount Median', numpy.median(freq_values)),
-            ('Amount Standard deviation', numpy.std(freq_values)),
-            ('Amount Quartile 1', numpy.percentile(freq_values, 25)),
-            ('Amount Quartile 3', numpy.percentile(freq_values, 75)),
-            ('Contour number', len(contour_list)),
-    ])
-    return data
-
-
 def analysis(compositions):
     contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
 
     if contour_list:
         args = {
-            'basic_stats': basic_stats(contour_list),
+            'basic_stats': utils.aux_basic_stats(contour_list, 'Contour number', True),
             'frequency_pie_2': frequency_pie(contour_list, 2),
             'frequency_pie_3': frequency_pie(contour_list, 3),
             'frequency_pie_4': frequency_pie(contour_list, 4),

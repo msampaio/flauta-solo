@@ -1,5 +1,4 @@
 from collections import Counter
-from django.utils.datastructures import SortedDict
 import numpy
 from analysis.computation import utils
 
@@ -40,30 +39,6 @@ def chromatic_leaps_frequency_pie(chromatic_intervals):
     return r
 
 
-def basic_stats(all_intervals):
-    freq = Counter(all_intervals)
-    freq_values = list(freq.values())
-
-    data = SortedDict([
-            ('Value Min', min(all_intervals)),
-            ('Value Max', max(all_intervals)),
-            ('Value Mean', numpy.mean(all_intervals)),
-            ('Value Median', numpy.median(all_intervals)),
-            ('Value Standard deviation', numpy.std(all_intervals)),
-            ('Value Quartile 1', numpy.percentile(all_intervals, 25)),
-            ('Value Quartile 3', numpy.percentile(all_intervals, 75)),
-            ('Amount with most common', max(freq.values())),
-            ('Amount with less common', min(freq.values())),
-            ('Amount Mean', numpy.mean(freq_values)),
-            ('Amount Median', numpy.median(freq_values)),
-            ('Amount Standard deviation', numpy.std(freq_values)),
-            ('Amount Quartile 1', numpy.percentile(freq_values, 25)),
-            ('Amount Quartile 3', numpy.percentile(freq_values, 75)),
-            ('Intervals number', len(all_intervals)),
-    ])
-    return data
-
-
 def distribution_amount(all_intervals):
     freq = Counter(all_intervals)
 
@@ -95,7 +70,7 @@ def analysis(compositions):
         args = {
             'frequency_scatter': frequency_scatter(midi_intervals),
             'frequency_basic_scatter': frequency_basic_scatter(midi_intervals),
-            'basic_stats': basic_stats(midi_intervals),
+            'basic_stats': utils.aux_basic_stats(midi_intervals, 'Intervals number', False),
             'frequency_pie': frequency_pie(midi_intervals),
             'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
             'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),

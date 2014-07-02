@@ -1,4 +1,5 @@
 from collections import Counter
+from django.utils.datastructures import SortedDict
 import numpy
 
 
@@ -44,6 +45,34 @@ def special_counter(seq, proportional=False, normalized=False):
             counted[key] = normalization(counted[key], mean, std_dev)
 
     return counted
+
+
+def aux_basic_stats(data_seq, string, flat=False):
+    if flat:
+        data_seq = flatten(data_seq)
+
+    freq = Counter(data_seq)
+    freq_values = list(freq.values())
+
+    data = SortedDict([
+        ('Value Min', min(data_seq)),
+        ('Value Max', max(data_seq)),
+        ('Value Mean', numpy.mean(data_seq)),
+        ('Value Median', numpy.median(data_seq)),
+        ('Value Standard deviation', numpy.std(data_seq)),
+        ('Value Quartile 1', numpy.percentile(data_seq, 25)),
+        ('Value Quartile 3', numpy.percentile(data_seq, 75)),
+        ('Amount with most common', max(freq.values())),
+        ('Amount with less common', min(freq.values())),
+        ('Amount Mean', numpy.mean(freq_values)),
+        ('Amount Median', numpy.median(freq_values)),
+        ('Amount Standard deviation', numpy.std(freq_values)),
+        ('Amount Quartile 1', numpy.percentile(freq_values, 25)),
+        ('Amount Quartile 3', numpy.percentile(freq_values, 75)),
+        (string, len(data_seq)),
+    ])
+    return data
+
 
 # chart functions #
 
