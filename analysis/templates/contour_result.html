@@ -12,6 +12,7 @@
     <div class="contour-chart" id="chart_frequency_pie_4" style="width: 1000px; height: 400px;"></div>
     <div class="contour-chart" id="chart_proportion_scatter" style="width: 1000px; height: 400px;"></div>
     <div class="contour-chart" id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
+    <div class="contour-chart" id="chart_histogram" style="width: 1000px; height: 400px;"></div>
 
     <h2>Basic Statistics</h2>
         <h3>General contour</h3>
@@ -65,6 +66,7 @@
         drawChart3()
         drawChart4()
         drawChart5()
+        drawChart6()
     }
 
     function drawChart1() {
@@ -119,6 +121,21 @@
         var chart = new google.visualization.ComboChart(document.getElementById('chart_distribution_value'));
         chart.draw(data, options);
         }
+
+    function drawChart6() {
+        var data = google.visualization.arrayToDataTable( {{ histogram | safe }} );
+
+        var options = {
+            'title': 'Histogram',
+            hAxis: {title: 'C-point repetition index (percentiles)'},
+            vAxis: {title: 'Amount (by bin)'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_histogram'));
+        chart.draw(data, options);
+        }
+
     </script>
 
 {% endblock %}

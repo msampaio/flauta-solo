@@ -94,6 +94,7 @@ def analysis(compositions):
             'frequency_pie_4': frequency_pie(contour_list, 4),
             'repetition_scatter': repetition,
             'distribution_value': dist_value,
+            'histogram': utils.histogram(repetition_seq, 10, ['Index', 'Pieces'], False, True),
         }
     else:
         args = {}
