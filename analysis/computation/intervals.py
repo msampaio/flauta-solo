@@ -39,12 +39,11 @@ def chromatic_leaps_frequency_pie(chromatic_intervals):
     return r
 
 
-def distribution_amount(all_intervals):
+def distribution_amount(all_intervals, basic_stats):
     freq = Counter(all_intervals)
 
-    basic_data = basic_stats(all_intervals)
-    mu = basic_data['Amount Mean']
-    sigma = basic_data['Amount Standard deviation']
+    mu = basic_stats['Amount Mean']
+    sigma = basic_stats['Amount Standard deviation']
 
     normalized = [utils.normalization(value, mu, sigma) for value in list(freq.values())]
 
@@ -65,17 +64,18 @@ def distribution_amount(all_intervals):
 def analysis(compositions):
     midi_intervals = utils.get_music_data_attrib(compositions, 'intervals_midi')
     chromatic_intervals = utils.get_music_data_attrib(compositions, 'intervals')
+    basic_stats = utils.aux_basic_stats(midi_intervals, 'Intervals number', False)
 
     if midi_intervals and chromatic_intervals:
         args = {
             'frequency_scatter': frequency_scatter(midi_intervals),
             'frequency_basic_scatter': frequency_basic_scatter(midi_intervals),
-            'basic_stats': utils.aux_basic_stats(midi_intervals, 'Intervals number', False),
+            'basic_stats': basic_stats,
             'frequency_pie': frequency_pie(midi_intervals),
             'chromatic_frequency_pie': chromatic_frequency_pie(chromatic_intervals),
             'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
             'histogram': utils.histogram(midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
-            'distribution_amount': distribution_amount(midi_intervals),
+            'distribution_amount': distribution_amount(midi_intervals, basic_stats),
         }
     else:
         args = {}

@@ -12,11 +12,10 @@ def frequency(ambitus_list):
     return r
 
 
-def distribution_value(ambitus_list):
+def distribution_value(ambitus_list, basic_stats):
 
-    basic_data = utils.aux_basic_stats(ambitus_list, 'Pieces number', False)
-    mu = basic_data['Value Mean']
-    sigma = basic_data['Value Standard deviation']
+    mu = basic_stats['Value Mean']
+    sigma = basic_stats['Value Standard deviation']
 
     normalized = [utils.normalization(value, mu, sigma) for value in ambitus_list]
 
@@ -34,12 +33,11 @@ def distribution_value(ambitus_list):
     return r
 
 
-def distribution_amount(ambitus_list):
+def distribution_amount(ambitus_list, basic_stats):
 
     freq = Counter(ambitus_list)
-    basic_data = utils.aux_basic_stats(ambitus_list, 'Pieces number', False)
-    mu = basic_data['Amount Mean']
-    sigma = basic_data['Amount Standard deviation']
+    mu = basic_stats['Amount Mean']
+    sigma = basic_stats['Amount Standard deviation']
 
     normalized = [utils.normalization(value, mu, sigma) for value in list(freq.values())]
 
@@ -67,17 +65,17 @@ def analysis(compositions):
     ambitus_list = utils.get_single_music_data_attrib(compositions, 'ambitus')
 
     if ambitus_list:
-        basic_stats_dic = utils.aux_basic_stats(ambitus_list, 'Pieces number', False)
-        distribution_value(ambitus_list)
+        basic_stats = utils.aux_basic_stats(ambitus_list, 'Pieces number', False)
+        dist_value = distribution_value(ambitus_list, basic_stats)
 
         args = {
-            'basic_stats': basic_stats_dic,
+            'basic_stats': basic_stats,
             'frequency': frequency(ambitus_list),
             'histogram': utils.histogram(ambitus_list, 10, ['Ambitus', 'Pieces'], False, True),
-            'distribution_value': distribution_value(ambitus_list),
-            'distribution_amount': distribution_amount(ambitus_list),
+            'distribution_value': dist_value,
+            'distribution_amount': distribution_amount(ambitus_list, basic_stats),
             'frequency_pie': frequency_pie(ambitus_list),
-            'boxplot': utils.boxplot(basic_stats_dic),
+            'boxplot': utils.boxplot(basic_stats),
         }
         return args
     else:
