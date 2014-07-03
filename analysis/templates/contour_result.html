@@ -13,6 +13,7 @@
     <div class="contour-chart" id="chart_proportion_scatter" style="width: 1000px; height: 400px;"></div>
     <div class="contour-chart" id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
     <div class="contour-chart" id="chart_histogram" style="width: 1000px; height: 400px;"></div>
+    <div class="contour-chart" id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
 
     <h2>Basic Statistics</h2>
         <h3>General contour</h3>
@@ -67,6 +68,7 @@
         drawChart4()
         drawChart5()
         drawChart6()
+        drawChart7()
     }
 
     function drawChart1() {
@@ -136,6 +138,23 @@
         chart.draw(data, options);
         }
 
+    function drawChart7() {
+        var data = google.visualization.arrayToDataTable( {{ distribution_amount | safe }} );
+
+        var options = {
+            'title':'Distribution by C-point repetition index amount',
+            hAxis: {
+                title: '\u03C3', // sigma
+                },
+            seriesType: "bars",
+            series: {1: {type: "line", curveType: 'function'},
+                     2: {type: "line", curveType: 'function'}},
+
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_distribution_amount'));
+        chart.draw(data, options);
+        }
     </script>
 
 {% endblock %}
