@@ -81,8 +81,8 @@ def analysis(compositions):
 
     if contour_list:
         basic_stats = utils.aux_basic_stats(contour_list, 'Contour number', True)
+        repetition_scatter_data = repetition_scatter(contour_list)
         repetition_seq = repetition_index(contour_list)
-        repetition = repetition_scatter(contour_list)
         repetition_stats = utils.aux_basic_stats(repetition_seq, 'Pieces Number', False)
         dist_value = utils.distribution(repetition_seq, repetition_stats, False)
 
@@ -92,7 +92,7 @@ def analysis(compositions):
             'frequency_pie_2': frequency_pie(contour_list, 2),
             'frequency_pie_3': frequency_pie(contour_list, 3),
             'frequency_pie_4': frequency_pie(contour_list, 4),
-            'repetition_scatter': repetition,
+            'repetition_scatter': repetition_scatter_data,
             'distribution_value': dist_value,
             'histogram': utils.histogram(repetition_seq, 10, ['Index', 'Pieces'], False, True),
         }
