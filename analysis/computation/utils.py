@@ -106,15 +106,16 @@ def aux_pie_chart(counted_dic):
 
 def distribution(data_seq, basic_stats, amount=False):
 
-    label = 'Value'
     if amount:
         label = 'Amount'
         data_seq = Counter(data_seq).values()
+    else:
+        label = 'Value'
+
+    mu = basic_stats[label + ' Mean']
+    sigma = basic_stats[label + ' Standard deviation']
 
     label = label + ' distribution'
-
-    mu = basic_stats['Amount Mean']
-    sigma = basic_stats['Amount Standard deviation']
 
     normalized = [normalization(value, mu, sigma) for value in data_seq]
 
