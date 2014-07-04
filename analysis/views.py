@@ -1,12 +1,13 @@
 import json
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from analysis.models import MusicData, Composition
 from analysis.computation import ambitus
 from analysis.computation import intervals
 from analysis.computation import contour
+from analysis.computation import pure_data
 
 
 def home(request):
@@ -134,6 +135,42 @@ def show_contour(request):
             'signatures': uniq_items_in_model('time_signature'),
     }
     return render(request, 'contour.html', args)
+
+
+def show_pure_data(request):
+    def select_filter(name, item, arguments, template='music_data__%s'):
+        if item != "all":
+            arguments[template % name] = item
+
+    if request.method == 'POST':
+        kwargs = {}
+
+        title = request.POST['select-composition']
+        key = request.POST['select-key']
+        total_duration = request.POST['select-duration']
+        time_signature = request.POST['select-time-signature']
+
+        select_filter('title__iexact', title, kwargs, template='%s')
+        select_filter('key', key, kwargs)
+        select_filter('total_duration', total_duration, kwargs)
+        select_filter('time_signature', time_signature, kwargs)
+
+        compositions = Composition.objects.filter(**kwargs)
+        args = pure_data.analysis(compositions)
+
+        # TODO: return a file for each args key.
+        key = 'cseg_chain'
+        response = StreamingHttpResponse(args[key], content_type="text/plain")
+        response['Content-Disposition'] = 'attachment; filename="{}.coll"'.format(key)
+        return response
+
+
+    args = {'compositions': uniq_items_in_model('title', Composition),
+            'keys': uniq_items_in_model('key'),
+            'durations': uniq_items_in_model('total_duration'),
+            'signatures': uniq_items_in_model('time_signature'),
+    }
+    return render(request, 'pure_data.html', args)
 
 
 def stats(request):

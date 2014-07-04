@@ -24,48 +24,6 @@ def split_and_translate(cseg, size=2):
     return [aux(cseg, i, size) for i in range(len(cseg) - size)]
 
 
-def markov_chain(contour_list, size=2):
-
-    def split_and_count(cseg):
-        without_repetition = remove_adjacent_repetition(cseg)
-        splitted = map(tuple, split_and_translate(without_repetition, size + 1))
-        return Counter(splitted)
-
-    output_csegs_counter = Counter()
-
-    for cseg in contour_list:
-        output_csegs_counter.update(split_and_count(cseg))
-
-    output_csegs = output_csegs_counter.keys()
-    total = sum(output_csegs_counter.values())
-
-    translation_dic = {}
-    for output_cseg in output_csegs:
-        translated_input_cseg = tuple(translate(list(output_cseg[:-1])))
-        if translated_input_cseg not in translation_dic:
-            translation_dic[translated_input_cseg] = []
-        translation_dic[translated_input_cseg].append(output_cseg)
-
-    input_csegs = sorted(set([tuple(translate(list(k[:-1]))) for k in output_csegs]))
-
-    chain = []
-
-    for output_cseg in sorted(output_csegs):
-        row = [output_cseg]
-        for input_cseg in input_csegs:
-            translation_csegs = translation_dic[input_cseg]
-            if output_cseg in output_csegs_counter and output_cseg in translation_csegs:
-                value = output_csegs_counter[output_cseg] / total
-            else:
-                value = 0
-            row.append(value)
-        chain.append(row)
-    input_csegs.insert(0, None)
-    chain.insert(0, input_csegs)
-
-    return chain
-
-
 def contour_adjacency_series(contour_list):
     pairs = zip(contour_list, contour_list[1:])
     return list(map(utils.comparison, pairs))
