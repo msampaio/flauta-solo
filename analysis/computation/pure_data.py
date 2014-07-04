@@ -48,20 +48,18 @@ def markov_chain(contour_list, order=1, print_pd=False):
 
     if print_pd:
         cseg_map_int = print_pretty_pd(cseg_map_int)
-        cseg_map_cseg = print_pretty_pd(cseg_map_cseg)
         chain = print_pretty_pd(chain)
 
-    return cseg_map_int, cseg_map_cseg, chain
+    return cseg_map_int, chain
 
-def analysis(compositions):
+def analysis(compositions, order=1):
     contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
 
     if contour_list:
-        cseg_map_int, cseg_map_cseg, cseg_chain = markov_chain(contour_list, 1, True)
+        cseg_map, cseg_chain = markov_chain(contour_list, order, True)
 
         args = {
-            'cseg_map_int': cseg_map_int,
-            'cseg_map_cseg': cseg_map_cseg,
+            'cseg_map': cseg_map,
             'cseg_chain': cseg_chain,
         }
     else:
