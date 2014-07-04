@@ -1,3 +1,4 @@
+import os
 from analysis.computation import contour
 from analysis.computation import utils
 
@@ -66,3 +67,16 @@ def analysis(compositions, order=1):
         args = {}
 
     return args
+
+
+def save_chain(contour_list, order=1):
+
+    def save(string, basename):
+        filename = os.path.join('/tmp/', '{}-{}.coll'.format(basename, order))
+        with open(filename, 'w') as f:
+            f.write(''.join(string))
+
+    cseg_map, cseg_chain = markov_chain(contour_list, order, True)
+
+    save(cseg_map, 'cseg_map')
+    save(cseg_chain, 'cseg_chain')
