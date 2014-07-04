@@ -2,6 +2,7 @@ import os
 from analysis.computation import contour
 from analysis.computation import utils
 
+
 def markov_chain(contour_list, order=1, print_pd=False):
 
     def split_and_count(cseg):
@@ -52,6 +53,7 @@ def markov_chain(contour_list, order=1, print_pd=False):
         chain = print_pretty_pd(chain)
 
     return cseg_map_int, chain
+
 
 def analysis(compositions, order=1):
     contour_list = utils.get_single_music_data_attrib(compositions, 'contour')

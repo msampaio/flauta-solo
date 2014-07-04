@@ -1,8 +1,8 @@
-import json
+from io import StringIO, BytesIO
+import zipfile
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect, HttpResponse, StreamingHttpResponse
+from django.http import HttpResponseRedirect, StreamingHttpResponse, HttpResponse
 from django.shortcuts import render
-from django.shortcuts import render_to_response
 from analysis.models import MusicData, Composition
 from analysis.computation import ambitus
 from analysis.computation import intervals
@@ -158,18 +158,23 @@ def show_pure_data(request):
         compositions = Composition.objects.filter(**kwargs)
         args = pure_data.analysis(compositions)
 
-        # TODO: return a file for each args key.
-        key = 'cseg_chain'
-        response = StreamingHttpResponse(args[key], content_type="text/plain")
-        response['Content-Disposition'] = 'attachment; filename="{}.coll"'.format(key)
-        return response
+        buff = BytesIO()
+        zip_archive = zipfile.ZipFile(buff, mode='w')
 
+        for key, value in args.items():
+            zip_archive.writestr(key + '.coll', "".join(value))
+
+        zip_archive.close()
+
+        response = HttpResponse(buff.getvalue(), mimetype="application/x-zip-compressed")
+        response['Content-Disposition'] = 'attachment; filename=%s' % "markov-chains.zip"
+        return response
 
     args = {'compositions': uniq_items_in_model('title', Composition),
             'keys': uniq_items_in_model('key'),
             'durations': uniq_items_in_model('total_duration'),
             'signatures': uniq_items_in_model('time_signature'),
-    }
+            }
     return render(request, 'pure_data.html', args)
 
 
