@@ -60,41 +60,36 @@ bhclowers at gmail.com
 
 
 # import hcluster as H
-from matplotlib import pyplot as plt, pyplot
-
+from matplotlib import pyplot as plt
 import numpy
+from scipy.spatial.distance import squareform, pdist
 
-import scipy.spatial
 
-
-def optics(x, k, distMethod = 'euclidean'):
+def optics(x, k, dist_method = 'euclidean'):
     if len(x.shape)>1:
         m,n = x.shape
     else:
         m = x.shape[0]
-        n == 1
+        n = 1
 
     try:
-        d = scipy.spatial.distance.squareform(scipy.spatial.distance.pdist(x, distMethod))
-        dist_ok = True
+        distance = squareform(pdist(x, dist_method))
     except Exception as ex:
         print(ex)
         print("squareform or pdist error")
-        dist_ok = False
-
 
     cd = numpy.zeros(m)
-    rd = numpy.ones(m)*1E10
+    rd = numpy.ones(m) * 1E10
 
     for i in range(m):
-        #again you can use the euclid function if you don't want hcluster
-#        d = euclid(x[i],x)
-#        d.sort()
-#        cd[i] = d[k]
+        # again you can use the euclid function if you don't want hcluster
+        # distance = euclid(x[i],x)
+        # distance.sort()
+        # cd[i] = distance[k]
 
-        temp_ind = d[i].argsort()
-        temp_d = d[i][temp_ind]
-#        temp_d.sort() #we don't use this function as it changes the reference
+        temp_ind = distance[i].argsort()
+        temp_d = distance[i][temp_ind]
+        # temp_d.sort() #we don't use this function as it changes the reference
         cd[i] = temp_d[k]#**2
 
 
@@ -103,16 +98,16 @@ def optics(x, k, distMethod = 'euclidean'):
 
     ind = 0
     while len(seeds) != 1:
-#    for seed in seeds:
+    # for seed in seeds:
         ob = seeds[ind]
-        seedInd = numpy.where(seeds != ob)
-        seeds = seeds[seedInd]
+        seed_ind = numpy.where(seeds != ob)
+        seeds = seeds[seed_ind]
 
         order.append(ob)
         tempX = numpy.ones(len(seeds))*cd[ob]
-        temp_d = d[ob][seeds]#[seeds]
-        #you can use this function if you don't want to use hcluster
-        #temp_d = euclid(x[ob],x[seeds])
+        temp_d = distance[ob][seeds]#[seeds]
+        # you can use this function if you don't want to use hcluster
+        # temp_d = euclid(x[ob],x[seeds])
 
         temp = numpy.column_stack((tempX, temp_d))
         mm = numpy.max(temp, axis = 1)
@@ -122,7 +117,7 @@ def optics(x, k, distMethod = 'euclidean'):
 
 
     order.append(seeds[0])
-    rd[0] = 0 #we set this point to 0 as it does not get overwritten
+    rd[0] = 0 # we set this point to 0 as it does not get overwritten
     return rd, cd, order
 
 
@@ -146,31 +141,31 @@ def is_local_maxima(index, RPlot, RPoints, nghsize):
 
 def find_local_maxima(RPlot, RPoints, nghsize):
 
-    localMaximaPoints = {}
+    local_maxima_points = {}
 
-    #1st and last points on Reachability Plot are not taken as local maxima points
+    # 1st and last points on Reachability Plot are not taken as local maxima points
     for i in range(1,len(RPoints)-1):
-        #if the point is a local maxima on the reachability plot with
-        #regard to nghsize, insert it into priority queue and maxima list
-        if RPlot[i] > RPlot[i-1] and RPlot[i] >= RPlot[i+1] and is_local_maxima(i,RPlot,RPoints,nghsize) == 1:
-            localMaximaPoints[i] = RPlot[i]
+        # if the point is a local maxima on the reachability plot with
+        # regard to nghsize, insert it into priority queue and maxima list
+        if all([RPlot[i] > RPlot[i-1], RPlot[i] >= RPlot[i+1], is_local_maxima(i,RPlot,RPoints,nghsize) == 1]):
+            local_maxima_points[i] = RPlot[i]
 
-    return sorted(localMaximaPoints, key=localMaximaPoints.__getitem__ , reverse=True)
+    return sorted(local_maxima_points, key=local_maxima_points.__getitem__ , reverse=True)
 
 
 def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_cluster_size):
-    #node is a node or the root of the tree in the first call
-    #parentNode is parent node of N or None if node is root of the tree
-    #localMaximaPoints is list of local maxima points sorted in descending order of reachability
+    # node is a node or the root of the tree in the first call
+    # parentNode is parent node of N or None if node is root of the tree
+    # localMaximaPoints is list of local maxima points sorted in descending order of reachability
     if len(local_maxima_points) == 0:
-        return #parentNode is a leaf
+        return # parentNode is a leaf
 
-    #take largest local maximum as possible separation between clusters
+    # take largest local maximum as possible separation between clusters
     s = local_maxima_points[0]
     node.assign_split_point(s)
     local_maxima_points = local_maxima_points[1:]
 
-    #create two new nodes and add to list of nodes
+    # create two new nodes and add to list of nodes
     node_1 = TreeNode(RPoints[node.start:s],node.start,s, node)
     node_2 = TreeNode(RPoints[s+1:node.end],s+1, node.end, node)
     local_max_1 = []
@@ -206,11 +201,11 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     avg_reach_value_2 = float(numpy.average(RPlot[node_2.start:(node_2.start + check_value_2)]))
 
 
-    '''
+    """
     To adjust the fineness of the clustering, adjust the following ratios.
     The higher the ratio, the more generous the algorithm is to preserving
     local minimums, and the more cuts the resulting tree will have.
-    '''
+    """
 
     #the maximum ratio we allow of average height of clusters on the right and left to the local maxima in question
     maxima_ratio = .75
@@ -252,7 +247,8 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
         node.assign_split_point(-1)
         return
 
-    '''
+###
+    """
     Check if nodes can be moved up one level - the new cluster created
     is too "similar" to its parent, given the similarity threshold.
     Similarity can be determined by 1)the size of the new cluster relative
@@ -260,7 +256,8 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     values of the new cluster relative to the average of the
     reachability values of the parent node
     A lower value for the similarity threshold means less levels in the tree.
-    '''
+    """
+
     similarity_threshold = 0.4
     bypass_node = 0
     if parent_node != None:
