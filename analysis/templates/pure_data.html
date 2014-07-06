@@ -55,6 +55,18 @@
             </div>
 
             <div class="form-group">
+                <label class="col-md-4 control-label" for="select-markov-order">Markov Order</label>
+
+                <div class="col-md-4">
+                    <select id="select-markov-order" name="select-markov-order" class="form-control">
+                    {% for order_number in order_numbers %}
+                        <option value="{{ order_number }}">{{ order_number }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="submit"></label>
 
                 <div class="col-md-4">

@@ -149,6 +149,7 @@ def show_pure_data(request):
         key = request.POST['select-key']
         total_duration = request.POST['select-duration']
         time_signature = request.POST['select-time-signature']
+        markov_order = request.POST['select-markov-order']
 
         select_filter('title__iexact', title, kwargs, template='%s')
         select_filter('key', key, kwargs)
@@ -156,7 +157,7 @@ def show_pure_data(request):
         select_filter('time_signature', time_signature, kwargs)
 
         compositions = Composition.objects.filter(**kwargs)
-        args = pure_data.analysis(compositions)
+        args = pure_data.analysis(compositions, order=int(markov_order))
 
         buff = BytesIO()
         zip_archive = zipfile.ZipFile(buff, mode='w')
@@ -174,6 +175,7 @@ def show_pure_data(request):
             'keys': uniq_items_in_model('key'),
             'durations': uniq_items_in_model('total_duration'),
             'signatures': uniq_items_in_model('time_signature'),
+            'order_numbers': range(1, 11)
             }
     return render(request, 'pure_data.html', args)
 
