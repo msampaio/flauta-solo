@@ -47,10 +47,13 @@ def uniq_items_in_model(item, model=MusicData):
     return [x[item] for x in items]
 
 
+def select_filter(name, item, arguments, template='music_data__%s'):
+    if item != "all":
+        arguments[template % name] = item
+
+
 def show_ambitus(request):
-    def select_filter(name, item, arguments, template='music_data__%s'):
-        if item != "all":
-            arguments[template % name] = item
+
 
     if request.method == 'POST':
         kwargs = {}
@@ -78,10 +81,6 @@ def show_ambitus(request):
 
 
 def show_intervals(request):
-    def select_filter(name, item, arguments, template='music_data__%s'):
-        if item != "all":
-            arguments[template % name] = item
-
     if request.method == 'POST':
         kwargs = {}
 
@@ -108,10 +107,6 @@ def show_intervals(request):
     return render(request, 'intervals.html', args)
 
 def show_durations(request):
-    def select_filter(name, item, arguments, template='music_data__%s'):
-        if item != "all":
-            arguments[template % name] = item
-
     if request.method == 'POST':
         kwargs = {}
 
@@ -135,10 +130,6 @@ def show_durations(request):
     return render(request, 'durations.html', args)
 
 def show_contour(request):
-    def select_filter(name, item, arguments, template='music_data__%s'):
-        if item != "all":
-            arguments[template % name] = item
-
     if request.method == 'POST':
         kwargs = {}
 
@@ -165,10 +156,6 @@ def show_contour(request):
 
 
 def show_pure_data(request):
-    def select_filter(name, item, arguments, template='music_data__%s'):
-        if item != "all":
-            arguments[template % name] = item
-
     if request.method == 'POST':
         kwargs = {}
 
