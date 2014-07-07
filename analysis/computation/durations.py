@@ -16,16 +16,22 @@ def frequency_pie(durations):
 
 def analysis(compositions):
     durations = utils.get_music_data_attrib(compositions, 'durations')
-    total_duration = utils.get_single_music_data_attrib(compositions, 'total_duration')
-    basic_stats = utils.aux_basic_stats(durations, 'Durations number', False)
+    piece_durations = utils.get_single_music_data_attrib(compositions, 'total_duration')
+    basic_stats_duration = utils.aux_basic_stats(durations, 'Durations number', False)
+    basic_stats_piece_duration = utils.aux_basic_stats(piece_durations, 'Durations number', False)
 
-    if durations and total_duration:
+    if durations and piece_durations:
         args = {
-            'basic_stats': basic_stats,
-            'frequency_scatter': frequency_scatter(durations),
-            'frequency_pie': frequency_pie(durations),
-            'histogram': utils.histogram(durations, 10, ['Durations', 'Ocurrences'], False, True),
-            'distribution_amount': utils.distribution(durations, basic_stats, True),
+            'basic_stats_duration': basic_stats_duration,
+            'note_frequency_scatter': frequency_scatter(durations),
+            'note_frequency_pie': frequency_pie(durations),
+            'note_histogram': utils.histogram(durations, 10, ['Durations', 'Ocurrences'], False, True),
+            'note_distribution_amount': utils.distribution(durations, basic_stats_duration, True),
+            'basic_stats_piece_duration': basic_stats_piece_duration,
+            'piece_frequency_scatter': frequency_scatter(piece_durations),
+            'piece_frequency_pie': frequency_pie(piece_durations),
+            'piece_histogram': utils.histogram(piece_durations, 10, ['Durations', 'Ocurrences'], False, True),
+            'piece_distribution_amount': utils.distribution(piece_durations, basic_stats_duration, True),
         }
     else:
         args = {}

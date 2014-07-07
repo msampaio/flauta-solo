@@ -5,31 +5,57 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Durations results</h1>
+    <h1>Note durations results</h1>
 
-        <div class="interval-chart" id="chart_frequency_scatter"></div>
-        <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
-        <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
-        <div class="interval-chart" id="chart_frequency_pie"></div>
+        <div class="duration-chart" id="chart_note_frequency_scatter" style="width: 1000px; height: 400px;"></div>
+        <div class="duration-chart" id="chart_note_histogram" style="width: 1000px; height: 400px;"></div>
+        <div class="duration-chart" id="chart_note_distribution_amount" style="width: 1000px; height: 400px;"></div>
+        <div class="duration-chart" id="chart_note_frequency_pie" style="width: 1000px; height: 400px;"></div>
 
 
     <h2>Basic Statistics</h2>
-    <table id="basic_statistics" class="table">
-        <thead>
-        <tr>
-            <th>Measure</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for measure, value in basic_stats.items %}
+        <table id="basic_statistics_duration" class="table">
+            <thead>
             <tr>
-                <td class="simple-table-measure">{{ measure }}</td>
-                <td class="simple-table-value">{{ value }}</td>
+                <th>Measure</th>
+                <th>Value</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for measure, value in basic_stats_duration.items %}
+                <tr>
+                    <td class="simple-table-measure">{{ measure }}</td>
+                    <td class="simple-table-value">{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    <h1>Piece durations results</h1>
+
+        <div class="duration-chart" id="chart_piece_frequency_scatter" style="width: 1000px; height: 400px;"></div>
+        <div class="duration-chart" id="chart_piece_histogram" style="width: 1000px; height: 400px;"></div>
+        <div class="duration-chart" id="chart_piece_distribution_amount" style="width: 1000px; height: 400px;"></div>
+        <div class="duration-chart" id="chart_piece_frequency_pie" style="width: 1000px; height: 400px;"></div>
+        
+
+    <h2>Basic Statistics</h2>
+        <table id="basic_statistics_total_duration" class="table">
+            <thead>
+            <tr>
+                <th>Measure</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for measure, value in basic_stats_piece_duration.items %}
+                <tr>
+                    <td class="simple-table-measure">{{ measure }}</td>
+                    <td class="simple-table-value">{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
 {% endblock %}
 
@@ -46,25 +72,29 @@
         drawChart2();
         drawChart3();
         drawChart4();
+        drawChart5();
+        drawChart6();
+        drawChart7();
+        drawChart8();
     }
 
     function drawChart1() {
-        var data = google.visualization.arrayToDataTable( {{ frequency_scatter | safe }} );
+        var data = google.visualization.arrayToDataTable( {{ note_frequency_scatter | safe }} );
 
         var options = {
-            'title': 'Intervals frequency',
+            'title': 'Quarter durations frequency',
             'legend': 'none',
             hAxis: {title: 'Quarter duration'},
             vAxis: {title: 'Amount (normalized by std dev.)'},
             pointSize: 5
         };
 
-        var chart = new google.visualization.ScatterChart(document.getElementById('chart_frequency_scatter'));
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_note_frequency_scatter'));
         chart.draw(data, options);
     }
 
     function drawChart2() {
-        var data = google.visualization.arrayToDataTable( {{ histogram | safe }} );
+        var data = google.visualization.arrayToDataTable( {{ note_histogram | safe }} );
 
         var options = {
             'title': 'Histogram',
@@ -73,12 +103,12 @@
             'legend': 'none',
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_histogram'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_note_histogram'));
         chart.draw(data, options);
         }
 
     function drawChart3() {
-        var data = google.visualization.arrayToDataTable( {{ distribution_amount | safe }} );
+        var data = google.visualization.arrayToDataTable( {{ note_distribution_amount | safe }} );
 
         var options = {
             'title':'Distribution by durations amount per duration type',
@@ -91,14 +121,68 @@
 
         };
 
-        var chart = new google.visualization.ComboChart(document.getElementById('chart_distribution_amount'));
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_note_distribution_amount'));
         chart.draw(data, options);
         }
 
     function drawChart4() {
-        var data = google.visualization.arrayToDataTable({{ frequency_pie | safe }});
+        var data = google.visualization.arrayToDataTable({{ note_frequency_pie | safe }});
         var options = {'title': 'Durations frequency' };
-        var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie'));
+        var chart = new google.visualization.PieChart(document.getElementById('chart_note_frequency_pie'));
+        chart.draw(data, options);
+    }
+
+    function drawChart5() {
+        var data = google.visualization.arrayToDataTable( {{ piece_frequency_scatter | safe }} );
+
+        var options = {
+            'title': 'Quarter durations frequency',
+            'legend': 'none',
+            hAxis: {title: 'Quarter duration'},
+            vAxis: {title: 'Amount (normalized by std dev.)'},
+            pointSize: 5
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_piece_frequency_scatter'));
+        chart.draw(data, options);
+    }
+
+    function drawChart6() {
+        var data = google.visualization.arrayToDataTable( {{ piece_histogram | safe }} );
+
+        var options = {
+            'title': 'Histogram',
+            hAxis: {title: 'Quarter duration (percentiles)'},
+            vAxis: {title: 'Amount (by bin)'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_piece_histogram'));
+        chart.draw(data, options);
+        }
+
+    function drawChart7() {
+        var data = google.visualization.arrayToDataTable( {{ piece_distribution_amount | safe }} );
+
+        var options = {
+            'title':'Distribution by durations amount per duration type',
+            hAxis: {
+                title: '\u03C3', // sigma
+            },
+            seriesType: "bars",
+            series: {1: {type: "line", curveType: 'function'},
+                     2: {type: "line", curveType: 'function'}},
+
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_piece_distribution_amount'));
+        chart.draw(data, options);
+        }
+
+    function drawChart8() {
+        var data = google.visualization.arrayToDataTable({{ piece_frequency_pie | safe }});
+        var options = {'title': 'Durations frequency' };
+        var chart = new google.visualization.PieChart(document.getElementById('chart_piece_frequency_pie'));
         chart.draw(data, options);
     }
 
