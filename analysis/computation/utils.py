@@ -1,7 +1,7 @@
 from collections import Counter
 from django.utils.datastructures import SortedDict
 import numpy
-
+from analysis.computation import optics_cluster
 
 def flatten(seq):
     return [el for l in seq for el in l]
@@ -148,3 +148,57 @@ def get_music_data_attrib(compositions, attrib):
 def comparison(pair):
     a, b = pair
     return (a > b) - (a < b)
+
+
+# cluster functions #
+
+def make_reachability_and_order(array, smoothing=9):
+    # run the OPTICS algorithm on the points, using a smoothing value (0 = no smoothing)
+    reach_dist, core_dist, order = optics_cluster.optics(array, smoothing)
+    reach_plot = []
+    reach_points = []
+
+    for item in order:
+        reach_plot.append(reach_dist[item]) #Reachability Plot
+        reach_points.append([array[item][0],array[item][1]]) #points in their order determined by OPTICS
+
+    return reach_plot, reach_points, order
+
+
+def get_optics_data(array):
+    reach_plot, reach_points, order = make_reachability_and_order(array)
+
+    #hierarchically cluster the data
+    root_node = optics_cluster.automatic_cluster(reach_plot, reach_points)
+
+    #array of the TreeNode objects, position in the array is the TreeNode's level in the tree
+    array = optics_cluster.get_array(root_node, 0, [0])
+
+    #get only the leaves of the tree
+    leaves = optics_cluster.get_leaves(root_node, [])
+
+    return root_node, reach_plot, reach_points, leaves
+
+
+def make_optics_plot_data(array):
+    root_node, reach_plot, reach_points, leaves = get_optics_data(array)
+
+    # graph the points and the leaf clusters that have been found by OPTICS
+
+    leaves = sorted(leaves, key=lambda x: len(x.points), reverse=True)
+    seq = []
+    size = len(leaves)
+    for n, item in enumerate(leaves):
+        for v in range(item.start,item.end):
+            x, y = reach_points[v]
+            row = [0 for i in range(size)]
+            row[n] = y
+            row.insert(0, x)
+            seq.append(row)
+
+    header = ['G{}'.format(str(n)) for n in range(1, size + 1)]
+    header.insert(0, 'Z')
+    seq = sorted(seq)
+    seq.insert(0, header)
+
+    return seq

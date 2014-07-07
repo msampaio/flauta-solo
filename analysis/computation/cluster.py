@@ -27,12 +27,21 @@ def get_duration_ambitus(compositions, normalize=True, labelize=False):
     return pairs
 
 
+def duration_ambitus_cluster(duration_ambitus):
+    array = numpy.array(duration_ambitus[1:])
+    return utils.make_optics_plot_data(array)
+
+
 def analysis(compositions):
-    duration_ambitus = get_duration_ambitus(compositions)
+    duration_ambitus_label = get_duration_ambitus(compositions, True, True)
+    duration_ambitus = get_duration_ambitus(compositions, True, False)
+    cluster = duration_ambitus_cluster(duration_ambitus)
 
     if duration_ambitus:
         args = {
+            'duration_ambitus_label': duration_ambitus_label,
             'duration_ambitus': duration_ambitus,
+            'cluster': cluster,
         }
     else:
         args = {}

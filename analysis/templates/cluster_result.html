@@ -7,6 +7,7 @@
 {% block body %}
     <h1>Cluster results</h1>
         <div class="cluster-chart" id="chart_duration_ambitus_scatter" style="width: 1000px; height: 400px;"></div>
+        <div class="cluster-chart" id="chart_duration_ambitus_cluster" style="width: 1000px; height: 400px;"></div>
 
 {% endblock %}
 
@@ -20,13 +21,14 @@
 
     function init() {
         drawChart1()
+        drawChart2()
     }
 
     function drawChart1() {
-        var data = google.visualization.arrayToDataTable( {{ duration_ambitus | safe }} );
+        var data = google.visualization.arrayToDataTable( {{ duration_ambitus_label | safe }} );
 
         var options = {
-            'title': 'Compositions clusters: duration x ambitus',
+            'title': 'Compositions dispersion: duration x ambitus',
             'legend': 'none',
             hAxis: {title: 'Duration (\u03C3)'}, // sigma
             vAxis: {title: 'Ambitus  (\u03C3)'}, // sigma
@@ -34,6 +36,20 @@
         };
 
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_duration_ambitus_scatter'));
+        chart.draw(data, options);
+    }
+
+    function drawChart2() {
+        var data = google.visualization.arrayToDataTable( {{ cluster | safe }} );
+
+        var options = {
+            'title': 'Compositions clusters: duration x ambitus',
+            hAxis: {title: 'Duration (\u03C3)'}, // sigma
+            vAxis: {title: 'Ambitus  (\u03C3)'}, // sigma
+            pointSize: 3
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_duration_ambitus_cluster'));
         chart.draw(data, options);
     }
     </script>
