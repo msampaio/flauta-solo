@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Durations Result
+{% endblock %}
+
+{% block body %}
+    <h1>Durations results</h1>
+
+        <div class="interval-chart" id="chart_frequency_scatter"></div>
+        <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
+        <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
+        <div class="interval-chart" id="chart_frequency_pie"></div>
+
+
+    <h2>Basic Statistics</h2>
+    <table id="basic_statistics" class="table">
+        <thead>
+        <tr>
+            <th>Measure</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for measure, value in basic_stats.items %}
+            <tr>
+                <td class="simple-table-measure">{{ measure }}</td>
+                <td class="simple-table-value">{{ value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascript %}
+{#    Use Autoloading: https://developers.google.com/chart/interactive/docs/library_loading_enhancements #}
+    <script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+
+    <script type="text/javascript">
+
+    google.setOnLoadCallback(init);
+
+    function init() {
+        drawChart1();
+        drawChart2();
+        drawChart3();
+        drawChart4();
+    }
+
+    function drawChart1() {
+        var data = google.visualization.arrayToDataTable( {{ frequency_scatter | safe }} );
+
+        var options = {
+            'title': 'Intervals frequency',
+            'legend': 'none',
+            hAxis: {title: 'Quarter duration'},
+            vAxis: {title: 'Amount (normalized by std dev.)'},
+            pointSize: 5
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_frequency_scatter'));
+        chart.draw(data, options);
+    }
+
+    function drawChart2() {
+        var data = google.visualization.arrayToDataTable( {{ histogram | safe }} );
+
+        var options = {
+            'title': 'Histogram',
+            hAxis: {title: 'Quarter duration (percentiles)'},
+            vAxis: {title: 'Amount (by bin)'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_histogram'));
+        chart.draw(data, options);
+        }
+
+    function drawChart3() {
+        var data = google.visualization.arrayToDataTable( {{ distribution_amount | safe }} );
+
+        var options = {
+            'title':'Distribution by durations amount per duration type',
+            hAxis: {
+                title: '\u03C3', // sigma
+            },
+            seriesType: "bars",
+            series: {1: {type: "line", curveType: 'function'},
+                     2: {type: "line", curveType: 'function'}},
+
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_distribution_amount'));
+        chart.draw(data, options);
+        }
+
+    function drawChart4() {
+        var data = google.visualization.arrayToDataTable({{ frequency_pie | safe }});
+        var options = {'title': 'Durations frequency' };
+        var chart = new google.visualization.PieChart(document.getElementById('chart_frequency_pie'));
+        chart.draw(data, options);
+    }
+
+    </script>
+
+{% endblock %}

@@ -6,6 +6,7 @@ from django.shortcuts import render
 from analysis.models import MusicData, Composition
 from analysis.computation import ambitus
 from analysis.computation import intervals
+from analysis.computation import durations
 from analysis.computation import contour
 from analysis.computation import pure_data
 
@@ -106,6 +107,32 @@ def show_intervals(request):
 
     return render(request, 'intervals.html', args)
 
+def show_durations(request):
+    def select_filter(name, item, arguments, template='music_data__%s'):
+        if item != "all":
+            arguments[template % name] = item
+
+    if request.method == 'POST':
+        kwargs = {}
+
+        title = request.POST['select-composition']
+        key = request.POST['select-key']
+        time_signature = request.POST['select-time-signature']
+
+        select_filter('title__iexact', title, kwargs, template='%s')
+        select_filter('key', key, kwargs)
+        select_filter('time_signature', time_signature, kwargs)
+
+        compositions = Composition.objects.filter(**kwargs)
+        args = durations.analysis(compositions)
+        return render(request, 'durations_result.html', args)
+
+    args = {'compositions': uniq_items_in_model('title', Composition),
+            'keys': uniq_items_in_model('key'),
+            'signatures': uniq_items_in_model('time_signature'),
+            }
+
+    return render(request, 'durations.html', args)
 
 def show_contour(request):
     def select_filter(name, item, arguments, template='music_data__%s'):
