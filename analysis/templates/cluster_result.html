@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Cluster Result
+{% endblock %}
+
+{% block body %}
+    <h1>Cluster results</h1>
+        <div class="cluster-chart" id="chart_duration_ambitus_scatter" style="width: 1000px; height: 400px;"></div>
+
+{% endblock %}
+
+{% block javascript %}
+{#    Use Autoloading: https://developers.google.com/chart/interactive/docs/library_loading_enhancements #}
+    <script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+
+    <script type="text/javascript">
+
+    google.setOnLoadCallback(init);
+
+    function init() {
+        drawChart1()
+    }
+
+    function drawChart1() {
+        var data = google.visualization.arrayToDataTable( {{ duration_ambitus | safe }} );
+
+        var options = {
+            'title': 'Compositions clusters: duration x ambitus',
+            'legend': 'none',
+            hAxis: {title: 'Duration (\u03C3)'}, // sigma
+            vAxis: {title: 'Ambitus  (\u03C3)'}, // sigma
+            pointSize: 3
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_duration_ambitus_scatter'));
+        chart.draw(data, options);
+    }
+    </script>
+
+{% endblock %}
