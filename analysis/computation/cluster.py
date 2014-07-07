@@ -2,7 +2,7 @@ import numpy
 from analysis.computation import utils
 
 
-def get_duration_ambitus(compositions, normalize=True):
+def get_duration_ambitus(compositions, normalize=True, labelize=False):
     pairs = [(c.music_data.total_duration, c.music_data.ambitus) for c in compositions]
     if normalize:
         arr = numpy.array(pairs)
@@ -10,17 +10,19 @@ def get_duration_ambitus(compositions, normalize=True):
             arr = utils.normalize_array(arr, i)
         pairs = arr.tolist()
 
-    seq = []
-    for i in range(len(pairs)):
-        imslp = compositions[i].collection.imslp_id
-        row = []
-        x, y = pairs[i]
-        row.append({'v': x, 'f':'{}. {}'.format(imslp, x)})
-        row.append(y)
+    if labelize:
+        seq = []
+        for i in range(len(pairs)):
+            imslp = compositions[i].collection.imslp_id
+            row = []
+            x, y = pairs[i]
+            row.append({'v': x, 'f':'{}. {}'.format(imslp, x)})
+            row.append(y)
 
-        seq.append(row)
+            seq.append(row)
 
-    pairs = seq
+        pairs = seq
+
     pairs.insert(0, ['', 'Piece'])
     return pairs
 
