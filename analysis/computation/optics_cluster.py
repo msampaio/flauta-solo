@@ -59,7 +59,6 @@ bhclowers at gmail.com
 """
 
 
-# import hcluster as H
 from matplotlib import pyplot as plt
 import numpy
 from scipy.spatial.distance import squareform, pdist
@@ -73,24 +72,25 @@ def optics(x, k, dist_method = 'euclidean'):
         n = 1
 
     try:
+        # using scipy.spatial instead of original hcluster
         distance = squareform(pdist(x, dist_method))
     except Exception as ex:
         print(ex)
         print("squareform or pdist error")
 
-    cd = numpy.zeros(m)
-    rd = numpy.ones(m) * 1E10
+    core_distance = numpy.zeros(m)
+    reach_distance = numpy.ones(m) * 1E10
 
     for i in range(m):
         # again you can use the euclid function if you don't want hcluster
         # distance = euclid(x[i],x)
         # distance.sort()
-        # cd[i] = distance[k]
+        # core_distance[i] = distance[k]
 
         temp_ind = distance[i].argsort()
-        temp_d = distance[i][temp_ind]
-        # temp_d.sort() #we don't use this function as it changes the reference
-        cd[i] = temp_d[k]#**2
+        tmp_distance = distance[i][temp_ind]
+        # tmp_distance.sort() #we don't use this function as it changes the reference
+        core_distance[i] = tmp_distance[k]#**2
 
 
     order = []
@@ -104,56 +104,63 @@ def optics(x, k, dist_method = 'euclidean'):
         seeds = seeds[seed_ind]
 
         order.append(ob)
-        tempX = numpy.ones(len(seeds))*cd[ob]
-        temp_d = distance[ob][seeds]#[seeds]
+        tempX = numpy.ones(len(seeds))*core_distance[ob]
+        tmp_distance = distance[ob][seeds]#[seeds]
         # you can use this function if you don't want to use hcluster
-        # temp_d = euclid(x[ob],x[seeds])
+        # tmp_distance = euclid(x[ob],x[seeds])
 
-        temp = numpy.column_stack((tempX, temp_d))
+        temp = numpy.column_stack((tempX, tmp_distance))
         mm = numpy.max(temp, axis = 1)
-        ii = numpy.where(rd[seeds]>mm)[0]
-        rd[seeds[ii]] = mm[ii]
-        ind = numpy.argmin(rd[seeds])
+        ii = numpy.where(reach_distance[seeds]>mm)[0]
+        reach_distance[seeds[ii]] = mm[ii]
+        ind = numpy.argmin(reach_distance[seeds])
 
 
     order.append(seeds[0])
-    rd[0] = 0 # we set this point to 0 as it does not get overwritten
-    return rd, cd, order
+    reach_distance[0] = 0 # we set this point to 0 as it does not get overwritten
+    return reach_distance, core_distance, order
 
 
-def is_local_maxima(index, RPlot, RPoints, nghsize):
+def is_local_maxima(index, reach_plot, reach_points, ngh_size):
     # 0 = point at index is not local maxima
     # 1 = point at index is local maxima
 
-    for i in range(1,nghsize+1):
+    for i in range(1, ngh_size + 1):
         #process objects to the right of index
-        if index + i < len(RPlot):
-            if (RPlot[index] < RPlot[index+i]):
+        if index + i < len(reach_plot):
+            if (reach_plot[index] < reach_plot[index + i]):
                 return 0
 
         #process objects to the left of index
         if index - i >= 0:
-            if (RPlot[index] < RPlot[index-i]):
+            if (reach_plot[index] < reach_plot[index - i]):
                 return 0
 
     return 1
 
 
-def find_local_maxima(RPlot, RPoints, nghsize):
+def find_local_maxima(reach_plot, reach_points, ngh_size):
+
+    def aux_comparison(i, reach_plot, reach_points, ngh_size):
+        conditions = []
+        conditions.append(reach_plot[i] > reach_plot[i-1])
+        conditions.append(reach_plot[i] >= reach_plot[i+1])
+        conditions.append(is_local_maxima(i, reach_plot, reach_points, ngh_size))
+        return all(conditions)
 
     local_maxima_points = {}
 
     # 1st and last points on Reachability Plot are not taken as local maxima points
-    for i in range(1,len(RPoints)-1):
+    for i in range(1, len(reach_points) - 1):
         # if the point is a local maxima on the reachability plot with
         # regard to nghsize, insert it into priority queue and maxima list
-        if all([RPlot[i] > RPlot[i-1], RPlot[i] >= RPlot[i+1], is_local_maxima(i,RPlot,RPoints,nghsize) == 1]):
-            local_maxima_points[i] = RPlot[i]
+        if aux_comparison(i, reach_plot, reach_points, ngh_size):
+            local_maxima_points[i] = reach_plot[i]
 
     return sorted(local_maxima_points, key=local_maxima_points.__getitem__ , reverse=True)
 
 
-def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_cluster_size):
+def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, min_cluster_size):
     # node is a node or the root of the tree in the first call
     # parentNode is parent node of N or None if node is root of the tree
     # localMaximaPoints is list of local maxima points sorted in descending order of reachability
@@ -166,8 +173,8 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     local_maxima_points = local_maxima_points[1:]
 
     # create two new nodes and add to list of nodes
-    node_1 = TreeNode(RPoints[node.start:s],node.start,s, node)
-    node_2 = TreeNode(RPoints[s+1:node.end],s+1, node.end, node)
+    node_1 = TreeNode(reach_points[node.start:s], node.start,s, node)
+    node_2 = TreeNode(reach_points[s + 1:node.end], s + 1, node.end, node)
     local_max_1 = []
     local_max_2 = []
 
@@ -184,10 +191,10 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     #set a lower threshold on how small a significant maxima can be
     significant_min = .003
 
-    if RPlot[s] < significant_min:
+    if reach_plot[s] < significant_min:
         node.assign_split_point(-1)
         #if split_point is not significant, ignore this split and continue
-        cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_cluster_size)
+        cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, min_cluster_size)
         return
 
 
@@ -197,8 +204,8 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     check_value_2 = int(numpy.round(check_ratio*len(node_2.points)))
     if check_value_2 == 0:
         check_value_2 = 1
-    avg_reach_value_1 = float(numpy.average(RPlot[(node_1.end - check_value_1):node_1.end]))
-    avg_reach_value_2 = float(numpy.average(RPlot[node_2.start:(node_2.start + check_value_2)]))
+    avg_reach_value_1 = float(numpy.average(reach_plot[(node_1.end - check_value_1):node_1.end]))
+    avg_reach_value_2 = float(numpy.average(reach_plot[node_2.start:(node_2.start + check_value_2)]))
 
 
     """
@@ -213,18 +220,21 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     #if ratio above exceeds maxima_ratio, find which of the clusters to the left and right to reject based on rejection_ratio
     rejection_ratio = .7
 
-    if float(avg_reach_value_1 / float(RPlot[s])) > maxima_ratio or float(avg_reach_value_2 / float(RPlot[s])) > maxima_ratio:
+    ratio_avg_reach_value_1 = float(avg_reach_value_1 / float(reach_plot[s]))
+    ratio_avg_reach_value_2 = float(avg_reach_value_2 / float(reach_plot[s]))
 
-        if float(avg_reach_value_1 / float(RPlot[s])) < rejection_ratio:
+    if ratio_avg_reach_value_1 > maxima_ratio or ratio_avg_reach_value_2 > maxima_ratio:
+
+        if ratio_avg_reach_value_1 < rejection_ratio:
           #reject node 2
             node_list.remove((node_2, local_max_2))
-        if float(avg_reach_value_2 / float(RPlot[s])) < rejection_ratio:
+        if ratio_avg_reach_value_2 < rejection_ratio:
           #reject node 1
             node_list.remove((node_1, local_max_1))
-        if float(avg_reach_value_1 / float(RPlot[s])) >= rejection_ratio and float(avg_reach_value_2 / float(RPlot[s])) >= rejection_ratio:
+        if ratio_avg_reach_value_1 >= rejection_ratio and ratio_avg_reach_value_2 >= rejection_ratio:
             node.assign_split_point(-1)
             #since split_point is not significant, ignore this split and continue (reject both child nodes)
-            cluster_tree(node,parent_node, local_maxima_points, RPlot, RPoints, min_cluster_size)
+            cluster_tree(node,parent_node, local_maxima_points, reach_plot, reach_points, min_cluster_size)
             return
 
     #remove clusters that are too small
@@ -261,8 +271,8 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     similarity_threshold = 0.4
     bypass_node = 0
     if parent_node != None:
-        sum_RP = numpy.average(RPlot[node.start:node.end])
-        sum_parent = numpy.average(RPlot[parent_node.start:parent_node.end])
+        sum_RP = numpy.average(reach_plot[node.start:node.end])
+        sum_parent = numpy.average(reach_plot[parent_node.start:parent_node.end])
         if float(float(node.end-node.start) / float(parent_node.end-parent_node.start)) > similarity_threshold: #1)
         #if float(float(sum_RP) / float(sum_parent)) > similarity_threshold: #2)
             parent_node.children.remove(node)
@@ -271,10 +281,10 @@ def cluster_tree(node, parent_node, local_maxima_points, RPlot, RPoints, min_clu
     for nl in node_list:
         if bypass_node == 1:
             parent_node.add_child(nl[0])
-            cluster_tree(nl[0], parent_node, nl[1], RPlot, RPoints, min_cluster_size)
+            cluster_tree(nl[0], parent_node, nl[1], reach_plot, reach_points, min_cluster_size)
         else:
             node.add_child(nl[0])
-            cluster_tree(nl[0], node, nl[1], RPlot, RPoints, min_cluster_size)
+            cluster_tree(nl[0], node, nl[1], reach_plot, reach_points, min_cluster_size)
 
 
 def print_tree(node, num):
