@@ -64,60 +64,48 @@ import numpy
 from scipy.spatial.distance import squareform, pdist
 
 
-def optics(x, k, dist_method = 'euclidean'):
-    if len(x.shape)>1:
-        m,n = x.shape
+def optics(array, smoothing, dist_method="euclidean"):
+    if len(array.shape) > 1:
+        rows_number, _ = array.shape
     else:
-        m = x.shape[0]
-        n = 1
+        rows_number = array.shape[0]
 
     try:
-        # using scipy.spatial instead of original hcluster
-        distance = squareform(pdist(x, dist_method))
+        distance = squareform(pdist(array, dist_method))
     except Exception as ex:
         print(ex)
         print("squareform or pdist error")
 
-    core_distance = numpy.zeros(m)
-    reach_distance = numpy.ones(m) * 1E10
+    core_distance = numpy.zeros(rows_number)
+    reach_distance = numpy.ones(rows_number) * 1E10
 
-    for i in range(m):
-        # again you can use the euclid function if you don't want hcluster
-        # distance = euclid(x[i],x)
-        # distance.sort()
-        # core_distance[i] = distance[k]
-
-        temp_ind = distance[i].argsort()
-        tmp_distance = distance[i][temp_ind]
-        # tmp_distance.sort() #we don't use this function as it changes the reference
-        core_distance[i] = tmp_distance[k]#**2
-
+    for i in range(rows_number):
+        tmp_index = distance[i].argsort()
+        tmp_distance = distance[i][tmp_index]
+        core_distance[i] = tmp_distance[smoothing]
 
     order = []
-    seeds = numpy.arange(m, dtype = numpy.int)
+    seeds = numpy.arange(rows_number, dtype = numpy.int)
 
     ind = 0
     while len(seeds) != 1:
-    # for seed in seeds:
         ob = seeds[ind]
         seed_ind = numpy.where(seeds != ob)
         seeds = seeds[seed_ind]
 
         order.append(ob)
         tempX = numpy.ones(len(seeds))*core_distance[ob]
-        tmp_distance = distance[ob][seeds]#[seeds]
-        # you can use this function if you don't want to use hcluster
-        # tmp_distance = euclid(x[ob],x[seeds])
+        tmp_distance = distance[ob][seeds]
 
-        temp = numpy.column_stack((tempX, tmp_distance))
-        mm = numpy.max(temp, axis = 1)
-        ii = numpy.where(reach_distance[seeds]>mm)[0]
-        reach_distance[seeds[ii]] = mm[ii]
+        stacked = numpy.column_stack((tempX, tmp_distance))
+        stacked_max = numpy.max(stacked, axis = 1)
+        ii = numpy.where(reach_distance[seeds] > stacked_max)[0]
+        reach_distance[seeds[ii]] = stacked_max[ii]
         ind = numpy.argmin(reach_distance[seeds])
-
 
     order.append(seeds[0])
     reach_distance[0] = 0 # we set this point to 0 as it does not get overwritten
+
     return reach_distance, core_distance, order
 
 
@@ -406,15 +394,3 @@ class TreeNode(object):
 
     def add_child(self, child):
         self.children.append(child)
-
-
-def euclid(i, x):
-    """euclidean(i, x) -> euclidean distance between x and y"""
-    y = numpy.zeros_like(x)
-    y += 1
-    y *= i
-    if len(x) != len(y):
-        raise ValueError("vectors must be same length")
-
-    d = (x-y)**2
-    return numpy.sqrt(numpy.sum(d, axis = 1))
