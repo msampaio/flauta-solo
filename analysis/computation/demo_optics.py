@@ -29,9 +29,9 @@ def generate_x(n_points_per_cluster, *data):
     return x
 
 
-def make_reachability_and_order(x):
+def make_reachability_and_order(x, smoothing=9):
     # run the OPTICS algorithm on the points, using a smoothing value (0 = no smoothing)
-    reach_dist, core_dist, order = optics_cluster.optics(x,9)
+    reach_dist, core_dist, order = optics_cluster.optics(x, smoothing)
     reach_plot = []
     reach_points = []
 
@@ -42,8 +42,8 @@ def make_reachability_and_order(x):
     return reach_plot, reach_points, order
 
 
-def get_optics_data(x):
-    reach_plot, reach_points, order = make_reachability_and_order(x)
+def get_optics_data(x, smoothing=9):
+    reach_plot, reach_points, order = make_reachability_and_order(x, smoothing)
 
     #hierarchically cluster the data
     root_node = optics_cluster.automatic_cluster(reach_plot, reach_points)
@@ -91,9 +91,9 @@ my_data = (([-5, -2], .8),
 
 X = generate_x(250, *my_data)
 
-def main(x=X):
+def main(x=X, smoothing=9):
     # get optics stuff
-    root_node, reach_plot, reach_points, leaves = get_optics_data(x)
+    root_node, reach_plot, reach_points, leaves = get_optics_data(x, smoothing=9)
 
     # plot scatterplot of points
     scatter_plot_points(x, 'b.', 2)
