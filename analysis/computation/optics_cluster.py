@@ -148,10 +148,24 @@ def find_local_maxima(reach_plot, reach_points, ngh_size):
     return sorted(local_maxima_points, key=local_maxima_points.__getitem__ , reverse=True)
 
 
+def check_ratio_of_points(node_1, node_2, reach_plot, check_ratio=0.8):
+    #only check a certain ratio of points in the child nodes formed to the left and right of the maxima
+    check_value_1 = int(numpy.round(check_ratio*len(node_1.points)))
+    check_value_2 = int(numpy.round(check_ratio*len(node_2.points)))
+
+    if check_value_2 == 0:
+        check_value_2 = 1
+
+    avg_reach_value_1 = float(numpy.average(reach_plot[(node_1.end - check_value_1):node_1.end]))
+    avg_reach_value_2 = float(numpy.average(reach_plot[node_2.start:(node_2.start + check_value_2)]))
+    return avg_reach_value_1, avg_reach_value_2
+
+
 def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, min_cluster_size):
     # node is a node or the root of the tree in the first call
     # parentNode is parent node of N or None if node is root of the tree
     # localMaximaPoints is list of local maxima points sorted in descending order of reachability
+
     if len(local_maxima_points) == 0:
         return # parentNode is a leaf
 
@@ -188,14 +202,8 @@ def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_point
 
     #only check a certain ratio of points in the child nodes formed to the left and right of the maxima
     check_ratio = .8
-    check_value_1 = int(numpy.round(check_ratio*len(node_1.points)))
-    check_value_2 = int(numpy.round(check_ratio*len(node_2.points)))
+    avg_reach_value_1, avg_reach_value_2 = check_ratio_of_points(node_1, node_2, reach_plot, check_ratio)
 
-    if check_value_2 == 0:
-        check_value_2 = 1
-
-    avg_reach_value_1 = float(numpy.average(reach_plot[(node_1.end - check_value_1):node_1.end]))
-    avg_reach_value_2 = float(numpy.average(reach_plot[node_2.start:(node_2.start + check_value_2)]))
 
     """
     To adjust the fineness of the clustering, adjust the following ratios.
@@ -350,28 +358,27 @@ def graph_node(node, num, ax):
         graph_node(item, num - .4, ax)
 
 
-def automatic_cluster(RPlot, RPoints):
+def automatic_cluster(reach_plot, reach_points):
 
     min_cluster_size_ratio = .005
     min_neighborhood_size = 2
     min_maxima_ratio = 0.001
 
-    min_cluster_size = int(min_cluster_size_ratio * len(RPoints))
+    min_cluster_size = int(min_cluster_size_ratio * len(reach_points))
 
     if min_cluster_size < 5:
         min_cluster_size = 5
 
 
-    nghsize = int(min_maxima_ratio * len(RPoints))
+    nghsize = int(min_maxima_ratio * len(reach_points))
 
     if nghsize < min_neighborhood_size:
         nghsize = min_neighborhood_size
 
-    local_maxima_points = find_local_maxima(RPlot, RPoints, nghsize)
+    local_maxima_points = find_local_maxima(reach_plot, reach_points, nghsize)
 
-    root_node = TreeNode(RPoints, 0, len(RPoints), None)
-    cluster_tree(root_node, None, local_maxima_points, RPlot, RPoints, min_cluster_size)
-
+    root_node = TreeNode(reach_points, 0, len(reach_points), None)
+    cluster_tree(root_node, None, local_maxima_points, reach_plot, reach_points, min_cluster_size)
 
     return root_node
 
