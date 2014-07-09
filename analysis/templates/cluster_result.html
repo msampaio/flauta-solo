@@ -46,7 +46,8 @@
             'title': 'Compositions clusters: duration x ambitus',
             hAxis: {title: 'Duration (\u03C3)'}, // sigma
             vAxis: {title: 'Ambitus  (\u03C3)'}, // sigma
-            pointSize: 3
+            pointSize: 2,
+            //interpolateNulls: 'false',
         };
 
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_duration_ambitus_cluster'));

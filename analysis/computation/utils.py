@@ -191,14 +191,15 @@ def make_optics_plot_data(array):
     for n, item in enumerate(leaves):
         for v in range(item.start,item.end):
             x, y = reach_points[v]
-            row = [0 for i in range(size)]
+            row = ['none' for i in range(size)]
             row[n] = y
             row.insert(0, x)
             seq.append(row)
 
     header = ['G{}'.format(str(n)) for n in range(1, size + 1)]
     header.insert(0, 'Z')
-    seq = sorted(seq)
+    first_data_line = [0] * (n + 2)
+    seq.insert(0, first_data_line)
     seq.insert(0, header)
 
     return seq
