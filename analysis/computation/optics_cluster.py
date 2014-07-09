@@ -94,10 +94,10 @@ def optics(array, smoothing, dist_method="euclidean"):
         seeds = seeds[seed_ind]
 
         order.append(ob)
-        tempX = numpy.ones(len(seeds))*core_distance[ob]
+        tmp_array = numpy.ones(len(seeds)) * core_distance[ob]
         tmp_distance = distance[ob][seeds]
 
-        stacked = numpy.column_stack((tempX, tmp_distance))
+        stacked = numpy.column_stack((tmp_array, tmp_distance))
         stacked_max = numpy.max(stacked, axis = 1)
         ii = numpy.where(reach_distance[seeds] > stacked_max)[0]
         reach_distance[seeds[ii]] = stacked_max[ii]
@@ -173,8 +173,8 @@ def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_point
             local_max_2.append(i)
 
     node_list = []
-    node_list.append((node_1,local_max_1))
-    node_list.append((node_2,local_max_2))
+    node_list.append((node_1, local_max_1))
+    node_list.append((node_2, local_max_2))
 
     #set a lower threshold on how small a significant maxima can be
     significant_min = .003
@@ -190,11 +190,12 @@ def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_point
     check_ratio = .8
     check_value_1 = int(numpy.round(check_ratio*len(node_1.points)))
     check_value_2 = int(numpy.round(check_ratio*len(node_2.points)))
+
     if check_value_2 == 0:
         check_value_2 = 1
+
     avg_reach_value_1 = float(numpy.average(reach_plot[(node_1.end - check_value_1):node_1.end]))
     avg_reach_value_2 = float(numpy.average(reach_plot[node_2.start:(node_2.start + check_value_2)]))
-
 
     """
     To adjust the fineness of the clustering, adjust the following ratios.
@@ -214,10 +215,10 @@ def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_point
     if ratio_avg_reach_value_1 > maxima_ratio or ratio_avg_reach_value_2 > maxima_ratio:
 
         if ratio_avg_reach_value_1 < rejection_ratio:
-          #reject node 2
+            #reject node 2
             node_list.remove((node_2, local_max_2))
         if ratio_avg_reach_value_2 < rejection_ratio:
-          #reject node 1
+            #reject node 1
             node_list.remove((node_1, local_max_1))
         if ratio_avg_reach_value_1 >= rejection_ratio and ratio_avg_reach_value_2 >= rejection_ratio:
             node.assign_split_point(-1)
@@ -245,7 +246,6 @@ def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_point
         node.assign_split_point(-1)
         return
 
-###
     """
     Check if nodes can be moved up one level - the new cluster created
     is too "similar" to its parent, given the similarity threshold.
@@ -320,7 +320,7 @@ def get_leaves(node, arr):
         if node.split_point == -1:
             arr.append(node)
         for n in node.children:
-            get_leaves(n,arr)
+            get_leaves(n, arr)
     return arr
 
 
@@ -362,7 +362,7 @@ def automatic_cluster(RPlot, RPoints):
         min_cluster_size = 5
 
 
-    nghsize = int(min_maxima_ratio*len(RPoints))
+    nghsize = int(min_maxima_ratio * len(RPoints))
 
     if nghsize < min_neighborhood_size:
         nghsize = min_neighborhood_size
