@@ -39,8 +39,23 @@
         chart.draw(data, options);
     }
 
+    function fix_null(array) {
+        var i;
+        var j;
+        var a = [["a", "b", "c"],["a", "b", "c"],["a", "b", "c"]];
+        for (i = 0; i < a.length; ++i) {
+            for (j = 0; j < a.length; ++j) {
+                if (a[i][j] === "null") {
+                    a[i][j] = null;
+                }
+            }
+        }
+        return array;
+    }
+
     function drawChart2() {
-        var data = google.visualization.arrayToDataTable( {{ cluster | safe }} );
+        array1 = fix_null( {{ cluster | safe }} )
+        var data = google.visualization.arrayToDataTable(array1);
 
         var options = {
             'title': 'Compositions clusters: duration x ambitus',
