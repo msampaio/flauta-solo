@@ -42,11 +42,10 @@
     function fix_null(array) {
         var i;
         var j;
-        var a = [["a", "b", "c"],["a", "b", "c"],["a", "b", "c"]];
-        for (i = 0; i < a.length; ++i) {
-            for (j = 0; j < a.length; ++j) {
-                if (a[i][j] === "null") {
-                    a[i][j] = null;
+        for (i = 0; i < array.length; ++i) {
+            for (j = 0; j < array.length; ++j) {
+                if (array[i][j] === "null") {
+                    array[i][j] = null;
                 }
             }
         }
