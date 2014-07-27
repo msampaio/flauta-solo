@@ -1,5 +1,7 @@
 import os
 import logging
+from optparse import make_option
+
 from django.core.management.base import BaseCommand, CommandError
 from progressbar import ProgressBar
 from analysis.models import MusicData, MusicXMLScore
@@ -127,12 +129,22 @@ class Command(BaseCommand):
     args = '<file1 [file2 ...]>'
     help = 'Import music data from MusicXML files'
 
+    option_list = BaseCommand.option_list + (
+        make_option('--progress',
+                    action='store_true',
+                    dest='progress',
+                    default=False,
+                    help='Show progress bar'),
+    )
+
     def handle(self, *args, **options):
         progress = ProgressBar()
         results = 0
 
+        files = progress(args) if options['progress'] else args
+
         if args:
-            for filename in progress(args):
+            for filename in files:
                 result = import_xml_file(filename, options)
                 results += result
 
