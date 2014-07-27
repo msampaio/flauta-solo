@@ -85,7 +85,7 @@ def make_music_data(music_stream, musicdata):
     musicdata.intervals_midi = intervals_midi(notes)
     musicdata.intervals_with_direction = intervals_with_direction(notes)
     musicdata.intervals_classes = intervals_classes(notes)
-    _durations = [note.duration.quarterLength for note in notes]
+    _durations = [float(note.duration.quarterLength) for note in notes]
     musicdata.durations = _durations
     musicdata.time_signature = get_time_signature(music_stream)
     _key = music_stream.analyze("key")
