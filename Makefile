@@ -73,7 +73,7 @@ update-static-files:
 	./manage-production.py collectstatic -v0 --noinput
 
 import-data:
-	python2.7 manage-production.py importmusic ~/partituras-flauta/I*.xml
+	python2.7 manage-production.py importmusic --progress ~/partituras-flauta/I*.xml
 	python3.3 manage-production.py importimslp ~/partituras-flauta/I*.xml
 
 see-errors:
