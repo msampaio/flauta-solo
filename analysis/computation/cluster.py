@@ -42,14 +42,14 @@ def make_clusters(compositions, array, min_pts):
     leaves = utils.get_optics_data(array, min_pts)[-1]
 
     clusters = []
-
+    if not leaves: return clusters
     for leave_number, leave in enumerate(leaves):
         l_dic = {}
         l_dic['number'] = leave_number
         l_dic['size'] = len(leave.order)
         songs = []
         for n in leave.order:
-            composition = compositions.get(id=n)
+            composition = compositions.get(id=n+1)
             title = composition.title
             code = composition.music_data.score.code
             songs.append({'title': title, 'code': code, 'first': False})

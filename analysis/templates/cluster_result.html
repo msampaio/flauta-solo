@@ -10,6 +10,7 @@
         <div class="cluster-chart" id="chart_duration_ambitus_cluster" style="width: 1000px; height: 400px;"></div>
         <div class="cluster-chart" id="chart_duration_ambitus_reachability" style="width: 1000px; height: 400px;"></div>
 
+    {% if cluster_table|length > 1 %}
     <h1>Clusters</h1>
         <table  id="basic_statistics" class="table">
             <tr>
@@ -32,6 +33,7 @@
                 {% endfor %}
             {% endfor %}
         </table>
+    {% endif %}
 
 
 {% endblock %}
