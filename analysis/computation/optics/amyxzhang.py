@@ -366,6 +366,21 @@ def graph_tree(root, RPlot):
     plt.show()
 
 
+def order_reach_plot(array, min_pts=9):
+    # run the OPTICS algorithm on the points, using a min_pts value (0 = no min_pts)
+    reach_dist, core_dist, order = optics(array, min_pts)
+    reach_plot = []
+    reach_points = []
+
+    # return reach_dist, reach_points, order
+
+    for item in order:
+        reach_plot.append(reach_dist[item]) # Reachability Plot
+        reach_points.append([array[item][0], array[item][1]]) # points in their order determined by OPTICS
+
+    return reach_plot, reach_points, order
+
+
 def graph_node(node, num, ax):
     ax.hlines(num,node.start,node.end,color="red")
     for item in node.children:

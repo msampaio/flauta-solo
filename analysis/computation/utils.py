@@ -168,8 +168,8 @@ def make_reachability_and_order(array, smoothing=9):
     return reach_plot, reach_points, order
 
 
-def get_optics_data(array, smoothing=9):
-    reach_plot, reach_points, order = make_reachability_and_order(array, smoothing)
+def get_optics_data(array, min_pts=9):
+    reach_plot, reach_points, order = amyxzhang.order_reach_plot(array, min_pts)
 
     #hierarchically cluster the data
     root_node = amyxzhang.automatic_cluster(reach_plot, reach_points, order)
