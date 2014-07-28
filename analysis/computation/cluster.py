@@ -27,25 +27,19 @@ def get_duration_ambitus(compositions, normalize=True, labelize=False):
     return pairs
 
 
-def duration_ambitus_cluster(duration_ambitus):
-    array = numpy.array(duration_ambitus[1:])
-    return utils.make_optics_plot_data(array)
+def duration_ambitus_cluster(array, min_pts):
+    return utils.make_optics_plot_data(array, min_pts)
 
 
-def duration_reachability(array):
-    min_pts = 10
-
-    if len(array) < 10:
-        min_pts = 0
-
+def duration_reachability(array, min_pts):
     reachability_plot = utils.make_reachability_plot_data(array, min_pts)
 
     reachability_plot.insert(0, ['Piece', 'Reachability value'])
     return reachability_plot
 
 
-def make_clusters(compositions, array):
-    leaves = utils.get_optics_data(array)[-1]
+def make_clusters(compositions, array, min_pts):
+    leaves = utils.get_optics_data(array, min_pts)[-1]
 
     clusters = []
 
@@ -69,17 +63,19 @@ def make_clusters(compositions, array):
     return clusters
 
 
-
-
 def analysis(compositions):
     duration_ambitus_label = get_duration_ambitus(compositions, True, True)
     duration_ambitus = get_duration_ambitus(compositions, True, False)
-    cluster = duration_ambitus_cluster(duration_ambitus)
 
     array = numpy.array(duration_ambitus[1:])
 
-    reachability_plot = duration_reachability(array)
-    cluster_table = make_clusters(compositions, array)
+    min_pts = 10
+    if len(duration_ambitus) < 10:
+        min_pts = 0
+
+    cluster = duration_ambitus_cluster(array, min_pts)
+    reachability_plot = duration_reachability(array, min_pts)
+    cluster_table = make_clusters(compositions, array, min_pts)
 
     if duration_ambitus:
         args = {

@@ -188,8 +188,8 @@ def get_optics_data(array, min_pts=9):
     return root_node, reach_plot, reach_points, leaves
 
 
-def make_optics_plot_data(array):
-    root_node, reach_plot, reach_points, leaves = get_optics_data(array)
+def make_optics_plot_data(array, min_pts=9):
+    root_node, reach_plot, reach_points, leaves = get_optics_data(array, min_pts)
 
     # graph the points and the leaf clusters that have been found by OPTICS
 
