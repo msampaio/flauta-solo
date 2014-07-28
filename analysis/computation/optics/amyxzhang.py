@@ -56,13 +56,14 @@ def optics(array, min_pts, distance_method="euclidean"):
 
 
 class TreeNode(object):
-    def __init__(self, points, start, end, parent_node):
+    def __init__(self, points, order, start, end, parent_node):
         self.points = points
         self.start = start
         self.end = end
         self.parent_node = parent_node
         self.children = []
         self.split_point = -1
+        self.order = order
 
     def __str__(self):
         return "start: %d, end %d, split: %d" % (self.start, self.end, self.split_point)
@@ -143,9 +144,15 @@ def _split_local_maxima(local_maxima_points, split_point):
     return seq_1, seq_2
 
 
-def _make_node_list(node, reach_points, local_maxima_points, split_point):
-    node_1 = TreeNode(reach_points[node.start:split_point], node.start,split_point, node)
-    node_2 = TreeNode(reach_points[split_point + 1:node.end], split_point + 1, node.end, node)
+def _make_node_list(node, reach_points, order, local_maxima_points, split_point):
+    points_1 = reach_points[node.start:split_point]
+    points_2 = reach_points[split_point + 1:node.end]
+
+    order_1 = order[node.start:split_point]
+    order_2 = order[split_point + 1:node.end]
+
+    node_1 = TreeNode(points_1, order_1, node.start,split_point, node)
+    node_2 = TreeNode(points_2, order_2, split_point + 1, node.end, node)
     local_max_1, local_max_2 = _split_local_maxima(local_maxima_points, split_point)
 
     node_list = []
@@ -234,7 +241,7 @@ def _get_node_or_parent(node, parent_node, reach_plot, similarity_threshold):
     return node
 
 
-def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, min_cluster_size):
+def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, order, min_cluster_size):
     # node is a node or the root of the tree in the first call
     # parentNode is parent node of N or None if node is root of the tree
     # localMaximaPoints is list of local maxima points sorted in descending order of reachability
@@ -253,17 +260,17 @@ def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_point
     local_maxima_value = reach_plot[split_point]
 
     # create two new nodes and add to list of nodes
-    node_list = _make_node_list(node, reach_points, local_maxima_points, split_point)
+    node_list = _make_node_list(node, reach_points, order, local_maxima_points, split_point)
     node_and_local_1, node_and_local_2 = node_list
 
     if local_maxima_value < significant_min:
         node.assign_split_point(-1)
         # if split_point is not significant, ignore this split and continue
-        cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, min_cluster_size)
+        cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, order, min_cluster_size)
         return
 
     if _inside_ratios_test(node, node_and_local_1, node_and_local_2, node_list, reach_plot, local_maxima_value):
-        cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, min_cluster_size)
+        cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_points, order, min_cluster_size)
         return
 
     #remove clusters that are too small
@@ -281,10 +288,10 @@ def cluster_tree(node, parent_node, local_maxima_points, reach_plot, reach_point
 
     for n, l in node_list:
         node_or_parent_obj.add_child(n)
-        cluster_tree(n, node_or_parent_obj, l, reach_plot, reach_points, min_cluster_size)
+        cluster_tree(n, node_or_parent_obj, l, reach_plot, reach_points, order, min_cluster_size)
 
 
-def automatic_cluster(reach_plot, reach_points):
+def automatic_cluster(reach_plot, reach_points, order):
 
     min_cluster_size_ratio = .005
     min_neighborhood_size = 2
@@ -303,15 +310,15 @@ def automatic_cluster(reach_plot, reach_points):
 
     local_maxima_points = _find_local_maxima(reach_plot, reach_points, nbh_size)
 
-    root_node = TreeNode(reach_points, 0, len(reach_points), None)
-    cluster_tree(root_node, None, local_maxima_points, reach_plot, reach_points, min_cluster_size)
+    root_node = TreeNode(reach_points, order, 0, len(reach_points), None)
+    cluster_tree(root_node, None, local_maxima_points, reach_plot, reach_points, order, min_cluster_size)
 
     return root_node
 
 
-def automatic_optics_cluster(array, min_pts, distance_method="euclidean"):
+def automatic_optics_cluster(array, min_pts=9, distance_method="euclidean"):
     reach_plot, reach_points, order = optics(array, min_pts, distance_method)
-    return automatic_cluster(reach_plot, reach_points)
+    return automatic_cluster(reach_plot, reach_points, order)
 
 
 def get_array(node, num, arr):

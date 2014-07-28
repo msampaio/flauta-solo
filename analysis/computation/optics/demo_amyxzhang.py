@@ -49,7 +49,7 @@ def get_optics_data(x, min_pts=9):
     reach_plot, reach_points, order = make_reachability_and_order(x, min_pts)
 
     #hierarchically cluster the data
-    root_node = amyxzhang.automatic_cluster(reach_plot, reach_points)
+    root_node = amyxzhang.automatic_cluster(reach_plot, reach_points, order)
 
     #array of the TreeNode objects, position in the array is the TreeNode's level in the tree
     array = amyxzhang.get_array(root_node, 0, [0])
