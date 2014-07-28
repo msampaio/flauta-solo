@@ -176,23 +176,15 @@ class Command(BaseCommand):
     help = 'Import metadata from IMSLP'
 
     def handle(self, *args, **options):
-        # FIXME: find the problem with IF322968 files
-        def has_pattern(x):
-            name = os.path.basename(x)
-            return name[0] == 'I' and name[0:8] != "IF322968"
-
         global IMSLP_USERNAME
-
         progress = ProgressBar()
-        # FIXME: find the problem with IF322968 files
-        files = [x for x in args if has_pattern(x)]
 
         try:
             IMSLP_USERNAME = get_imslp_username()
         except configparser.NoSectionError:
             raise CommandError("Can't read the ~/.musiAnalysis.cfg file")
 
-        for filename in progress(files):
+        for filename in progress(args):
             base_filename = os.path.basename(filename)
             imslp_id_code = get_code_from_filename(base_filename)
             import_imslp_data(base_filename, imslp_id_code)
