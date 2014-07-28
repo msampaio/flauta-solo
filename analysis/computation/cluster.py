@@ -45,7 +45,7 @@ def make_clusters(compositions, array, min_pts):
     if not leaves: return clusters
     for leave_number, leave in enumerate(leaves):
         l_dic = {}
-        l_dic['number'] = leave_number
+        l_dic['number'] = 'G' + str(leave_number + 1)
         l_dic['size'] = len(leave.order)
         songs = []
         for n in leave.order:
