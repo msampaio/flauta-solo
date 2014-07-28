@@ -1,7 +1,10 @@
 from collections import Counter
+
 from django.utils.datastructures import SortedDict
 import numpy
-from analysis.computation import optics_cluster
+
+from analysis.computation.optics import amyxzhang
+
 
 def flatten(seq):
     return [el for l in seq for el in l]
@@ -154,7 +157,7 @@ def comparison(pair):
 
 def make_reachability_and_order(array, smoothing=9):
     # run the OPTICS algorithm on the points, using a smoothing value (0 = no smoothing)
-    reach_dist, core_dist, order = optics_cluster.optics(array, smoothing)
+    reach_dist, core_dist, order = amyxzhang.optics(array, smoothing)
     reach_plot = []
     reach_points = []
 
@@ -169,13 +172,13 @@ def get_optics_data(array, smoothing=9):
     reach_plot, reach_points, order = make_reachability_and_order(array, smoothing)
 
     #hierarchically cluster the data
-    root_node = optics_cluster.automatic_cluster(reach_plot, reach_points)
+    root_node = amyxzhang.automatic_cluster(reach_plot, reach_points, order)
 
     #array of the TreeNode objects, position in the array is the TreeNode's level in the tree
-    array = optics_cluster.get_array(root_node, 0, [0])
+    array = amyxzhang.get_array(root_node, 0, [0])
 
     #get only the leaves of the tree
-    leaves = optics_cluster.get_leaves(root_node, [])
+    leaves = amyxzhang.get_leaves(root_node, [])
 
     return root_node, reach_plot, reach_points, leaves
 
