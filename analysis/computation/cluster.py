@@ -49,7 +49,7 @@ def make_clusters(compositions, array, min_pts):
         l_dic['size'] = len(leave.order)
         songs = []
         for n in leave.order:
-            composition = compositions.get(id=n+1)
+            composition = compositions[int(n)]
             title = composition.title
             code = composition.music_data.score.code
             songs.append({'title': title, 'code': code, 'first': False})
