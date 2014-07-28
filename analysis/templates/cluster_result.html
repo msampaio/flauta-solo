@@ -8,6 +8,7 @@
     <h1>Cluster results</h1>
         <div class="cluster-chart" id="chart_duration_ambitus_scatter" style="width: 1000px; height: 400px;"></div>
         <div class="cluster-chart" id="chart_duration_ambitus_cluster" style="width: 1000px; height: 400px;"></div>
+        <div class="cluster-chart" id="chart_duration_ambitus_reachability" style="width: 1000px; height: 400px;"></div>
 
 {% endblock %}
 
@@ -22,6 +23,7 @@
     function init() {
         drawChart1()
         drawChart2()
+        drawChart3()
     }
 
     function drawChart1() {
@@ -67,6 +69,20 @@
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_duration_ambitus_cluster'));
         chart.draw(data, options);
     }
+
+    function drawChart3() {
+        var data = google.visualization.arrayToDataTable( {{ reachability_plot | safe }} );
+
+        var options = {
+            'title': 'Reachability Plot (OPTICS)',
+            hAxis: {title: 'Piece (in OPTICS order)'},
+            vAxis: {title: 'Reachability distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_duration_ambitus_reachability'));
+        chart.draw(data, options);
+        }
     </script>
 
 {% endblock %}
