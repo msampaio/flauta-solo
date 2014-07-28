@@ -10,6 +10,30 @@
         <div class="cluster-chart" id="chart_duration_ambitus_cluster" style="width: 1000px; height: 400px;"></div>
         <div class="cluster-chart" id="chart_duration_ambitus_reachability" style="width: 1000px; height: 400px;"></div>
 
+    <h1>Clusters</h1>
+        <table  id="basic_statistics" class="table">
+            <tr>
+                <th rowspan="2">Cluster number</th>
+                <th colspan="2">Song</th>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <th>IMSLP code</th>
+            </tr>
+            {% for cluster_row in cluster_table %}
+                {% for song_row in cluster_row.songs %}
+                <tr>
+                    {% if song_row.first %}
+                        <td rowspan="{{ cluster_row.size }}">{{ cluster_row.number }}</td>
+                    {% endif %}
+                    <td>{{ song_row.title }}</td>
+                    <td>{{ song_row.code }}</td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+
+
 {% endblock %}
 
 {% block javascript %}
