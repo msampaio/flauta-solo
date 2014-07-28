@@ -191,9 +191,8 @@ def make_optics_plot_data(array):
     leaves = sorted(leaves, key=lambda x: len(x.points), reverse=True)
     seq = []
     size = len(leaves)
-    for n, item in enumerate(leaves):
-        for v in range(item.start,item.end):
-            x, y = reach_points[v]
+    for n, leave in enumerate(leaves):
+        for x, y in leave.points:
             row = ["null"] * size # add null string for google chart
             row[n] = y
             row.insert(0, x)
