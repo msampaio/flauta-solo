@@ -227,3 +227,6 @@ def stats(request):
         'number_compositions': Composition.objects.count(),
     }
     return render(request, 'stats.html', args)
+
+def show_main_cluster(request):
+    return render(request, 'cluster.html', {})
