@@ -9,7 +9,7 @@ from analysis.computation import intervals
 from analysis.computation import durations
 from analysis.computation import contour
 from analysis.computation import pure_data
-from analysis.computation import cluster
+from analysis.computation import cluster_duration_ambitus
 
 
 def home(request):
@@ -195,7 +195,7 @@ def show_pure_data(request):
     return render(request, 'pure_data.html', args)
 
 
-def show_cluster(request):
+def show_cluster_duration_ambitus(request):
     if request.method == 'POST':
         kwargs = {}
 
@@ -210,15 +210,15 @@ def show_cluster(request):
         select_filter('time_signature', time_signature, kwargs)
 
         compositions = Composition.objects.filter(**kwargs)
-        args = cluster.analysis(compositions)
-        return render(request, 'cluster_result.html', args)
+        args = cluster_duration_ambitus.analysis(compositions)
+        return render(request, 'cluster_duration_ambitus_result.html', args)
 
     args = {'compositions': uniq_items_in_model('title', Composition),
             'keys': uniq_items_in_model('key'),
             'durations': uniq_items_in_model('total_duration'),
             'signatures': uniq_items_in_model('time_signature'),
     }
-    return render(request, 'cluster.html', args)
+    return render(request, 'cluster_duration_ambitus.html', args)
 
 
 def stats(request):
