@@ -23,34 +23,10 @@ def get_interval_frequency(compositions, normalize=False):
 
 
 def interval_reachability(array, min_pts):
-    reachability_plot = utils.make_reachability_plot_data(array, min_pts)
+    reachability_plot = utils._make_reachability_plot_data(array, min_pts)
 
     reachability_plot.insert(0, ['Piece', 'Reachability value'])
     return reachability_plot
-
-
-def make_clusters(compositions, array, min_pts):
-    leaves = utils.get_optics_data(array, min_pts)[-1]
-
-    clusters = []
-    if not leaves: return clusters
-    for leave_number, leave in enumerate(leaves):
-        l_dic = {}
-        l_dic['number'] = 'G' + str(leave_number + 1)
-        l_dic['size'] = len(leave.order)
-        songs = []
-        for n in leave.order:
-            composition = compositions[int(n)]
-            title = composition.title
-            code = composition.music_data.score.code
-            songs.append({'title': title, 'code': code, 'first': False})
-
-        songs[0]['first'] = True
-        l_dic['songs'] = songs
-
-        clusters.append(l_dic)
-
-    return clusters
 
 
 def analysis(compositions):
@@ -60,8 +36,8 @@ def analysis(compositions):
     if array.shape[0] < 10:
         min_pts = 0
 
-    reachability_plot = interval_reachability(array, min_pts)
-    cluster_table = make_clusters(compositions, array, min_pts)
+    reachability_plot = utils.make_reachability_plot(array, min_pts)
+    cluster_table = utils.make_clusters(compositions, array, min_pts)
 
     if array.any():
         args = {

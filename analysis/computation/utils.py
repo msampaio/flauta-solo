@@ -155,9 +155,16 @@ def comparison(pair):
 
 # cluster functions #
 
-def make_reachability_plot_data(array, min_pts=9):
+def _make_reachability_plot_data(array, min_pts=9):
     reachability_plot = amyxzhang.optics(array, min_pts)[0]
     return list(map(list, enumerate(reachability_plot)))
+
+
+def make_reachability_plot(array, min_pts=9):
+    reachability_plot = _make_reachability_plot_data(array, min_pts)
+
+    reachability_plot.insert(0, ['Piece', 'Reachability value'])
+    return reachability_plot
 
 
 def make_reachability_and_order(array, min_pts=9):
@@ -208,3 +215,30 @@ def make_optics_plot_data(array, min_pts=9):
     seq.insert(0, header)
 
     return seq
+
+
+def make_clusters(compositions, array, min_pts):
+    leaves = get_optics_data(array, min_pts)[-1]
+
+    clusters = []
+    if not leaves: return clusters
+    for leave_number, leave in enumerate(leaves):
+        l_dic = {}
+        l_dic['number'] = 'G' + str(leave_number + 1)
+        l_dic['size'] = len(leave.order)
+        songs = []
+        for n in leave.order:
+            composition = compositions[int(n)]
+            title = composition.title
+            code = composition.music_data.score.code
+            songs.append({'title': title, 'code': code, 'first': False})
+
+        songs[0]['first'] = True
+        l_dic['songs'] = songs
+
+
+        clusters.append(l_dic)
+
+    return clusters
+
+
