@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Cluster Result - Intervals
+{% endblock %}
+
+{% block body %}
+    <h1>Cluster results - Intervals</h1>
+        <div class="cluster-chart" id="chart_intervals_reachability" style="width: 1000px; height: 400px;"></div>
+
+    {% if cluster_table|length > 1 %}
+    <h1>Clusters</h1>
+        <table  id="basic_statistics" class="table">
+            <tr>
+                <th rowspan="2">Cluster number</th>
+                <th colspan="2">Song</th>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <th>IMSLP code</th>
+            </tr>
+            {% for cluster_row in cluster_table %}
+                {% for song_row in cluster_row.songs %}
+                <tr>
+                    {% if song_row.first %}
+                        <td rowspan="{{ cluster_row.size }}">{{ cluster_row.number }}</td>
+                    {% endif %}
+                    <td>{{ song_row.title }}</td>
+                    <td>{{ song_row.code }}</td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+    {% endif %}
+
+
+{% endblock %}
+
+{% block javascript %}
+{#    Use Autoloading: https://developers.google.com/chart/interactive/docs/library_loading_enhancements #}
+    <script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+
+    <script type="text/javascript">
+
+    google.setOnLoadCallback(init);
+
+    function init() {
+        drawChart1()
+    }
+
+    function drawChart1() {
+        var data = google.visualization.arrayToDataTable( {{ reachability_plot | safe }} );
+
+        var options = {
+            'title': 'Reachability Plot (OPTICS)',
+            hAxis: {title: 'Piece (in OPTICS order)'},
+            vAxis: {title: 'Reachability distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_intervals_reachability'));
+        chart.draw(data, options);
+        }
+    </script>
+
+{% endblock %}

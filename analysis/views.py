@@ -10,6 +10,7 @@ from analysis.computation import durations
 from analysis.computation import contour
 from analysis.computation import pure_data
 from analysis.computation import cluster_duration_ambitus
+from analysis.computation import cluster_intervals
 
 
 def home(request):
@@ -219,6 +220,32 @@ def show_cluster_duration_ambitus(request):
             'signatures': uniq_items_in_model('time_signature'),
     }
     return render(request, 'cluster_duration_ambitus.html', args)
+
+
+def show_cluster_intervals(request):
+    if request.method == 'POST':
+        kwargs = {}
+
+        title = request.POST['select-composition']
+        key = request.POST['select-key']
+        total_duration = request.POST['select-duration']
+        time_signature = request.POST['select-time-signature']
+
+        select_filter('title__iexact', title, kwargs, template='%s')
+        select_filter('key', key, kwargs)
+        select_filter('total_duration', total_duration, kwargs)
+        select_filter('time_signature', time_signature, kwargs)
+
+        compositions = Composition.objects.filter(**kwargs)
+        args = cluster_intervals.analysis(compositions)
+        return render(request, 'cluster_intervals_result.html', args)
+
+    args = {'compositions': uniq_items_in_model('title', Composition),
+            'keys': uniq_items_in_model('key'),
+            'durations': uniq_items_in_model('total_duration'),
+            'signatures': uniq_items_in_model('time_signature'),
+    }
+    return render(request, 'cluster_intervals.html', args)
 
 
 def stats(request):
