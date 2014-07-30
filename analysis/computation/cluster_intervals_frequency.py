@@ -1,6 +1,7 @@
 import numpy
 from analysis.computation import utils
 
+
 def get_interval_frequency(compositions, normalize=False):
     def aux(composition):
         intervals = composition.music_data.intervals_midi

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Flauta Solo | Cluster - Intervals
+    Flauta Solo | Cluster - Intervals Frequency
 {% endblock %}
 
 
 {% block body %}
-    <h1>Cluster - Intervals</h1>
+    <h1>Cluster - Intervals Frequency</h1>
 
-    <form class="form-horizontal" action='{% url "cluster_intervals" %}' method="post">
+    <form class="form-horizontal" action='{% url "cluster_intervals_frequency" %}' method="post">
         {% csrf_token %}
         <fieldset>
             <div class="form-group">
@@ -71,7 +71,7 @@
     <script>
         $(document).ready(function () {
             $(".nav li").removeClass("active");
-            $('#cluster_intervals').addClass('active');
+            $('#cluster_intervals_frequency').addClass('active');
         });
     </script>
 {% endblock %}
