@@ -8,7 +8,7 @@
 {% block body %}
     <h1>Cluster - Duration and ambitus</h1>
 
-    <form class="form-horizontal" action='{% url "cluster" %}' method="post">
+    <form class="form-horizontal" action='{% url "cluster_duration_ambitus" %}' method="post">
         {% csrf_token %}
         <fieldset>
             <div class="form-group">
@@ -71,7 +71,7 @@
     <script>
         $(document).ready(function () {
             $(".nav li").removeClass("active");
-            $('#cluster').addClass('active');
+            $('#cluster_duration_ambitus').addClass('active');
         });
     </script>
 {% endblock %}
