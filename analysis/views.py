@@ -300,7 +300,7 @@ def show_cluster_contour(request):
             'keys': uniq_items_in_model('key'),
             'durations': uniq_items_in_model('total_duration'),
             'signatures': uniq_items_in_model('time_signature'),
-            'size_numbers': range(2, 6)
+            'size_numbers': range(2, 5)
     }
     return render(request, 'cluster_contour.html', args)
 
@@ -328,7 +328,7 @@ def show_cluster_all(request):
             'keys': uniq_items_in_model('key'),
             'durations': uniq_items_in_model('total_duration'),
             'signatures': uniq_items_in_model('time_signature'),
-            'size_numbers': range(2, 6)
+            'size_numbers': range(2, 5)
     }
     return render(request, 'cluster_all.html', args)
 
