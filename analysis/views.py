@@ -12,6 +12,7 @@ from analysis.computation import pure_data
 from analysis.computation import cluster_duration_ambitus
 from analysis.computation import cluster_intervals_frequency
 from analysis.computation import cluster_durations_frequency
+from analysis.computation import cluster_contour
 
 
 def home(request):
@@ -273,6 +274,34 @@ def show_cluster_durations_frequency(request):
             'signatures': uniq_items_in_model('time_signature'),
     }
     return render(request, 'cluster_durations_frequency.html', args)
+
+
+def show_cluster_contour(request):
+    if request.method == 'POST':
+        kwargs = {}
+
+        title = request.POST['select-composition']
+        key = request.POST['select-key']
+        total_duration = request.POST['select-duration']
+        time_signature = request.POST['select-time-signature']
+        contour_size = request.POST['select-contour-size']
+
+        select_filter('title__iexact', title, kwargs, template='%s')
+        select_filter('key', key, kwargs)
+        select_filter('total_duration', total_duration, kwargs)
+        select_filter('time_signature', time_signature, kwargs)
+
+        compositions = Composition.objects.filter(**kwargs)
+        args = cluster_contour.analysis(compositions, int(contour_size))
+        return render(request, 'cluster_contour_result.html', args)
+
+    args = {'compositions': uniq_items_in_model('title', Composition),
+            'keys': uniq_items_in_model('key'),
+            'durations': uniq_items_in_model('total_duration'),
+            'signatures': uniq_items_in_model('time_signature'),
+            'size_numbers': range(2, 6)
+    }
+    return render(request, 'cluster_contour.html', args)
 
 
 def stats(request):

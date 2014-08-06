@@ -1,5 +1,4 @@
 import numpy
-
 from analysis.computation import utils
 
 
