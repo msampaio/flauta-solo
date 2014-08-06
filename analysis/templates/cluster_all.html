@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Flauta Solo | Cluster - All attributes
+{% endblock %}
+
+
+{% block body %}
+    <h1>Cluster - All attributes</h1>
+
+    <form class="form-horizontal" action='{% url "cluster_all" %}' method="post">
+        {% csrf_token %}
+        <fieldset>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="select-composition">Composition</label>
+
+                <div class="col-md-4">
+                    <select id="composition" name="select-composition" class="form-control">
+                        <option value="all">All</option>
+                        {% for composition in compositions %}
+                            <option value="{{ composition.title }}">{{ composition.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="select-key">Key</label>
+
+                <div class="col-md-4">
+                    <select id="select-key" name="select-key" class="form-control">
+                    {% include "_options.html" with items=keys %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="select-duration">Total Duration</label>
+
+                <div class="col-md-4">
+                    <select id="select-duration" name="select-duration" class="form-control">
+                    {% include "_options.html" with items=durations %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="select-time-signature">Time Signature</label>
+
+                <div class="col-md-4">
+                    <select id="select-time-signature" name="select-time-signature" class="form-control">
+                    {% include "_options.html" with items=signatures %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="select-contour-size">Contour size</label>
+
+                <div class="col-md-4">
+                    <select id="select-contour-size" name="select-contour-size" class="form-control">
+                    {% for size_number in size_numbers %}
+                        <option value="{{ size_number }}">{{ size_number }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="submit"></label>
+
+                <div class="col-md-4">
+                    <button id="submit" name="submit" class="btn btn-primary">Analyze</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $(".nav li").removeClass("active");
+            $('#cluster_all').addClass('active');
+        });
+    </script>
+{% endblock %}
