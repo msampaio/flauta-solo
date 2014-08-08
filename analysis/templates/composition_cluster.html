@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Individual analysis - {{ composition.music_data.score.code  }}
+{% endblock %}
+
+{% block body %}
+    <h1>Individual analysis - {{ composition.music_data.score.code  }}</h1>
+        <h2>General</h2>
+            <div class="chart_scatter" id="chart_notes_scatter"></div>
+            <div class="chart-scatter" id="chart_durations_scatter"></div>
+        <h2>Cluster</h2>
+            <h3>Pitch</h3>
+                <div class="chart-reachability" id="chart_notes_reachability"></div>
+                <div class="chart-reachability" id="chart_notes_cluster"></div>
+            <h3>Duration</h3>
+                <div class="chart-reachability" id="chart_durations_reachability"></div>
+                <div class="chart-reachability" id="chart_durations_cluster"></div>
+{% endblock %}
+
+{% block javascript %}
+{#    Use Autoloading: https://developers.google.com/chart/interactive/docs/library_loading_enhancements #}
+    <script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+
+    <script type="text/javascript">
+
+    google.setOnLoadCallback(init);
+
+    function init() {
+        drawChart1();
+        drawChart2();
+        drawChart3();
+        drawChart4();
+        drawChart5();
+        drawChart6();
+    }
+
+    function drawChart1() {
+        var data = google.visualization.arrayToDataTable( {{ notes_scatter | safe }} );
+
+        var options = {
+            'title': 'Pitch in time',
+            'legend': 'none',
+            hAxis: {title: 'Time'},
+            vAxis: {title: 'Midi number'},
+            pointSize: 5
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_notes_scatter'));
+        chart.draw(data, options);
+        }
+
+    function drawChart2() {
+        var data = google.visualization.arrayToDataTable( {{ durations_scatter | safe }} );
+
+        var options = {
+            'title': 'Duration in time',
+            'legend': 'none',
+            hAxis: {title: 'Time'},
+            vAxis: {title: 'Duration (quarter length)'},
+            pointSize: 5
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_durations_scatter'));
+        chart.draw(data, options);
+        }
+
+    function drawChart3() {
+        var data = google.visualization.arrayToDataTable( {{ notes_reachability_plot | safe }} );
+
+        var options = {
+            'title': 'Notes Reachability Plot (OPTICS)',
+            hAxis: {title: 'Note (in OPTICS order)'},
+            vAxis: {title: 'Reachability distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_notes_reachability'));
+        chart.draw(data, options);
+        }
+
+    function drawChart4() {
+        var data = google.visualization.arrayToDataTable( {{ durations_reachability_plot | safe }} );
+
+        var options = {
+            'title': 'Durations Reachability Plot (OPTICS)',
+            hAxis: {title: 'Duration (in OPTICS order)'},
+            vAxis: {title: 'Reachability distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_durations_reachability'));
+        chart.draw(data, options);
+        }
+
+    function fix_null(array) {
+        var i;
+        var j;
+        for (i = 0; i < array.length; ++i) {
+            for (j = 0; j < array.length; ++j) {
+                if (array[i][j] === "null") {
+                    array[i][j] = null;
+                }
+            }
+        }
+        return array;
+    }
+
+    function drawChart5() {
+        array1 = fix_null( {{ notes_cluster | safe }} )
+        var data = google.visualization.arrayToDataTable(array1);
+
+        var options = {
+            'title': 'Notes clusters',
+            hAxis: {title: 'Time'},
+            vAxis: {title: 'Pitch'}, // sigma
+            pointSize: 2,
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_notes_cluster'));
+        chart.draw(data, options);
+    }
+
+    function drawChart6() {
+        array1 = fix_null( {{ durations_cluster | safe }} )
+        var data = google.visualization.arrayToDataTable(array1);
+
+        var options = {
+            'title': 'Durations clusters',
+            hAxis: {title: 'Time'},
+            vAxis: {title: 'Duration'},
+            pointSize: 2,
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_durations_cluster'));
+        chart.draw(data, options);
+    }
+    </script>
+
+{% endblock %}

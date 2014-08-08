@@ -146,10 +146,10 @@ def composition_contour(request, code):
     return render(request, 'contour_result.html', args)
 
 
-def composition_individual(request, code):
+def composition_cluster(request, code):
     composition = Composition.objects.get(music_data__score__code=code)
     args = composition_analysis.analysis(composition)
-    return render(request, 'composition_individual_analysis.html', args)
+    return render(request, 'composition_cluster.html', args)
 
 
 def show_durations(request):
