@@ -127,6 +127,24 @@ def list_composition(request, code):
     return render(request, 'composition.html', args)
 
 
+def composition_interval(request, code):
+    composition = Composition.objects.get(music_data__score__code=code)
+    args = intervals.analysis([composition])
+    return render(request, 'intervals_result.html', args)
+
+
+def composition_durations(request, code):
+    composition = Composition.objects.get(music_data__score__code=code)
+    args = durations.analysis([composition])
+    return render(request, 'durations_result.html', args)
+
+
+def composition_contour(request, code):
+    composition = Composition.objects.get(music_data__score__code=code)
+    args = contour.analysis([composition])
+    return render(request, 'contour_result.html', args)
+
+
 def show_durations(request):
     if request.method == 'POST':
         kwargs = {}

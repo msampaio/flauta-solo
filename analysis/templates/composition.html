@@ -66,4 +66,10 @@ Compositions
                     <td>{{ composition.music_data.total_duration }}</td>
                 </tr>
             </table>
+    <h2>Analysis</h2>
+        <ul>
+            <li><a href="/composition/{{ composition.music_data.score.code }}/intervals">Intervals</a></li>
+            <li><a href="/composition/{{ composition.music_data.score.code }}/durations">Durations</a></li>
+            <li><a href="/composition/{{ composition.music_data.score.code }}/contour">Contour</a></li>
+        </ul>
 {% endblock %}
