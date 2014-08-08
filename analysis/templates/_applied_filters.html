@@ -1,3 +1,7 @@
+        {% if composition_code %}
+        <h2>Input data</h2>
+            <p>Composition code: {{ composition_code }}</p>
+        {% else %}
         <h2>Applied filters</h2>
         <ul>
             <li>Collection: {{ filter_collection|title }}</li>
@@ -6,3 +10,4 @@
             <li>Time signature: {{ filter_time_signature|title }}</li>
         </ul>
             <p>Input data size: {{ input_size }} objects</p>
+        {% endif %}
