@@ -5,9 +5,65 @@ Compositions
 {% endblock %}
 
 {% block body %}
-<h1>{{ composition.title }} &mdash; {{ composition.music_data.score.code }}</h1>
+<h1>Composition {{ composition.music_data.score.code }}</h1>
+    <h2>General Data</h2>
+        <h3>IMSLP</h3>
+            <table id="imslp-data" class="table">
+                <tr>
+                    <th>Item</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Internal ID</td>
+                    <td>{{ composition.id }}</td>
+                </tr>
+                <tr>
+                    <td>Collection</td>
+                    <td>{{ composition.collection.name }}</td>
+                </tr>
+                <tr>
+                    <td>Composer</td>
+                    <td>{{ composition.composer.last_name }}, {{ composition.composer.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>IMSLP collection code</td>
+                    <td>{{ composition.collection.imslp_id }}</td>
+                </tr>
+                <tr>
+                    <td>Internal composition code</td>
+                    <td>{{ composition.music_data.score.code }}</td>
+                </tr>
+                <tr>
+                    <td>IMSLP file link</td>
+                    <td><a href="http://imslp.org/wiki/Special:ImagefromIndex/{{ composition.collection.imslp_id }}" target="_blank">{{ composition.imslp_filename }}</a></td>
+                </tr>
+            </table>
 
-<ul>
-<li>{{ composition.composer.first_name }}, {{ composition.composer.last_name }}</li>
-</ul>
+        <h3>Composition</h3>
+            <table id="composition-data" class="table">
+                <tr>
+                    <th>Item</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Key</td>
+                    <td>{{ composition.music_data.key }}</td>
+                </tr>
+                <tr>
+                    <td>Mode</td>
+                    <td>{{ composition.music_data.mode }}</td>
+                </tr>
+                <tr>
+                    <td>Time Signature</td>
+                    <td>{{ composition.music_data.time_signature }}</td>
+                </tr>
+                <tr>
+                    <td>Ambitus (semitones)</td>
+                    <td>{{ composition.music_data.ambitus }}</td>
+                </tr>
+                <tr>
+                    <td>Total duration (quarter notes)</td>
+                    <td>{{ composition.music_data.total_duration }}</td>
+                </tr>
+            </table>
 {% endblock %}
