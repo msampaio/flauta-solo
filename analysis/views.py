@@ -60,7 +60,6 @@ def select_filter(name, item, arguments, template='music_data__%s'):
 
 def show_ambitus(request):
 
-
     if request.method == 'POST':
         kwargs = {}
 
@@ -76,6 +75,15 @@ def show_ambitus(request):
 
         compositions = Composition.objects.filter(**kwargs)
         args = ambitus.analysis(compositions)
+
+        args.update({
+            'input_size': len(compositions),
+            'filter_collection': title,
+            'filter_key': key,
+            'filter_total_duration': total_duration,
+            'filter_time_signature': time_signature,
+            })
+
         return render(request, 'ambitus_result.html', args)
 
     args = {'compositions': uniq_items_in_model('title', Composition),

@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Ambitus Result
+    Ambitus Analysis
 {% endblock %}
 
 {% block body %}
-    <h1>Ambitus results</h1>
+    <h1>Ambitus Analysis</h1>
+        {% include "_applied_filters.html" %}
 
-    <div id="chart_frequency" style="width: 1000px; height: 400px;"></div>
-    <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
-    <div id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
-    <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
-    <div id="chart_frequency_pie" style="width: 1000px; height: 400px;"></div>
-    <div id="chart_boxplot" style="width: 1000px; height: 400px;"></div>
+        <h2>Charts</h2>
+            <div id="chart_frequency" style="width: 1000px; height: 400px;"></div>
+            <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
+            <div id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
+            <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
+            <div id="chart_frequency_pie" style="width: 1000px; height: 400px;"></div>
+            <div id="chart_boxplot" style="width: 1000px; height: 400px;"></div>
 
-    <div>
         <h2>Basic Statistics</h2>
         <table id="basic_statistics" class="table">
             <thead>
@@ -32,7 +33,6 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
 {% endblock %}
 
 {% block javascript %}
