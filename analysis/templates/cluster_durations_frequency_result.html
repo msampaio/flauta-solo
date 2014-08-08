@@ -12,22 +12,7 @@
                 <li>Attribute: Frequency of adjacent durations (quarter notes)</li>
             </ul>
 
-        <h2>Analysis</h2>
-        {% if cluster_table|length == 0 %}
-            <p>There is no cluster</p>
-        {% elif cluster_table|length == 1 %}
-            <p>There is only one cluster</p>
-        {% else %}
-            <p>There are {{ cluster_table|length }} clusters</p>
-        {% endif %}
-
-        {% if cluster_table|length > 0 %}
-        <ul>
-            {% for cluster_row in cluster_table %}
-                <li>Cluster {{ cluster_row.number }}: {{ cluster_row.songs | length }} objects</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+        {% include "_cluster_analysis.html" with cluster_table=cluster_table %}
 
         <h2>Chart</h2>
         <div class="cluster-chart" id="chart_durations_reachability" style="width: 1000px; height: 400px;"></div>
