@@ -1,57 +1,57 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Contour Result
+    Contour Analysis
 {% endblock %}
 
 {% block body %}
-    <h1>Contour results</h1>
+    <h1>Contour Analysis</h1>
+        {% include "_applied_filters.html" %}
 
-    <div class="contour-chart" id="chart_frequency_pie_2" style="width: 1000px; height: 400px;"></div>
-    <div class="contour-chart" id="chart_frequency_pie_3" style="width: 1000px; height: 400px;"></div>
-    <div class="contour-chart" id="chart_frequency_pie_4" style="width: 1000px; height: 400px;"></div>
-    <div class="contour-chart" id="chart_proportion_scatter" style="width: 1000px; height: 400px;"></div>
-    <div class="contour-chart" id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
-    <div class="contour-chart" id="chart_histogram" style="width: 1000px; height: 400px;"></div>
-    <div class="contour-chart" id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
+        <h2>Charts</h2>
+            <div class="contour-chart" id="chart_frequency_pie_2" style="width: 1000px; height: 400px;"></div>
+            <div class="contour-chart" id="chart_frequency_pie_3" style="width: 1000px; height: 400px;"></div>
+            <div class="contour-chart" id="chart_frequency_pie_4" style="width: 1000px; height: 400px;"></div>
+            <div class="contour-chart" id="chart_proportion_scatter" style="width: 1000px; height: 400px;"></div>
+            <div class="contour-chart" id="chart_distribution_value" style="width: 1000px; height: 400px;"></div>
+            <div class="contour-chart" id="chart_histogram" style="width: 1000px; height: 400px;"></div>
+            <div class="contour-chart" id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
 
-    <h2>Basic Statistics</h2>
-        <h3>General contour</h3>
-        <table id="basic_statistics" class="table">
-            <thead>
-            <tr>
-                <th>Measure</th>
-                <th>Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for measure, value in basic_stats.items %}
+        <h2>Basic Statistics</h2>
+            <h3>General contour</h3>
+            <table id="basic_statistics" class="table">
+                <thead>
                 <tr>
-                    <td class="simple-table-measure">{{ measure }}</td>
-                    <td class="simple-table-value">{{ value }}</td>
+                    <th>Measure</th>
+                    <th>Value</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <h3>Repetition index</h3>
-        <table id="repetition_statistics" class="table">
-            <thead>
-            <tr>
-                <th>Measure</th>
-                <th>Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for measure, value in repetition_stats.items %}
+                </thead>
+                <tbody>
+                {% for measure, value in basic_stats.items %}
+                    <tr>
+                        <td class="simple-table-measure">{{ measure }}</td>
+                        <td class="simple-table-value">{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <h3>Repetition index</h3>
+            <table id="repetition_statistics" class="table">
+                <thead>
                 <tr>
-                    <td class="simple-table-measure">{{ measure }}</td>
-                    <td class="simple-table-value">{{ value }}</td>
+                    <th>Measure</th>
+                    <th>Value</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-
+                </thead>
+                <tbody>
+                {% for measure, value in repetition_stats.items %}
+                    <tr>
+                        <td class="simple-table-measure">{{ measure }}</td>
+                        <td class="simple-table-value">{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 {% endblock %}
 
 {% block javascript %}
