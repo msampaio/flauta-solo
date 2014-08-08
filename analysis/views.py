@@ -264,5 +264,5 @@ def stats(request):
     return render(request, 'stats.html', args)
 
 
-def show_main_cluster(request):
-    return render(request, 'cluster.html', {})
+def show_reports(request):
+    return render(request, 'reports.html', {})

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Reports
+{% endblock %}
+
+{% block body %}
+<h1>Reports</h1>
+    <h2>Basic statistics analysis</h2>
+        <ul>
+            <li id="ambitus"><a href="{% url "ambitus" %}">Ambitus</a></li>
+            <li id="intervals"><a href="{% url "intervals" %}">Intervals</a></li>
+            <li id="durations"><a href="{% url "durations" %}">Durations</a></li>
+            <li id="contour"><a href="{% url "contour" %}">Melodic Contour</a></li>
+        </ul>
+    <h2>Cluster analysis</h2>
+        <ul>
+            <li id="cluster_all"><a href="{% url "cluster_all" %}">All attributes</a></li>
+            <li id="cluster_duration_ambitus"><a href="{% url "cluster_duration_ambitus" %}">Duration and ambitus</a></li>
+            <li id="cluster_intervals_frequency"><a href="{% url "cluster_intervals_frequency" %}">Intervals frequency</a></li>
+            <li id="cluster_durations_frequency"><a href="{% url "cluster_durations_frequency" %}">Durations frequency</a></li>
+            <li id="cluster_contour"><a href="{% url "cluster_contour" %}">Contour frequency</a></li>
+        </ul>
+
+{% endblock %}
