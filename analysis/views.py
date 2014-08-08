@@ -14,6 +14,7 @@ from analysis.computation import cluster_intervals_frequency
 from analysis.computation import cluster_durations_frequency
 from analysis.computation import cluster_contour
 from analysis.computation import cluster_all
+from analysis.computation import composition_analysis
 
 
 def home(request):
@@ -143,6 +144,12 @@ def composition_contour(request, code):
     composition = Composition.objects.get(music_data__score__code=code)
     args = contour.analysis([composition])
     return render(request, 'contour_result.html', args)
+
+
+def composition_individual(request, code):
+    composition = Composition.objects.get(music_data__score__code=code)
+    args = composition_analysis.analysis(composition)
+    return render(request, 'composition_individual_analysis.html', args)
 
 
 def show_durations(request):
