@@ -16,7 +16,7 @@
                             <td rowspan="{{ cluster_row.size }}">{{ cluster_row.number }}</td>
                         {% endif %}
                         <td>{{ song_row.title }}</td>
-                        <td>{{ song_row.code }}</td>
+                        <td><a href="/composition/{{ song_row.code }}">{{ song_row.code }}</a></td>
                     </tr>
                     {% endfor %}
                 {% endfor %}
