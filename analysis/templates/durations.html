@@ -35,6 +35,16 @@
             </div>
 
             <div class="form-group">
+                <label class="col-md-4 control-label" for="select-duration">Total Duration</label>
+
+                <div class="col-md-4">
+                    <select id="select-duration" name="select-duration" class="form-control">
+                    {% include "_options.html" with items=durations %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="select-time-signature">Time Signature</label>
 
                 <div class="col-md-4">
