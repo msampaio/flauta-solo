@@ -6,34 +6,63 @@
 
 {% block body %}
     <h1>Cluster results - All attributes</h1>
-        <p>Objects: compositions</p>
-        <p>Attributes: total length, ambitus and frequency of intervals, durations and contours with cardinality {{ size }}.</p>
-        <div class="cluster-chart" id="chart_all_reachability" style="width: 1000px; height: 400px;"></div>
+        <h2>Input data</h2>
+            <ul>
+                <li>Object: Piece</li>
+                <li>Attributes</li>
+                <ul>
+                    <li>Total length (quarter notes)</li>
+                    <li>Ambitus (semitones)</li>
+                    <li>Frequency of adjacent intervals (with direction)</li>
+                    <li>Frequency of adjacent durations (quarter notes)</li>
+                    <li>Frequency of adjacent contours with cardinality {{ size }}</li>
+                </ul>
+            </ul>
 
-    {% if cluster_table|length > 1 %}
-    <h1>Clusters</h1>
-        <table  id="basic_statistics" class="table">
-            <tr>
-                <th rowspan="2">Cluster number</th>
-                <th colspan="2">Song</th>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <th>IMSLP code</th>
-            </tr>
+        <h2>Analysis</h2>
+        {% if cluster_table|length == 0 %}
+            <p>There is no cluster</p>
+        {% elif cluster_table|length == 1 %}
+            <p>There is only one cluster</p>
+        {% else %}
+            <p>There are {{ cluster_table|length }} clusters</p>
+        {% endif %}
+
+        {% if cluster_table|length > 0 %}
+        <ul>
             {% for cluster_row in cluster_table %}
-                {% for song_row in cluster_row.songs %}
-                <tr>
-                    {% if song_row.first %}
-                        <td rowspan="{{ cluster_row.size }}">{{ cluster_row.number }}</td>
-                    {% endif %}
-                    <td>{{ song_row.title }}</td>
-                    <td>{{ song_row.code }}</td>
-                </tr>
-                {% endfor %}
+                <li>Cluster {{ cluster_row.number }}: {{ cluster_row.songs | length }} objects</li>
             {% endfor %}
-        </table>
-    {% endif %}
+        </ul>
+        {% endif %}
+
+        <h2>Chart</h2>
+            <div class="cluster-chart" id="chart_all_reachability" style="width: 1000px; height: 400px;"></div>
+
+        {% if cluster_table|length > 1 %}
+        <h2>Clusters</h2>
+            <table  id="basic_statistics" class="table">
+                <tr>
+                    <th rowspan="2">Cluster number</th>
+                    <th colspan="2">Song</th>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <th>IMSLP code</th>
+                </tr>
+                {% for cluster_row in cluster_table %}
+                    {% for song_row in cluster_row.songs %}
+                    <tr>
+                        {% if song_row.first %}
+                            <td rowspan="{{ cluster_row.size }}">{{ cluster_row.number }}</td>
+                        {% endif %}
+                        <td>{{ song_row.title }}</td>
+                        <td>{{ song_row.code }}</td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            </table>
+        {% endif %}
 
 
 {% endblock %}
