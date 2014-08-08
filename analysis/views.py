@@ -111,6 +111,22 @@ def show_intervals(request):
 
     return render(request, 'intervals.html', args)
 
+
+def list_compositions(request):
+    compositions = Composition.objects.all()
+
+    args = {
+        "compositions": compositions
+    }
+    return render(request, 'compositions.html', args)
+
+
+def list_composition(request, code):
+    composition = Composition.objects.get(music_data__score__code=code)
+    args = {'composition': composition}
+    return render(request, 'composition.html', args)
+
+
 def show_durations(request):
     if request.method == 'POST':
         kwargs = {}

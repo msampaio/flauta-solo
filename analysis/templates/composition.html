@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+Compositions
+{% endblock %}
+
+{% block body %}
+<h1>{{ composition.title }} &mdash; {{ composition.music_data.score.code }}</h1>
+
+<ul>
+<li>{{ composition.composer.first_name }}, {{ composition.composer.last_name }}</li>
+</ul>
+{% endblock %}
