@@ -1,38 +1,39 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Intervals Result
+    Intervals Analysis
 {% endblock %}
 
 {% block body %}
-    <h1>Intervals results</h1>
+    <h1>Intervals Analysis</h1>
+        {% include "_applied_filters.html" %}
 
-    <div class="interval-chart" id="chart_frequency_scatter"></div>
-    <div class="interval-chart" id="chart_frequency_basic_scatter"></div>
-    <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
-    <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
-    <div class="interval-chart" id="chart_frequency_pie"></div>
-    <div class="interval-chart" id="chart_chromatic_frequency_pie"></div>
-    <div class="interval-chart" id="chart_chromatic_leaps_frequency_pie"></div>
+        <h2>Charts</h2>
+            <div class="interval-chart" id="chart_frequency_scatter"></div>
+            <div class="interval-chart" id="chart_frequency_basic_scatter"></div>
+            <div id="chart_histogram" style="width: 1000px; height: 400px;"></div>
+            <div id="chart_distribution_amount" style="width: 1000px; height: 400px;"></div>
+            <div class="interval-chart" id="chart_frequency_pie"></div>
+            <div class="interval-chart" id="chart_chromatic_frequency_pie"></div>
+            <div class="interval-chart" id="chart_chromatic_leaps_frequency_pie"></div>
 
-    <h2>Basic Statistics</h2>
-    <table id="basic_statistics" class="table">
-        <thead>
-        <tr>
-            <th>Measure</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for measure, value in basic_stats.items %}
+        <h2>Basic Statistics</h2>
+        <table id="basic_statistics" class="table">
+            <thead>
             <tr>
-                <td class="simple-table-measure">{{ measure }}</td>
-                <td class="simple-table-value">{{ value }}</td>
+                <th>Measure</th>
+                <th>Value</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+            {% for measure, value in basic_stats.items %}
+                <tr>
+                    <td class="simple-table-measure">{{ measure }}</td>
+                    <td class="simple-table-value">{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 {% endblock %}
 
 {% block javascript %}

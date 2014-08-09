@@ -1,62 +1,63 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Durations Result
+    Durations Analysis
 {% endblock %}
 
 {% block body %}
-    <h1>Note durations results</h1>
+    <h1>Note Durations Analysis</h1>
+        {% include "_applied_filters.html" %}
 
-        <div class="duration-chart" id="chart_note_frequency_scatter" style="width: 1000px; height: 400px;"></div>
-        <div class="duration-chart" id="chart_note_histogram" style="width: 1000px; height: 400px;"></div>
-        <div class="duration-chart" id="chart_note_distribution_amount" style="width: 1000px; height: 400px;"></div>
-        <div class="duration-chart" id="chart_note_frequency_pie" style="width: 1000px; height: 400px;"></div>
+        <h2>Charts</h2>
+            <div class="duration-chart" id="chart_note_frequency_scatter" style="width: 1000px; height: 400px;"></div>
+            <div class="duration-chart" id="chart_note_histogram" style="width: 1000px; height: 400px;"></div>
+            <div class="duration-chart" id="chart_note_distribution_amount" style="width: 1000px; height: 400px;"></div>
+            <div class="duration-chart" id="chart_note_frequency_pie" style="width: 1000px; height: 400px;"></div>
 
 
-    <h2>Basic Statistics</h2>
-        <table id="basic_statistics_duration" class="table">
-            <thead>
-            <tr>
-                <th>Measure</th>
-                <th>Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for measure, value in basic_stats_duration.items %}
+        <h2>Basic Statistics</h2>
+            <table id="basic_statistics_duration" class="table">
+                <thead>
                 <tr>
-                    <td class="simple-table-measure">{{ measure }}</td>
-                    <td class="simple-table-value">{{ value }}</td>
+                    <th>Measure</th>
+                    <th>Value</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for measure, value in basic_stats_duration.items %}
+                    <tr>
+                        <td class="simple-table-measure">{{ measure }}</td>
+                        <td class="simple-table-value">{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
     <h1>Piece durations results</h1>
-
-        <div class="duration-chart" id="chart_piece_frequency_scatter" style="width: 1000px; height: 400px;"></div>
-        <div class="duration-chart" id="chart_piece_histogram" style="width: 1000px; height: 400px;"></div>
-        <div class="duration-chart" id="chart_piece_distribution_amount" style="width: 1000px; height: 400px;"></div>
-        <div class="duration-chart" id="chart_piece_frequency_pie" style="width: 1000px; height: 400px;"></div>
+        <h2>Charts</h2>
+            <div class="duration-chart" id="chart_piece_frequency_scatter" style="width: 1000px; height: 400px;"></div>
+            <div class="duration-chart" id="chart_piece_histogram" style="width: 1000px; height: 400px;"></div>
+            <div class="duration-chart" id="chart_piece_distribution_amount" style="width: 1000px; height: 400px;"></div>
+            <div class="duration-chart" id="chart_piece_frequency_pie" style="width: 1000px; height: 400px;"></div>
         
 
-    <h2>Basic Statistics</h2>
-        <table id="basic_statistics_total_duration" class="table">
-            <thead>
-            <tr>
-                <th>Measure</th>
-                <th>Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for measure, value in basic_stats_piece_duration.items %}
+        <h2>Basic Statistics</h2>
+            <table id="basic_statistics_total_duration" class="table">
+                <thead>
                 <tr>
-                    <td class="simple-table-measure">{{ measure }}</td>
-                    <td class="simple-table-value">{{ value }}</td>
+                    <th>Measure</th>
+                    <th>Value</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                {% for measure, value in basic_stats_piece_duration.items %}
+                    <tr>
+                        <td class="simple-table-measure">{{ measure }}</td>
+                        <td class="simple-table-value">{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 {% endblock %}
 
 {% block javascript %}

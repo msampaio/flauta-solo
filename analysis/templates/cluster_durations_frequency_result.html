@@ -6,33 +6,20 @@
 
 {% block body %}
     <h1>Cluster results - Durations Frequency</h1>
+        {% include "_applied_filters.html" %}
+
+        <h2>Input data</h2>
+            <ul>
+                <li>Object: Piece</li>
+                <li>Attribute: Frequency of adjacent durations (quarter notes)</li>
+            </ul>
+
+        {% include "_cluster_analysis.html" with cluster_table=cluster_table %}
+
+        <h2>Chart</h2>
         <div class="cluster-chart" id="chart_durations_reachability" style="width: 1000px; height: 400px;"></div>
 
-    {% if cluster_table|length > 1 %}
-    <h1>Clusters</h1>
-        <table  id="basic_statistics" class="table">
-            <tr>
-                <th rowspan="2">Cluster number</th>
-                <th colspan="2">Song</th>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <th>IMSLP code</th>
-            </tr>
-            {% for cluster_row in cluster_table %}
-                {% for song_row in cluster_row.songs %}
-                <tr>
-                    {% if song_row.first %}
-                        <td rowspan="{{ cluster_row.size }}">{{ cluster_row.number }}</td>
-                    {% endif %}
-                    <td>{{ song_row.title }}</td>
-                    <td>{{ song_row.code }}</td>
-                </tr>
-                {% endfor %}
-            {% endfor %}
-        </table>
-    {% endif %}
-
+        {% include "_cluster_table.html" with cluster_table=cluster_table %}
 
 {% endblock %}
 
