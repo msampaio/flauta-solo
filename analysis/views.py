@@ -127,6 +127,20 @@ def list_composition(request, code):
     return render(request, 'composition.html', args)
 
 
+def download_composition(request, code):
+    data = MusicData.objects.get(score__code=code)
+
+    buff = BytesIO()
+    zip_archive = zipfile.ZipFile(buff, mode='w')
+
+    zip_archive.writestr(code + '.xml', data.score.score)
+    zip_archive.close()
+
+    response = HttpResponse(buff.getvalue(), mimetype="application/x-zip-compressed")
+    response['Content-Disposition'] = 'attachment; filename=%s.zip' % code
+    return response
+
+
 def show_durations(request):
     if request.method == 'POST':
         kwargs = {}

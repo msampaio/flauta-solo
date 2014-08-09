@@ -10,4 +10,10 @@ Compositions
 <ul>
 <li>{{ composition.composer.first_name }}, {{ composition.composer.last_name }}</li>
 </ul>
+
+<form class="form-horizontal" action='/download/{{ composition.music_data.score.code }}/' method="post">
+    {% csrf_token %}
+    <button id="submit" name="submit" class="btn btn-primary">Download</button>
+</form>
+
 {% endblock %}
