@@ -207,14 +207,7 @@ def show_contour(request):
     return render(request, 'contour.html', args)
 
 
-def show_pure_data_contour(request):
-    if request.method == 'POST':
-        markov_order = request.POST['select-markov-order']
-
-        compositions, args = filter_compositions(request)
-        pure_data_args = pure_data.analysis(compositions, order=int(markov_order))
-        args.update(pure_data_args)
-
+def get_zip_save_pure_data(pure_data_args, attrib):
         buff = BytesIO()
         zip_archive = zipfile.ZipFile(buff, mode='w')
 
@@ -224,8 +217,19 @@ def show_pure_data_contour(request):
         zip_archive.close()
 
         response = HttpResponse(buff.getvalue(), mimetype="application/x-zip-compressed")
-        response['Content-Disposition'] = 'attachment; filename=%s' % "markov-chains.zip"
+        response['Content-Disposition'] = 'attachment; filename=%s' % "markov-chains-{}.zip".format(attrib)
         return response
+
+
+def show_pure_data_contour(request):
+    if request.method == 'POST':
+        markov_order = request.POST['select-markov-order']
+
+        compositions, args = filter_compositions(request)
+        pure_data_args = pure_data.generate_contour_chain(compositions, order=int(markov_order))
+        args.update(pure_data_args)
+
+        return get_zip_save_pure_data(pure_data_args, 'contour')
 
     args = make_filter_args(Composition)
     args['order_numbers'] = range(1, 11)

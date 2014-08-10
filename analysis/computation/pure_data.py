@@ -80,7 +80,7 @@ def markov_chain(contour_list, order=1, print_pd=False):
     return cseg_map_int, chain
 
 
-def analysis(compositions, order=1):
+def generate_contour_chain(compositions, order=1):
     contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
 
     if contour_list:
