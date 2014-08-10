@@ -207,7 +207,7 @@ def show_contour(request):
     return render(request, 'contour.html', args)
 
 
-def show_pure_data(request):
+def show_pure_data_contour(request):
     if request.method == 'POST':
         markov_order = request.POST['select-markov-order']
 
@@ -230,7 +230,7 @@ def show_pure_data(request):
     args = make_filter_args(Composition)
     args['order_numbers'] = range(1, 11)
 
-    return render(request, 'pure_data.html', args)
+    return render(request, 'pure_data_contour.html', args)
 
 
 def show_cluster_duration_ambitus(request):
@@ -297,3 +297,7 @@ def stats(request):
 
 def show_reports(request):
     return render(request, 'reports.html', {})
+
+
+def show_pure_data(request):
+    return render(request, 'pure_data.html', {})
