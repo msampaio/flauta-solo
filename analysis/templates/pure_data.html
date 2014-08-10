@@ -7,6 +7,8 @@
 
 {% block body %}
     <h1>Pure Data</h1>
+        <p>Generate a Markov Chain with compositions melodic contour frequency.
+            It will download a zipped file with the chain and a map in Pure data 'coll' format.</p>
 
     <form class="form-horizontal" action='{% url "pure_data" %}' method="post">
         {% csrf_token %}
