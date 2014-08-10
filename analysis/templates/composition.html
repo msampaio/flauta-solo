@@ -39,6 +39,11 @@ Compositions
                 </tr>
             </table>
 
+        <form class="form-horizontal" action='/composition/{{ composition.music_data.score.code }}/download/' method="post">
+            {% csrf_token %}
+            <button id="submit" name="submit" class="btn btn-primary">Download XML</button>
+        </form>
+
         <h3>Composition</h3>
             <table id="composition-data" class="table">
                 <tr>
@@ -66,11 +71,6 @@ Compositions
                     <td>{{ composition.music_data.total_duration }}</td>
                 </tr>
             </table>
-
-<form class="form-horizontal" action='/composition/{{ composition.music_data.score.code }}/download/' method="post">
-    {% csrf_token %}
-    <button id="submit" name="submit" class="btn btn-primary">Download</button>
-</form>
 
     <h2>Analysis</h2>
         <ul>
