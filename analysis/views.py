@@ -142,6 +142,23 @@ def download_composition(request, code):
     return response
 
 
+def download_pure_data(request, code):
+    data = MusicData.objects.get(score__code=code)
+
+    buff = BytesIO()
+    zip_archive = zipfile.ZipFile(buff, mode='w')
+
+    # get pure_data
+    for attrib, pd_map, pd_data in pure_data.get_all_attributes(data):
+        zip_archive.writestr('{}-{}-data.coll'.format(code, attrib), pd_data)
+        zip_archive.writestr('{}-{}-map.coll'.format(code, attrib), pd_map)
+    zip_archive.close()
+
+    response = HttpResponse(buff.getvalue(), mimetype="application/x-zip-compressed")
+    response['Content-Disposition'] = 'attachment; filename=pure_data-%s.zip' % code
+    return response
+
+
 def composition_interval(request, code):
     composition = Composition.objects.get(music_data__score__code=code)
     args = intervals.analysis([composition])

@@ -3,6 +3,31 @@ from analysis.computation import contour
 from analysis.computation import utils
 
 
+def get_list_and_map_attr(music_data, attrib):
+    seq = getattr(music_data, attrib)
+
+    seq_map = sorted(set(seq))
+    seq_pd = [seq_map.index(s) for s in seq]
+    return seq_map, seq_pd
+
+
+def print_pretty_list_map(seq_map, seq):
+    pretty_map = '\n'.join(['{}, {};'.format(x, y) for x, y in enumerate(seq_map)])
+    pretty_seq = ' '.join(map(str, seq)) + ';'
+    return [pretty_map, pretty_seq]
+
+
+def get_all_attributes(music_data):
+    attribs = ['durations', 'intervals_midi', 'contour']
+
+    r = []
+    for attrib in attribs:
+        data = print_pretty_list_map(*get_list_and_map_attr(music_data, attrib))
+        data.insert(0, attrib)
+        r.append(data)
+    return r
+
+
 def markov_chain(contour_list, order=1, print_pd=False):
 
     def split_and_count(cseg):

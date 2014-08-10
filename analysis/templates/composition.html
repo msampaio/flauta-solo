@@ -79,4 +79,12 @@ Compositions
             <li><a href="/composition/{{ composition.music_data.score.code }}/durations">Durations</a></li>
             <li><a href="/composition/{{ composition.music_data.score.code }}/contour">Contour</a></li>
         </ul>
+
+    <h2>Pure Data</h2>
+        <p>Download duration, intervals and contour data from the composition</p>
+
+        <form class="form-horizontal" action='/composition/{{ composition.music_data.score.code }}/pure_data/' method="post">
+            {% csrf_token %}
+            <button id="submit" name="submit" class="btn btn-primary">Download PureData</button>
+        </form>
 {% endblock %}
