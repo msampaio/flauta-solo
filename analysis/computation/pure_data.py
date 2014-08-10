@@ -28,7 +28,7 @@ def get_all_attributes(music_data):
     return r
 
 
-def markov_chain(contour_list, order=1, print_pd=False):
+def markov_chain_contour(contour_list, order=1, print_pd=False):
 
     def split_and_count(cseg):
         without_repetition = contour.remove_adjacent_repetition(cseg)
@@ -84,7 +84,7 @@ def generate_contour_chain(compositions, order=1):
     contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
 
     if contour_list:
-        cseg_map, cseg_chain = markov_chain(contour_list, order, True)
+        cseg_map, cseg_chain = markov_chain_contour(contour_list, order, True)
 
         args = {
             'cseg_map': cseg_map,
@@ -103,7 +103,7 @@ def save_chain(contour_list, order=1):
         with open(filename, 'w') as f:
             f.write(''.join(string))
 
-    cseg_map, cseg_chain = markov_chain(contour_list, order, True)
+    cseg_map, cseg_chain = markov_chain_contour(contour_list, order, True)
 
     save(cseg_map, 'cseg_map')
     save(cseg_chain, 'cseg_chain')
