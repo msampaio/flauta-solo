@@ -3,7 +3,7 @@ import zipfile
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, StreamingHttpResponse, HttpResponse
 from django.shortcuts import render
-from analysis.models import MusicData, Composition
+from analysis.models import MusicData, Composition, Composer, CompositionType
 from analysis.computation import ambitus
 from analysis.computation import intervals
 from analysis.computation import durations
@@ -63,10 +63,16 @@ def filter_compositions(request):
 
     title = request.POST['select-composition']
     key = request.POST['select-key']
+    composer = request.POST['select-composer']
+    composition_type = request.POST['select-composition-type']
+    mode = request.POST['select-mode']
     total_duration = request.POST['select-duration']
     time_signature = request.POST['select-time-signature']
 
     select_filter('title__iexact', title, kwargs, template='%s')
+    select_filter('composition__composer__last_name', composer, kwargs)
+    select_filter('mode', mode, kwargs)
+    select_filter('composition_type', composition_type, kwargs)
     select_filter('key', key, kwargs)
     select_filter('total_duration', total_duration, kwargs)
     select_filter('time_signature', time_signature, kwargs)
@@ -84,9 +90,12 @@ def filter_compositions(request):
     return compositions, args
 
 
-def make_filter_args(composition_model):
-    args = {'compositions': uniq_items_in_model('title', composition_model),
+def make_filter_args():
+    args = {'compositions': uniq_items_in_model('title', Composition),
             'keys': uniq_items_in_model('key'),
+            'composers': uniq_items_in_model('last_name', Composer),
+            'tcompositions': uniq_items_in_model('name', CompositionType),
+            'modes': uniq_items_in_model('mode'),
             'durations': uniq_items_in_model('total_duration'),
             'signatures': uniq_items_in_model('time_signature'),
     }
@@ -99,7 +108,7 @@ def show_ambitus(request):
         args.update(ambitus.analysis(compositions))
         return render(request, 'ambitus_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'ambitus.html', args)
 
 
@@ -109,7 +118,7 @@ def show_intervals(request):
         args.update(intervals.analysis(compositions))
         return render(request, 'intervals_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'intervals.html', args)
 
 
@@ -176,7 +185,7 @@ def show_durations(request):
         args.update(durations.analysis(compositions))
         return render(request, 'durations_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'durations.html', args)
 
 
@@ -186,7 +195,7 @@ def show_contour(request):
         args.update(contour.analysis(compositions))
         return render(request, 'contour_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'contour.html', args)
 
 
@@ -210,7 +219,7 @@ def show_pure_data(request):
         response['Content-Disposition'] = 'attachment; filename=%s' % "markov-chains.zip"
         return response
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     args['order_numbers'] = range(1, 11)
 
     return render(request, 'pure_data.html', args)
@@ -222,7 +231,7 @@ def show_cluster_duration_ambitus(request):
         args.update(cluster_duration_ambitus.analysis(compositions))
         return render(request, 'cluster_duration_ambitus_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'cluster_duration_ambitus.html', args)
 
 
@@ -232,7 +241,7 @@ def show_cluster_intervals_frequency(request):
         args.update(cluster_intervals_frequency.analysis(compositions))
         return render(request, 'cluster_intervals_frequency_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'cluster_intervals_frequency.html', args)
 
 
@@ -242,7 +251,7 @@ def show_cluster_durations_frequency(request):
         args.update(cluster_durations_frequency.analysis(compositions))
         return render(request, 'cluster_durations_frequency_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'cluster_durations_frequency.html', args)
 
 
@@ -253,7 +262,7 @@ def show_cluster_contour(request):
         args.update(cluster_contour.analysis(compositions, int(contour_size)))
         return render(request, 'cluster_contour_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     args['size_numbers'] = range(2, 5)
     return render(request, 'cluster_contour.html', args)    
 
@@ -265,7 +274,7 @@ def show_cluster_all(request):
         args.update(cluster_all.analysis(compositions, int(contour_size)))
         return render(request, 'cluster_all_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     args['size_numbers'] = range(2, 5)
     return render(request, 'cluster_all.html', args)
 
