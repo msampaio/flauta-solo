@@ -82,6 +82,9 @@ def filter_compositions(request):
     args = {
         'input_size': len(compositions),
         'filter_collection': title,
+        'filter_composer': composer,
+        'filter_composition_type': composition_type,
+        'filter_mode': mode,
         'filter_key': key,
         'filter_total_duration': total_duration,
         'filter_time_signature': time_signature,
