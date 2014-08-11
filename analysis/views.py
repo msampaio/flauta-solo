@@ -123,11 +123,12 @@ def show_intervals(request):
 
 
 def list_compositions(request):
-    compositions = Composition.objects.all()
+    if request.method == 'POST':
+        compositions, args = filter_compositions(request)
+        args.update({'compositions': compositions})
+        return render(request, 'compositions_result.html', args)
 
-    args = {
-        "compositions": compositions
-    }
+    args = make_filter_args(Composition)
     return render(request, 'compositions.html', args)
 
 
@@ -148,6 +149,23 @@ def download_composition(request, code):
 
     response = HttpResponse(buff.getvalue(), mimetype="application/x-zip-compressed")
     response['Content-Disposition'] = 'attachment; filename=%s.zip' % code
+    return response
+
+
+def download_pure_data(request, code):
+    data = MusicData.objects.get(score__code=code)
+
+    buff = BytesIO()
+    zip_archive = zipfile.ZipFile(buff, mode='w')
+
+    # get pure_data
+    for attrib, pd_map, pd_data in pure_data.get_all_attributes(data):
+        zip_archive.writestr('{}-{}-data.coll'.format(code, attrib), pd_data)
+        zip_archive.writestr('{}-{}-map.coll'.format(code, attrib), pd_map)
+    zip_archive.close()
+
+    response = HttpResponse(buff.getvalue(), mimetype="application/x-zip-compressed")
+    response['Content-Disposition'] = 'attachment; filename=pure_data-%s.zip' % code
     return response
 
 
@@ -199,14 +217,7 @@ def show_contour(request):
     return render(request, 'contour.html', args)
 
 
-def show_pure_data(request):
-    if request.method == 'POST':
-        markov_order = request.POST['select-markov-order']
-
-        compositions, args = filter_compositions(request)
-        pure_data_args = pure_data.analysis(compositions, order=int(markov_order))
-        args.update(pure_data_args)
-
+def zip_pure_data(pure_data_args, attrib):
         buff = BytesIO()
         zip_archive = zipfile.ZipFile(buff, mode='w')
 
@@ -216,13 +227,48 @@ def show_pure_data(request):
         zip_archive.close()
 
         response = HttpResponse(buff.getvalue(), mimetype="application/x-zip-compressed")
-        response['Content-Disposition'] = 'attachment; filename=%s' % "markov-chains.zip"
+        response['Content-Disposition'] = 'attachment; filename=%s' % "markov-chains-{}.zip".format(attrib)
         return response
+
+
+def show_pure_data_contour(request):
+    if request.method == 'POST':
+        markov_order = request.POST['select-markov-order']
+
+        compositions, args = filter_compositions(request)
+        pure_data_args = pure_data.generate_contour_chain(compositions, order=int(markov_order))
+        args.update(pure_data_args)
+
+        return zip_pure_data(pure_data_args, 'contour')
 
     args = make_filter_args()
     args['order_numbers'] = range(1, 11)
 
-    return render(request, 'pure_data.html', args)
+    return render(request, 'pure_data_contour.html', args)
+
+
+def show_pure_data_generic(request, attrib, html):
+    if request.method == 'POST':
+        markov_order = request.POST['select-markov-order']
+
+        compositions, args = filter_compositions(request)
+        pure_data_args = pure_data.make_general_chain(compositions, attrib, order=int(markov_order) + 1)
+        args.update(pure_data_args)
+
+        return zip_pure_data(pure_data_args, attrib)
+
+    args = make_filter_args(Composition)
+    args['order_numbers'] = range(1, 11)
+
+    return render(request, 'pure_data_{}.html'.format(html), args)
+
+
+def show_pure_data_durations(request):
+    return show_pure_data_generic(request, 'durations', 'durations')
+
+
+def show_pure_data_intervals(request):
+    return show_pure_data_generic(request, 'intervals_midi', 'intervals')
 
 
 def show_cluster_duration_ambitus(request):
@@ -289,3 +335,7 @@ def stats(request):
 
 def show_reports(request):
     return render(request, 'reports.html', {})
+
+
+def show_pure_data(request):
+    return render(request, 'pure_data.html', {})
