@@ -30,5 +30,6 @@ urlpatterns = patterns('',
     url(r'^composition/(\w+)/cluster/$', 'analysis.views.composition_cluster', name='composition_cluster'),
     url(r'^dashboard/$', 'analysis.views.dashboard', name='dashboard'),
     url(r'^stats/$', 'analysis.views.stats', name='stats'),
+    url(r'^license/$', 'analysis.views.license', name='license'),
     url(r'^admin/', include(admin.site.urls)),
 )

@@ -342,3 +342,7 @@ def show_reports(request):
 
 def show_pure_data(request):
     return render(request, 'pure_data.html', {})
+
+
+def license(request):
+    return render(request, "license.html", {})
