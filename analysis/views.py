@@ -207,7 +207,7 @@ def show_contour(request):
     return render(request, 'contour.html', args)
 
 
-def get_zip_save_pure_data(pure_data_args, attrib):
+def zip_pure_data(pure_data_args, attrib):
         buff = BytesIO()
         zip_archive = zipfile.ZipFile(buff, mode='w')
 
@@ -229,12 +229,36 @@ def show_pure_data_contour(request):
         pure_data_args = pure_data.generate_contour_chain(compositions, order=int(markov_order))
         args.update(pure_data_args)
 
-        return get_zip_save_pure_data(pure_data_args, 'contour')
+        return zip_pure_data(pure_data_args, 'contour')
 
     args = make_filter_args(Composition)
     args['order_numbers'] = range(1, 11)
 
     return render(request, 'pure_data_contour.html', args)
+
+
+def show_pure_data_generic(request, attrib, html):
+    if request.method == 'POST':
+        markov_order = request.POST['select-markov-order']
+
+        compositions, args = filter_compositions(request)
+        pure_data_args = pure_data.make_general_chain(compositions, attrib, order=int(markov_order) + 1)
+        args.update(pure_data_args)
+
+        return zip_pure_data(pure_data_args, attrib)
+
+    args = make_filter_args(Composition)
+    args['order_numbers'] = range(1, 11)
+
+    return render(request, 'pure_data_{}.html'.format(html), args)
+
+
+def show_pure_data_durations(request):
+    return show_pure_data_generic(request, 'durations', 'durations')
+
+
+def show_pure_data_intervals(request):
+    return show_pure_data_generic(request, 'intervals_midi', 'intervals')
 
 
 def show_cluster_duration_ambitus(request):

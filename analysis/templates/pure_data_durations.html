@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Flauta Solo | Pure Data Contour
+    Flauta Solo | Pure Data Durations
 {% endblock %}
 
 
 {% block body %}
-    <h1>Pure Data Contour</h1>
+    <h1>Pure Data Durations</h1>
 
-    <form class="form-horizontal" action='{% url "pure_data_contour" %}' method="post">
+    <form class="form-horizontal" action='{% url "pure_data_durations" %}' method="post">
         {% csrf_token %}
         <fieldset>
             {% include "_filter_fields.html" with items=signatures %}
@@ -42,7 +42,7 @@
     <script>
         $(document).ready(function () {
             $(".nav li").removeClass("active");
-            $('#pure_data_contour').addClass('active');
+            $('#pure_data_durations').addClass('active');
         });
     </script>
 {% endblock %}
