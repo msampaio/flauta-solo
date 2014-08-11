@@ -1,20 +1,35 @@
 {% extends "base.html" %}
 
 {% block title %}
-Compositions
+    Flauta Solo | Compositions
 {% endblock %}
 
+
 {% block body %}
-<h1>Compositions</h1>
+    <h1>Compositions</h1>
 
-<ul>
-{% for composition in compositions %}
-<li>
-    <a href="/composition/{{ composition.music_data.score.code }}">
-        {{ composition.title }} &mdash; {{ composition.music_data.score.code }}
-    </a>
-</li>
-{% endfor %}
-</ul>
+    <form class="form-horizontal" action='{% url "list_compositions" %}' method="post">
+        {% csrf_token %}
+        <fieldset>
+            {% include "_filter_fields.html" with items=signatures %}
 
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="submit"></label>
+
+                <div class="col-md-4">
+                    <button id="submit" name="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $(".nav li").removeClass("active");
+            $('#compositions').addClass('active');
+        });
+    </script>
 {% endblock %}

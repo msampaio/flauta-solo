@@ -114,11 +114,12 @@ def show_intervals(request):
 
 
 def list_compositions(request):
-    compositions = Composition.objects.all()
+    if request.method == 'POST':
+        compositions, args = filter_compositions(request)
+        args.update({'compositions': compositions})
+        return render(request, 'compositions_result.html', args)
 
-    args = {
-        "compositions": compositions
-    }
+    args = make_filter_args(Composition)
     return render(request, 'compositions.html', args)
 
 

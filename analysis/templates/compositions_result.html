@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+Compositions
+{% endblock %}
+
+{% block body %}
+<h1>Compositions</h1>
+        {% include "_applied_filters.html" %}
+    <ul>
+        {% for composition in compositions %}
+        <li>
+            <a href="/composition/{{ composition.music_data.score.code }}">
+                {{ composition.title }} &mdash; {{ composition.music_data.score.code }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
