@@ -128,7 +128,7 @@ def list_compositions(request):
         args.update({'compositions': compositions})
         return render(request, 'compositions_result.html', args)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     return render(request, 'compositions.html', args)
 
 
@@ -257,7 +257,7 @@ def show_pure_data_generic(request, attrib, html):
 
         return zip_pure_data(pure_data_args, attrib)
 
-    args = make_filter_args(Composition)
+    args = make_filter_args()
     args['order_numbers'] = range(1, 11)
 
     return render(request, 'pure_data_{}.html'.format(html), args)
