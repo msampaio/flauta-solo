@@ -36,8 +36,7 @@ def get_contour_frequency(contour_list, size, normalize=False):
 
 
 def analysis(compositions, size=2):
-
-    contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
+    contour_list = utils.get_music_data_attrib(compositions, 'contour', 'append')
     array = get_contour_frequency(contour_list, size, True)
 
     min_pts = 10

@@ -16,7 +16,7 @@ def frequency_pie(durations):
 
 def analysis(compositions):
     durations = utils.get_music_data_attrib(compositions, 'durations')
-    piece_durations = utils.get_single_music_data_attrib(compositions, 'total_duration')
+    piece_durations = utils.get_music_data_attrib(compositions, 'total_duration', 'append')
     basic_stats_duration = utils.aux_basic_stats(durations, 'Durations number', False)
     basic_stats_piece_duration = utils.aux_basic_stats(piece_durations, 'Durations number', False)
 

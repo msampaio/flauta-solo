@@ -77,7 +77,7 @@ def count_contour_subseq(cseg, n):
 
 
 def analysis(compositions):
-    contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
+    contour_list = utils.get_music_data_attrib(compositions, 'contour', 'append')
 
     if contour_list:
         basic_stats = utils.aux_basic_stats(contour_list, 'Contour number', True)

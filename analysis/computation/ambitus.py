@@ -18,7 +18,7 @@ def frequency_pie(ambitus_list):
 
 
 def analysis(compositions):
-    ambitus_list = utils.get_single_music_data_attrib(compositions, 'ambitus')
+    ambitus_list = utils.get_music_data_attrib(compositions, 'ambitus', 'append')
 
     if ambitus_list:
         basic_stats = utils.aux_basic_stats(ambitus_list, 'Pieces number', False)

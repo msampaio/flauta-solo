@@ -140,7 +140,7 @@ def markov_chain_contour(contour_list, order=1, print_pd=False):
 
 
 def generate_contour_chain(compositions, order=1):
-    contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
+    contour_list = utils.get_music_data_attrib(compositions, 'contour', 'append')
 
     if contour_list:
         cseg_map, cseg_chain = markov_chain_contour(contour_list, order, True)
@@ -156,7 +156,7 @@ def generate_contour_chain(compositions, order=1):
 
 
 def make_general_chain(compositions, attrib, order=1):
-    nested_seq = utils.get_single_music_data_attrib(compositions, attrib)
+    nested_seq = utils.get_music_data_attrib(compositions, attrib, 'append')
     if nested_seq:
         spl = split_nested_sequences(nested_seq, order)
         chain_str, map_str = markov_print(*make_markov_chain(spl))

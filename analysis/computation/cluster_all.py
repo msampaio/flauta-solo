@@ -8,7 +8,7 @@ import numpy
 
 def analysis(compositions, size=2):
     duration_ambitus = cluster_duration_ambitus.get_duration_ambitus(compositions, True, False)
-    contour_list = utils.get_single_music_data_attrib(compositions, 'contour')
+    contour_list = utils.get_music_data_attrib(compositions, 'contour', 'append')
 
     a = numpy.array(duration_ambitus[1:])
     b = cluster_contour.get_contour_frequency(contour_list, size, True)

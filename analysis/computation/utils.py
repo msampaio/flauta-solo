@@ -138,15 +138,13 @@ def distribution(data_seq, basic_stats, amount=False):
 
 # music functions #
 
-def get_single_music_data_attrib(compositions, attrib):
-    return [getattr(composition.music_data, attrib) for composition in compositions]
-
-
-def get_music_data_attrib(compositions, attrib):
+def get_music_data_attrib(compositions, attrib, method='extend'):
     seq = []
     for composition in compositions:
-        seq.extend(getattr(composition.music_data, attrib))
+        # seq.extend(getattr(composition.music_data, attrib))
+        getattr(seq, method)(getattr(composition.music_data, attrib))
     return seq
+
 
 def comparison(pair):
     a, b = pair
