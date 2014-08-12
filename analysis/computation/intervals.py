@@ -1,6 +1,13 @@
 from analysis.computation import utils
 
 
+def get_category(interval):
+    interval_class = interval % 12
+    if interval_class > 6:
+        interval_class = 12 - interval_class
+    return range(7).index(interval_class)
+
+
 def frequency_scatter(intervals):
     counted = utils.special_counter(intervals, True)
     seq = sorted(map(list, counted.items()))
@@ -52,6 +59,7 @@ def analysis(compositions):
             'chromatic_leaps_frequency_pie': chromatic_leaps_frequency_pie(chromatic_intervals),
             'histogram': utils.histogram(midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
             'distribution_amount': utils.distribution(midi_intervals, basic_stats, True),
+            'category_frequency_pie': frequency_pie(list(map(get_category, midi_intervals))),
         }
     else:
         args = {}

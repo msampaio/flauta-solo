@@ -16,6 +16,7 @@
             <div class="interval-chart" id="chart_frequency_pie"></div>
             <div class="interval-chart" id="chart_chromatic_frequency_pie"></div>
             <div class="interval-chart" id="chart_chromatic_leaps_frequency_pie"></div>
+            <div class="interval-chart" id="chart_category_frequency_pie"></div>
 
         <h2>Basic Statistics</h2>
         <table id="basic_statistics" class="table">
@@ -52,6 +53,7 @@
         drawChart5();
         drawChart6();
         drawChart7();
+        drawChart8();
 
     }
 
@@ -135,6 +137,13 @@
           var data = google.visualization.arrayToDataTable({{ chromatic_leaps_frequency_pie|safe }});
           var options = {'title':'Chromatic leaps frequency (without 2nd and 3rds)' };
           var chart = new google.visualization.PieChart(document.getElementById('chart_chromatic_leaps_frequency_pie'));
+          chart.draw(data, options);
+       }
+
+      function drawChart8() {
+          var data = google.visualization.arrayToDataTable({{ category_frequency_pie|safe }});
+          var options = {'title':'Pitch-Class Interval Frequency' };
+          var chart = new google.visualization.PieChart(document.getElementById('chart_category_frequency_pie'));
           chart.draw(data, options);
        }
     </script>
