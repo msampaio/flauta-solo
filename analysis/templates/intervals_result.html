@@ -17,6 +17,7 @@
             <div class="interval-chart" id="chart_chromatic_frequency_pie"></div>
             <div class="interval-chart" id="chart_chromatic_leaps_frequency_pie"></div>
             <div class="interval-chart" id="chart_category_frequency_pie"></div>
+            <div class="interval-chart" id="chart_pitch_class_distance"></div>
 
         <h2>Basic Statistics</h2>
         <table id="basic_statistics" class="table">
@@ -54,7 +55,7 @@
         drawChart6();
         drawChart7();
         drawChart8();
-
+        drawChart9();
     }
 
     function drawChart1() {
@@ -146,6 +147,21 @@
           var chart = new google.visualization.PieChart(document.getElementById('chart_category_frequency_pie'));
           chart.draw(data, options);
        }
+
+      function drawChart9() {
+          var data = google.visualization.arrayToDataTable( {{ pitch_class_distance | safe }} );
+
+          var options = {
+            'title': 'Distance from All Pitch Class frequency',
+            hAxis: {title: 'Composition'},
+            vAxis: {title: 'Euclidean Distance'},
+            'legend': 'none',
+          };
+
+          var chart = new google.visualization.ColumnChart(document.getElementById('chart_pitch_class_distance'));
+          chart.draw(data, options);
+        }
+
     </script>
 
 {% endblock %}
