@@ -17,11 +17,17 @@ def translate(cseg):
 
 
 def split_and_translate(cseg, size=2):
-
     def aux(cseg, i, size):
         return translate(cseg[i:i + size])
 
     return [aux(cseg, i, size) for i in range(len(cseg) - size)]
+
+
+def split_and_translate_nested(cseg, size=2):
+    spl = []
+    for c in cseg:
+        spl.extend(split_and_translate(c, size))
+    return spl
 
 
 def contour_adjacency_series(contour_list):
@@ -58,6 +64,14 @@ def repetition_scatter(contour_list):
     return seq
 
 
+def get_frequency(split_seq, size=2):
+    total = len(split_seq)
+    counted = Counter(map(tuple, split_seq))
+    for k, v in counted.items():
+        counted[k] = v / float(total)
+    return counted
+
+
 def frequency_pie(contour_list, size=2):
     splitted = []
     for cseg in contour_list:
@@ -77,6 +91,7 @@ def count_contour_subseq(cseg, n):
 
 
 def analysis(compositions):
+    size = 4
     contour_list = utils.get_music_data_attrib(compositions, 'contour', 'append')
 
     if contour_list:
@@ -86,6 +101,16 @@ def analysis(compositions):
         repetition_stats = utils.aux_basic_stats(repetition_seq, 'Pieces Number', False)
         dist_value = utils.distribution(repetition_seq, repetition_stats, False)
         dist_amount = utils.distribution(repetition_seq, repetition_stats, True)
+
+
+        freq_dist_args = {}
+        for size in range(2, 5):
+            split_seq = list(map(tuple, split_and_translate_nested(contour_list, size)))
+            split_seq_nested = [list(map(tuple, split_and_translate(c, size))) for c in contour_list]
+            coll_freq_dic = get_frequency(split_seq, size)
+            freq_dist_sc = utils.frequency_distance_scatter(compositions, split_seq_nested, coll_freq_dic)
+            freq_dist_args.update({'frequency_distance_{}'.format(size): freq_dist_sc})
+
 
         args = {
             'basic_stats': basic_stats,
@@ -98,6 +123,7 @@ def analysis(compositions):
             'distribution_amount': dist_amount,
             'histogram': utils.histogram(repetition_seq, 10, ['Index', 'Pieces'], False, True),
         }
+        args.update(freq_dist_args)
     else:
         args = {}
         
