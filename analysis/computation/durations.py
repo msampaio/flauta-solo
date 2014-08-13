@@ -15,10 +15,13 @@ def frequency_pie(durations):
 
 
 def analysis(compositions):
-    durations = utils.get_music_data_attrib(compositions, 'durations')
+    durations = utils.get_music_data_attrib(compositions, 'durations', 'extend')
+    nested_durations = utils.get_music_data_attrib(compositions, 'durations', 'append')
     piece_durations = utils.get_music_data_attrib(compositions, 'total_duration', 'append')
     basic_stats_duration = utils.aux_basic_stats(durations, 'Durations number', False)
     basic_stats_piece_duration = utils.aux_basic_stats(piece_durations, 'Durations number', False)
+
+    coll_freq_dic = utils.special_counter(durations, True)
 
     if durations and piece_durations:
         args = {
@@ -32,6 +35,7 @@ def analysis(compositions):
             'piece_frequency_pie': frequency_pie(piece_durations),
             'piece_histogram': utils.histogram(piece_durations, 10, ['Durations', 'Ocurrences'], False, True),
             'piece_distribution_amount': utils.distribution(piece_durations, basic_stats_duration, True),
+            'frequency_distance': utils.frequency_distance_scatter(compositions, nested_durations, coll_freq_dic),
         }
     else:
         args = {}

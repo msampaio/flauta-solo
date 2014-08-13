@@ -13,6 +13,7 @@
             <div class="duration-chart" id="chart_note_histogram" style="width: 1000px; height: 400px;"></div>
             <div class="duration-chart" id="chart_note_distribution_amount" style="width: 1000px; height: 400px;"></div>
             <div class="duration-chart" id="chart_note_frequency_pie" style="width: 1000px; height: 400px;"></div>
+            <div class="interval-chart" id="chart_frequency_distance"></div>
 
 
         <h2>Basic Statistics</h2>
@@ -77,6 +78,7 @@
         drawChart6();
         drawChart7();
         drawChart8();
+        drawChart9();
     }
 
     function drawChart1() {
@@ -186,6 +188,20 @@
         var chart = new google.visualization.PieChart(document.getElementById('chart_piece_frequency_pie'));
         chart.draw(data, options);
     }
+
+    function drawChart9() {
+        var data = google.visualization.arrayToDataTable( {{ frequency_distance | safe }} );
+
+        var options = {
+            'title': 'Distance from Durations frequency',
+            hAxis: {title: 'Composition'},
+            vAxis: {title: 'Euclidean Distance'},
+            'legend': 'none',
+        };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_frequency_distance'));
+            chart.draw(data, options);
+        }
 
     </script>
 

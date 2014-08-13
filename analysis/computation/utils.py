@@ -1,4 +1,5 @@
 from collections import Counter
+from scipy.spatial import distance
 
 from django.utils.datastructures import SortedDict
 import numpy
@@ -48,6 +49,18 @@ def special_counter(seq, proportional=False, normalized=False):
             counted[key] = normalization(counted[key], mean, std_dev)
 
     return counted
+
+
+def get_frequency_distance(small_seq, coll_dic):
+    counted = special_counter(small_seq, True)
+    for key in coll_dic.keys():
+        if key not in counted.keys():
+            counted[key] = 0
+
+    small_array = numpy.array([v for _, v in sorted(counted.items())])
+    coll_array = numpy.array([v for _, v in sorted(coll_dic.items())])
+
+    return distance.euclidean(small_array, coll_array)
 
 
 def aux_basic_stats(data_seq, string, flat=False):
@@ -134,6 +147,14 @@ def distribution(data_seq, basic_stats, amount=False):
         r.append([k, v / total, v/total, normal_distribution(k, 0, 1)])
 
     return r
+
+
+def frequency_distance_scatter(compositions, small_nested_seq, coll_dic):
+    dist_seq = [get_frequency_distance(s, coll_dic) for s in small_nested_seq]
+    zipped = zip(compositions, dist_seq)
+    pairs = [[c.music_data.score.code, s] for c, s in zipped]
+    pairs.insert(0, ['Composition', 'Value'])
+    return pairs
 
 
 # music functions #
