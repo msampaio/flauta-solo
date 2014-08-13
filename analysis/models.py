@@ -81,7 +81,7 @@ class Composition(models.Model):
     subtitle = models.CharField(max_length=200, blank=True, null=True)
 
     editor = models.CharField(max_length=200)
-    publisher_information = models.CharField(max_length=200)
+    publisher_information = models.TextField()
     misc_notes = models.TextField(max_length=200)
     description = models.TextField()
     uploader = models.CharField(max_length=200)
