@@ -7,14 +7,26 @@ Compositions
 {% block body %}
 <h1>Compositions</h1>
         {% include "_applied_filters.html" %}
-    <ul>
-        {% for composition in compositions %}
-        <li>
-            <a href="/composition/{{ composition.music_data.score.code }}">
-                {{ composition.title }} &mdash; {{ composition.music_data.score.code }}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
 
+        <h2>List</h2>
+        <table id="basic_statistics" class="table">
+            <tr>
+                <th>Collection Title</th>
+                <th>Code</th>
+                <th>Length</th>
+                <th>Key</th>
+                <th>Mode</th>
+                <th>Time Signature</th>
+            </tr>
+            {% for composition in compositions|dictsort:"music_data.score.code" %}
+            <tr>
+                <td>{{ composition.title }}</td>
+                <td><a href="/composition/{{ composition.music_data.score.code }}">{{ composition.music_data.score.code }}</a></td>
+                <td>{{ composition.music_data.total_duration|floatformat:2 }}</td>
+                <td>{{ composition.music_data.key }}</td>
+                <td>{{ composition.music_data.mode }}</td>
+                <td>{{ composition.music_data.time_signature }}</td>
+            </tr>
+            {% endfor %}
+        </table>
 {% endblock %}
