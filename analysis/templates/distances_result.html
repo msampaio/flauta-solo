@@ -10,6 +10,10 @@
 
         <h2>Charts</h2>
             <div class="interval-chart" id="chart_intervals_distance" style="width: 1000px; height: 400px;"></div>
+            <div class="interval-chart" id="chart_durations_distance" style="width: 1000px; height: 400px;"></div>
+            <div class="interval-chart" id="chart_contour_2_distance" style="width: 1000px; height: 400px;"></div>
+            <div class="interval-chart" id="chart_contour_3_distance" style="width: 1000px; height: 400px;"></div>
+            <div class="interval-chart" id="chart_contour_4_distance" style="width: 1000px; height: 400px;"></div>
 
         <h2>Basic Statistics</h2>
         <table id="basic_statistics" class="table">
@@ -40,13 +44,17 @@
 
     function init() {
         drawChart1();
+        drawChart2();
+        drawChart3();
+        drawChart4();
+        drawChart5();
     }
 
     function drawChart1() {
         var data = google.visualization.arrayToDataTable( {{ intervals_distance | safe }} );
         var options = {
             'title': 'Distance from All Pitch Class frequency',
-            hAxis: {title: 'Composition'},
+            hAxis: {title: 'Composition (movement)'},
             vAxis: {title: 'Euclidean Distance'},
             'legend': 'none',
         };
@@ -54,6 +62,64 @@
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_intervals_distance'));
             chart.draw(data, options);
         }
+
+    function drawChart2() {
+        var data = google.visualization.arrayToDataTable( {{ durations_distance | safe }} );
+        var options = {
+            'title': 'Distance from Durations frequency',
+            hAxis: {title: 'Composition (movement)'},
+            vAxis: {title: 'Euclidean Distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_durations_distance'));
+            chart.draw(data, options);
+    }
+
+    function drawChart3() {
+        var data = google.visualization.arrayToDataTable( {{ contour_2_distance | safe }} );
+
+        var options = {
+            'title': 'Distance from Contour |2| frequency',
+            hAxis: {title: 'Composition (movement)'},
+            vAxis: {title: 'Euclidean Distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_contour_2_distance'));
+            chart.draw(data, options);
+        }
+
+    function drawChart4() {
+        var data = google.visualization.arrayToDataTable( {{ contour_3_distance | safe }} );
+
+        var options = {
+            'title': 'Distance from Contour |3| frequency',
+            hAxis: {title: 'Composition (movement)'},
+            vAxis: {title: 'Euclidean Distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_contour_3_distance'));
+            chart.draw(data, options);
+        }
+
+    function drawChart5() {
+        var data = google.visualization.arrayToDataTable( {{ contour_4_distance | safe }} );
+
+        var options = {
+            'title': 'Distance from Contour |4| frequency',
+            hAxis: {title: 'Composition (movement)'},
+            vAxis: {title: 'Euclidean Distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_contour_4_distance'));
+            chart.draw(data, options);
+        }
+
+
+
     </script>
 
 {% endblock %}
