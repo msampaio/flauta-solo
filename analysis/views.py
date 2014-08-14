@@ -15,6 +15,7 @@ from analysis.computation import cluster_durations_frequency
 from analysis.computation import cluster_contour
 from analysis.computation import cluster_all
 from analysis.computation import composition_analysis
+from analysis.computation import distances
 
 
 def home(request):
@@ -326,6 +327,16 @@ def show_cluster_all(request):
     args = make_filter_args()
     args['size_numbers'] = range(2, 5)
     return render(request, 'cluster_all.html', args)
+
+
+def show_distances(request):
+    if request.method == 'POST':
+        compositions, args = filter_compositions(request)
+        args.update(distances.analysis(compositions))
+        return render(request, 'distances_result.html', args)
+
+    args = make_filter_args()
+    return render(request, 'distances.html', args)
 
 
 def stats(request):

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Distances Analysis
+{% endblock %}
+
+{% block body %}
+    <h1>Distances Analysis</h1>
+        {% include "_applied_filters.html" %}
+
+        <h2>Charts</h2>
+            <div class="interval-chart" id="chart_intervals_distance" style="width: 1000px; height: 400px;"></div>
+
+        <h2>Basic Statistics</h2>
+        <table id="basic_statistics" class="table">
+            <thead>
+            <tr>
+                <th>Measure</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for measure, value in basic_stats.items %}
+                <tr>
+                    <td class="simple-table-measure">{{ measure }}</td>
+                    <td class="simple-table-value">{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
+
+{% block javascript %}
+{#    Use Autoloading: https://developers.google.com/chart/interactive/docs/library_loading_enhancements #}
+    <script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+
+    <script type="text/javascript">
+
+    google.setOnLoadCallback(init);
+
+    function init() {
+        drawChart1();
+    }
+
+    function drawChart1() {
+        var data = google.visualization.arrayToDataTable( {{ intervals_distance | safe }} );
+        var options = {
+            'title': 'Distance from All Pitch Class frequency',
+            hAxis: {title: 'Composition'},
+            vAxis: {title: 'Euclidean Distance'},
+            'legend': 'none',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_intervals_distance'));
+            chart.draw(data, options);
+        }
+    </script>
+
+{% endblock %}

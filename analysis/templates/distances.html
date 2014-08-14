@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Flauta Solo | Distances
+{% endblock %}
+
+
+{% block body %}
+    <h1>Distances</h1>
+
+    <form class="form-horizontal" action='{% url "distances" %}' method="post">
+        {% csrf_token %}
+        <fieldset>
+            {% include "_filter_fields.html" with items=signatures %}
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="submit"></label>
+
+                <div class="col-md-4">
+                    <button id="submit" name="submit" class="btn btn-primary">Analyze</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $(".nav li").removeClass("active");
+            $('#distances').addClass('active');
+        });
+    </script>
+{% endblock %}
