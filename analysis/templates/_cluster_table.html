@@ -3,11 +3,12 @@
             <table id="basic_statistics" class="table">
                 <tr>
                     <th rowspan="2">Cluster number</th>
-                    <th colspan="2">Song</th>
+                    <th colspan="3">Song</th>
                 </tr>
                 <tr>
                     <th>Title</th>
                     <th>IMSLP code</th>
+                    <th>Length</th>
                 </tr>
                 {% for cluster_row in cluster_table %}
                     {% for song_row in cluster_row.songs %}
@@ -17,6 +18,7 @@
                         {% endif %}
                         <td>{{ song_row.title }}</td>
                         <td><a href="/composition/{{ song_row.code }}">{{ song_row.code }}</a></td>
+                        <td>{{ song_row.length|floatformat:2 }} </td>
                     </tr>
                     {% endfor %}
                 {% endfor %}
