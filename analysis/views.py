@@ -14,6 +14,7 @@ from analysis.computation import cluster_intervals_frequency
 from analysis.computation import cluster_durations_frequency
 from analysis.computation import cluster_contour
 from analysis.computation import cluster_all
+from analysis.computation import cluster_without_length
 from analysis.computation import composition_analysis
 from analysis.computation import distances
 
@@ -327,6 +328,18 @@ def show_cluster_all(request):
     args = make_filter_args()
     args['size_numbers'] = range(2, 5)
     return render(request, 'cluster_all.html', args)
+
+
+def show_cluster_without_length(request):
+    if request.method == 'POST':
+        contour_size = request.POST['select-contour-size']
+        compositions, args = filter_compositions(request)
+        args.update(cluster_without_length.analysis(compositions, int(contour_size)))
+        return render(request, 'cluster_without_length_result.html', args)
+
+    args = make_filter_args()
+    args['size_numbers'] = range(2, 5)
+    return render(request, 'cluster_without_length.html', args)
 
 
 def show_distances(request):
