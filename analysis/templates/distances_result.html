@@ -14,6 +14,7 @@
             <div class="interval-chart" id="chart_contour_2_distance" style="width: 1000px; height: 400px;"></div>
             <div class="interval-chart" id="chart_contour_3_distance" style="width: 1000px; height: 400px;"></div>
             <div class="interval-chart" id="chart_contour_4_distance" style="width: 1000px; height: 400px;"></div>
+            <div id="chart_id_distance" style="width: 1000px; height: 400px;"></div>
 
         <h2>Basic Statistics</h2>
         <table id="basic_statistics" class="table">
@@ -48,16 +49,18 @@
         drawChart3();
         drawChart4();
         drawChart5();
+        drawChart6();
     }
 
     function drawChart1() {
         var data = google.visualization.arrayToDataTable( {{ intervals_distance | safe }} );
         var options = {
-            'title': 'Distance from All Pitch Class frequency',
+            'title': 'Distance from All Pitch Class frequency (normalized)',
             hAxis: {title: 'Composition (movement)'},
-            vAxis: {title: 'Euclidean Distance'},
+            vAxis: {title: 'Euclidean Distance (\u03C3 from \u03BC)'}, // sigma and mu
             'legend': 'none',
         };
+
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_intervals_distance'));
             chart.draw(data, options);
@@ -66,9 +69,9 @@
     function drawChart2() {
         var data = google.visualization.arrayToDataTable( {{ durations_distance | safe }} );
         var options = {
-            'title': 'Distance from Durations frequency',
+            'title': 'Distance from Durations frequency (normalized)',
             hAxis: {title: 'Composition (movement)'},
-            vAxis: {title: 'Euclidean Distance'},
+            vAxis: {title: 'Euclidean Distance (\u03C3 from \u03BC)'}, // sigma and mu
             'legend': 'none',
         };
 
@@ -80,9 +83,9 @@
         var data = google.visualization.arrayToDataTable( {{ contour_2_distance | safe }} );
 
         var options = {
-            'title': 'Distance from Contour |2| frequency',
+            'title': 'Distance from Contour |2| frequency (normalized)',
             hAxis: {title: 'Composition (movement)'},
-            vAxis: {title: 'Euclidean Distance'},
+            vAxis: {title: 'Euclidean Distance (\u03C3 from \u03BC)'}, // sigma and mu
             'legend': 'none',
         };
 
@@ -94,9 +97,9 @@
         var data = google.visualization.arrayToDataTable( {{ contour_3_distance | safe }} );
 
         var options = {
-            'title': 'Distance from Contour |3| frequency',
+            'title': 'Distance from Contour |3| frequency (normalized)',
             hAxis: {title: 'Composition (movement)'},
-            vAxis: {title: 'Euclidean Distance'},
+            vAxis: {title: 'Euclidean Distance (\u03C3 from \u03BC)'}, // sigma and mu
             'legend': 'none',
         };
 
@@ -108,9 +111,9 @@
         var data = google.visualization.arrayToDataTable( {{ contour_4_distance | safe }} );
 
         var options = {
-            'title': 'Distance from Contour |4| frequency',
+            'title': 'Distance from Contour |4| frequency (normalized)',
             hAxis: {title: 'Composition (movement)'},
-            vAxis: {title: 'Euclidean Distance'},
+            vAxis: {title: 'Euclidean Distance (\u03C3 from \u03BC)'}, // sigma and mu
             'legend': 'none',
         };
 
@@ -118,7 +121,18 @@
             chart.draw(data, options);
         }
 
+    function drawChart6() {
+        var data = google.visualization.arrayToDataTable( {{ id_distance | safe }} );
 
+        var options = {
+            'title': 'Distance from Intervals and Durations frequency (normalized)',
+            hAxis: {title: 'Composition (movement)'},
+            vAxis: {title: 'Euclidean Distance (\u03C3 from \u03BC)'}, // sigma and mu
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_id_distance'));
+            chart.draw(data, options);
+        }
 
     </script>
 

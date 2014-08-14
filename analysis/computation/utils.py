@@ -149,12 +149,44 @@ def distribution(data_seq, basic_stats, amount=False):
     return r
 
 
-def frequency_distance_scatter(compositions, small_nested_seq, coll_dic):
+def frequency_distance_scatter(compositions, small_nested_seq, coll_dic, norm=False):
     dist_seq = [get_frequency_distance(s, coll_dic) for s in small_nested_seq]
+    if norm:
+        arr = numpy.array(dist_seq)
+        mu = arr.mean()
+        sigma = arr.std()
+        new = (arr - mu) / sigma
+        dist_seq = new.tolist()
     zipped = zip(compositions, dist_seq)
     pairs = [[c.music_data.score.code, s] for c, s in zipped]
     pairs.insert(0, ['Composition', 'Value'])
     return pairs
+
+
+def frequency_distance_scatter_group(compositions, freq_data, norm=False):
+    main_pair = []
+    header = ['Composition']
+
+    for label, small_nested_seq, coll_dic in freq_data:
+        header.append(label)
+        dist_seq = [get_frequency_distance(s, coll_dic) for s in small_nested_seq]
+        if norm:
+            arr = numpy.array(dist_seq)
+            mu = arr.mean()
+            sigma = arr.std()
+            new = (arr - mu) / sigma
+            dist_seq = new.tolist()
+        main_pair.append(dist_seq)
+
+    main_pair = numpy.array(main_pair).transpose().tolist()
+    seq = [header]
+
+    for composition, data in zip(compositions, main_pair):
+        code = composition.music_data.score.code
+        data.insert(0, code)
+        seq.append(data)
+
+    return seq
 
 
 # music functions #
