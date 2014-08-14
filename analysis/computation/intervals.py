@@ -55,7 +55,7 @@ def analysis(compositions):
             'histogram': utils.histogram(midi_intervals, 10, ['Intervals', 'Ocurrences'], False, True),
             'distribution_amount': utils.distribution(midi_intervals, basic_stats, True),
             'category_frequency_pie': frequency_pie(list(map(get_category, midi_intervals))),
-            'frequency_distance': utils.frequency_distance_scatter(compositions, categorized_nested_midi_intervals, coll_freq_dic),
+            'pitch_class_distance': utils.frequency_distance_scatter(compositions, categorized_nested_midi_intervals, coll_freq_dic),
         }
     else:
         args = {}
