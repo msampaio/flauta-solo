@@ -18,6 +18,8 @@
             <div class="interval-chart" id="chart_chromatic_leaps_frequency_pie"></div>
             <div class="interval-chart" id="chart_category_frequency_pie"></div>
             <div class="interval-chart" id="chart_pitch_class_distance"></div>
+            <div class="interval-chart" id="chart_adjacent_frequency_pie"></div>
+            <div class="interval-chart" id="chart_adjacent_frequency_bubble"></div>
 
         <h2>Basic Statistics</h2>
         <table id="basic_statistics" class="table">
@@ -56,6 +58,8 @@
         drawChart7();
         drawChart8();
         drawChart9();
+        drawChart10();
+        drawChart11();
     }
 
     function drawChart1() {
@@ -161,6 +165,25 @@
           var chart = new google.visualization.ColumnChart(document.getElementById('chart_pitch_class_distance'));
           chart.draw(data, options);
         }
+
+      function drawChart10() {
+          var data = google.visualization.arrayToDataTable({{ adjacent_frequency_pie|safe }});
+          var options = {'title':'Adjacent intervals frequency'};
+          var chart = new google.visualization.PieChart(document.getElementById('chart_adjacent_frequency_pie'));
+          chart.draw(data, options);
+       }
+
+      function drawChart11() {
+          var data = google.visualization.arrayToDataTable({{ adjacent_frequency_bubble|safe }});
+          var options = {
+            'title':'Adjacent intervals frequency',
+            hAxis: {title: 'Preceding'},
+            vAxis: {title: 'Succeeding'},
+            sizeAxis: {maxSize: 5},
+          };
+          var chart = new google.visualization.BubbleChart(document.getElementById('chart_adjacent_frequency_bubble'));
+          chart.draw(data, options);
+       }
 
     </script>
 
