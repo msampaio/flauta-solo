@@ -52,10 +52,9 @@ def analysis(compositions):
     nested_midi_intervals = utils.get_music_data_attrib(compositions, 'intervals_midi', 'append')
     simple_intervals = [abs(x) % 12 for x in midi_intervals]
     chromatic_intervals = utils.get_music_data_attrib(compositions, 'intervals')
-    adjacent_intervals = get_adjacent_intervals(midi_intervals)
-    nested_adjacent_intervals = [get_adjacent_intervals(seq) for seq in nested_midi_intervals]
-
-    counted_adjacent_intervals = utils.special_counter(adjacent_intervals, True)
+    adjacent_intervals = []
+    for seq in nested_midi_intervals:
+        adjacent_intervals.extend(get_adjacent_intervals(seq))
 
     basic_stats = utils.aux_basic_stats(midi_intervals, 'Intervals number', False)
 
