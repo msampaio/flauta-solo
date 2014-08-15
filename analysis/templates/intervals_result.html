@@ -177,8 +177,8 @@
           var data = google.visualization.arrayToDataTable({{ adjacent_frequency_bubble|safe }});
           var options = {
             'title':'Adjacent intervals frequency',
-            hAxis: {title: 'Preceding'},
-            vAxis: {title: 'Succeeding'},
+            hAxis: {title: 'Preceding interval (semitones)'},
+            vAxis: {title: 'Succeeding (semitones)'},
             sizeAxis: {maxSize: 5},
           };
           var chart = new google.visualization.BubbleChart(document.getElementById('chart_adjacent_frequency_bubble'));
